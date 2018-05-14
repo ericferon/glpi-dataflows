@@ -1,0 +1,117 @@
+<?php
+/*
+ * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
+ -------------------------------------------------------------------------
+ dataflows plugin for GLPI
+ Copyright (C) 2009-2016 by the dataflows Development Team.
+
+ https://github.com/InfotelGLPI/dataflows
+ -------------------------------------------------------------------------
+
+ LICENSE
+      
+ This file is part of dataflows.
+
+ dataflows is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ dataflows is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with dataflows. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ */
+
+// Init the hooks of the plugins -Needed
+function plugin_init_dataflows() {
+   global $PLUGIN_HOOKS;
+
+   $PLUGIN_HOOKS['csrf_compliant']['dataflows'] = true;
+   $PLUGIN_HOOKS['change_profile']['dataflows'] = array('PluginDataflowsProfile', 'initProfile');
+   $PLUGIN_HOOKS['assign_to_ticket']['dataflows'] = true;
+   
+   //$PLUGIN_HOOKS['assign_to_ticket_dropdown']['dataflows'] = true;
+   //$PLUGIN_HOOKS['assign_to_ticket_itemtype']['dataflows'] = array('PluginDataflowsDataflow_Item');
+   
+   Plugin::registerClass('PluginDataflowsDataflow', array(
+//         'linkgroup_tech_types'   => true,
+//         'linkuser_tech_types'    => true,
+         'document_types'         => true,
+         'ticket_types'           => true,
+         'helpdesk_visible_types' => true//,
+//         'addtabon'               => 'Supplier'
+   ));
+   Plugin::registerClass('PluginDataflowsProfile',
+                         array('addtabon' => 'Profile'));
+                         
+   //Plugin::registerClass('PluginDataflowsDataflow_Item',
+   //                      array('ticket_types' => true));
+
+   if (class_exists('PluginAccountsAccount')) {
+      PluginAccountsAccount::registerType('PluginDataflowsDataflow');
+   }
+      
+   if (Session::getLoginUserID()) {
+
+      $plugin = new Plugin();
+      if (!$plugin->isActivated('environment')
+         && Session::haveRight("plugin_dataflows", READ)) {
+
+         $PLUGIN_HOOKS['menu_toadd']['dataflows'] = array('assets'   => 'PluginDataflowsMenu');
+      }
+
+      if (Session::haveRight("plugin_dataflows", UPDATE)) {
+         $PLUGIN_HOOKS['use_massive_action']['dataflows']=1;
+      }
+
+      if (class_exists('PluginDataflowsDataflow_Item')) { // only if plugin activated
+         $PLUGIN_HOOKS['plugin_datainjection_populate']['dataflows'] = 'plugin_datainjection_populate_dataflows';
+      }
+
+      // End init, when all types are registered
+      $PLUGIN_HOOKS['post_init']['dataflows'] = 'plugin_dataflows_postinit';
+
+      // Import from Data_Injection plugin
+      $PLUGIN_HOOKS['migratetypes']['dataflows'] = 'plugin_datainjection_migratetypes_dataflows';
+   }
+}
+
+// Get the name and the version of the plugin - Needed
+function plugin_version_dataflows() {
+
+   return array (
+      'name' => _n('Dataflow', 'Dataflows', 2, 'dataflows'),
+      'version' => '2.0.1',
+      'author'  => "Eric Feron",
+      'license' => 'GPLv2+',
+      'homepage'=>'',
+      'minGlpiVersion' => '0.90',
+   );
+
+}
+
+// Optional : check prerequisites before install : may print errors or add to message after redirect
+function plugin_dataflows_check_prerequisites() {
+   if (version_compare(GLPI_VERSION,'0.90','lt') || version_compare(GLPI_VERSION,'9.3','ge')) {
+      _e('This plugin requires GLPI >= 0.90 and <= 9.2', 'dataflows');
+      return false;
+   }
+   return true;
+}
+
+// Uninstall process for plugin : need to return true if succeeded : may display messages or add to message after redirect
+function plugin_dataflows_check_config() {
+   return true;
+}
+
+function plugin_datainjection_migratetypes_dataflows($types) {
+   $types[2400] = 'PluginDataflowsDataflow';
+   return $types;
+}
+
+?>
