@@ -527,7 +527,8 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
 	  if ($this->canCreate() && $plugin->isActivated("statecheck")) {
 			$classname = get_class($this);
-			PluginStatecheckRule::plugin_statecheck_renderfields($classname);
+			$statecheckrule = new PluginStatecheckRule;
+			$statecheckrule->plugin_statecheck_renderfields($classname);
 	  }
 
       $this->showFormButtons($options);
