@@ -143,7 +143,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       $tab[11]['name']           = PluginDataflowsType::getTypeName(1);
       $tab[11]['datatype']       = 'dropdown';
 
-/*      $tab[12]['table']          = 'glpi_users';
+      $tab[12]['table']          = 'glpi_users';
       $tab[12]['field']          = 'name';
       $tab[12]['linkfield']      = 'users_id';
       $tab[12]['name']           = __('Dataflow Expert');
@@ -157,7 +157,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       $tab[13]['condition']      = '`is_assign`';
       $tab[13]['datatype']       = 'dropdown';
 
-      $tab[4]['table']           = 'glpi_locations';
+/*      $tab[4]['table']           = 'glpi_locations';
       $tab[4]['field']           = 'completename';
       $tab[4]['name']            = __('Location');
       $tab[4]['datatype']        = 'dropdown';
