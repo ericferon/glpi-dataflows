@@ -179,13 +179,13 @@ class PluginDataflowsDataflow extends CommonDBTM {
       $tab[7]['name']            = _n('Associated item' , 'Associated items', 2);
       $tab[7]['forcegroupby']    = true;
       $tab[7]['joinparams']      = array('jointype' => 'child');
-
-      $tab[18]['table']          = $this->getTable();
-      $tab[18]['field']          = 'date_mod';
-      $tab[18]['massiveaction']  = false;
-      $tab[18]['name']           = __('Last update');
-      $tab[18]['datatype']       = 'datetime';
 */
+      $tab[18]['table']          = $this->getTable();
+      $tab[18]['field']          = 'statedate';
+      $tab[18]['massiveaction']  = false;
+      $tab[18]['name']           = __('Status StartDate');
+      $tab[18]['datatype']       = 'datetime';
+
       $tab[30]['table']          = $this->getTable();
       $tab[30]['field']          = 'id';
       $tab[30]['name']           = __('ID');
