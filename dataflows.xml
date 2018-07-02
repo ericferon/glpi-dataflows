@@ -36,10 +36,12 @@
                <en>
                   <tag>Dataflows</tag>
                   <tag>Architecture</tag>
+                  <tag>Data</tag>
                </en>
                <fr>
                   <tag>Flux de données</tag>
                   <tag>Architecture</tag>
+                  <tag>Données</tag>
               </fr>
             </tags>
             <screenshots>
