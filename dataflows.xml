@@ -1,0 +1,47 @@
+         <root>
+            <name>Dataflows inventory</name>
+            <key>dataflows</key>
+            <state>stable</state> <!-- stable | unstable | beta | alpha -->
+            <logo>https://github.com/ericferon/glpi-dataflows/blob/master/dataflows.png</logo>
+            <description>
+               <short>
+                  <en>Inventory of your dataflows. You can specify source and destination applications, connection type, exchange format, transfer frequency and calendar, ... and associate the dataflows with other elements of the inventory (accounts for connecting login and password, f.i).</en>
+                  <fr>Inventaire de vos flux de données. Vous pouvez spécifier les applications source et destination, le type de connexion, le format d'échange, la fréquence et le calendrier d'échange, ... et associer ces flux avec d'autres éléments d'inventaire (les comptes, pour les login et mot de passe de connexion aux applications, par exemple).</fr>
+               </short>
+               <long>
+                  <en>Inventory of your dataflows.<br/>This plugin enables you to manage the dataflows inventory (source and destination applications, connection type, exchange format, transfer frequency and calendar, ...) and associate the dataflows with elements of the inventory.<br/>- Applications inventory<br/>- Can be used with helpdesk<br/>- Field validity check with Statecheck plugin<br/>- Accounts for connecting login/password management</en>
+                  <fr>Inventaire de vos flux de données<br/>Ce plugin vous permet de spécifier les applications source et destination, le type de connexion, le format d'échange, la fréquence et le calendrier d'échange, ... et associer ces flux avec d'autres éléments d'inventaire<br/>- Inventaire des applications<br/>- Peut être utilisé avec le helpdesk<br/>- Contrôle de validté des champs, avec le plugin Statecheck<br/>- Comptes pour la gestion des login/mot de passe de connexion aux applications</fr>
+               </long>
+            </description>
+            <homepage>https://github.com/ericferon/glpi-dataflows</homepage>
+            <download>https://github.com/ericferon/glpi-dataflows/releases</download>
+            <issues>https://github.com/ericferon/glpi-dataflows/issues</issues>
+            <readme>https://github.com/ericferon/glpi-dataflows/blob/master/README.md</readme>
+            <authors>
+               <author>Eric Feron</author>
+            </authors>
+            <versions>
+               <version>
+                  <num>2.0.1</num>
+                  <compatibility>0.90</compatibility>
+                  <compatibility>9.1</compatibility>
+                  <compatibility>9.2</compatibility>
+               </version>
+            </versions>
+            <langs>
+               <lang>en_GB</lang>
+            </langs>
+            <license>GPL v2+</license>
+            <tags>
+               <en>
+                  <tag>Dataflows</tag>
+                  <tag>Architecture</tag>
+               </en>
+               <fr>
+                  <tag>Flux de données</tag>
+                  <tag>Architecture</tag>
+              </fr>
+            </tags>
+            <screenshots>
+            </screenshots>
+         </root>
