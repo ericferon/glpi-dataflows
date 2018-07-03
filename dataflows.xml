@@ -2,7 +2,7 @@
             <name>Dataflows inventory</name>
             <key>dataflows</key>
             <state>stable</state> <!-- stable | unstable | beta | alpha -->
-            <logo>https://github.com/ericferon/glpi-dataflows/blob/master/dataflows.png</logo>
+            <logo>https://raw.githubusercontent.com/ericferon/glpi-dataflows/master/dataflows.png</logo>
             <description>
                <short>
                   <en>Inventory of your dataflows. You can specify source and destination applications, connection type, exchange format, transfer frequency and calendar, ... and associate the dataflows with other elements of the inventory (accounts for connecting login and password, f.i).</en>
