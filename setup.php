@@ -75,6 +75,7 @@ function plugin_init_dataflows() {
 
       // Import from Data_Injection plugin
       $PLUGIN_HOOKS['migratetypes']['dataflows'] = 'plugin_datainjection_migratetypes_dataflows';
+	  
    }
 }
 
@@ -87,18 +88,26 @@ function plugin_version_dataflows() {
       'author'  => "Eric Feron",
       'license' => 'GPLv2+',
       'homepage'=>'',
-      'minGlpiVersion' => '0.90',
+      'minGlpiVersion' => '9.2',
    );
 
 }
 
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_dataflows_check_prerequisites() {
-   if (version_compare(GLPI_VERSION,'0.90','lt') || version_compare(GLPI_VERSION,'9.3','ge')) {
-      _e('This plugin requires GLPI >= 0.90 and <= 9.2', 'dataflows');
+   global $DB;
+   if (version_compare(GLPI_VERSION,'9.2','lt') || version_compare(GLPI_VERSION,'9.3','ge')) {
+      _e('This plugin requires GLPI >= 9.2 and <= 9.2', 'dataflows');
       return false;
-   }
-   return true;
+	} else {
+		$query = "select * from glpi_plugins where directory = 'archisw' and state = 1";
+		$result_query = $DB->query($query);
+		if($DB->numRows($result_query) == 1) {
+			return true;
+		} else {
+			echo "the plugin 'archisw' must be installed before using 'dataflows'";
+		}
+	}
 }
 
 // Uninstall process for plugin : need to return true if succeeded : may display messages or add to message after redirect
