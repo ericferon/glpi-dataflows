@@ -35,7 +35,7 @@ class PluginDataflowsTriggerType extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Transfer trigger','Transfer triggers',$nb);
+      return _n('Transfer trigger','Transfer triggers',$nb,'dataflows');
    }
 }
 

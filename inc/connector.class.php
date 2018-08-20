@@ -35,7 +35,7 @@ class PluginDataflowsConnector extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Connector','Connectors',$nb);
+      return _n('Connector','Connectors',$nb, 'dataflows');
    }
 }
 

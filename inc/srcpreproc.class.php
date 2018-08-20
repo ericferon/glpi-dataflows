@@ -35,7 +35,7 @@ class PluginDataflowsSrcPreproc extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Transfer Preprocessing','Transfer Preprocessings',$nb);
+      return _n('Transfer Preprocessing','Transfer Preprocessings',$nb,'dataflows');
    }
 }
 

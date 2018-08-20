@@ -31,31 +31,16 @@ if (!isset($_GET["withtemplate"])) $_GET["withtemplate"] = "";
 
 $dataflow=new PluginDataflowsDataflow();
 $dataflow_item=new PluginDataflowsDataflow_Item();
-$options = array();
+//$options = array();
 
 if (isset($_POST["add"])) {
 
    $dataflow->check(-1, CREATE,$_POST);
-   $newID=$dataflow->add($_POST, $options);
-	if (!$newID) {
-		if (isset($options['message']['plugin_statecheck'])) {
-            echo "<script type='text/javascript' >\n";
-			echo "alert(\"".str_replace(";","\\n",$options['message']['plugin_statecheck'])."\\n".__("Record not inserted")." !\");";
-			echo "history.go(-1);";
-			echo "</script>";
-		}
-		else {
-			if ($_SESSION['glpibackcreated']) {
-				Html::redirect($dataflow->getFormURL()."?id=".$newID);
-			}
-			Html::back();
-		}
-	} else {
-		if ($_SESSION['glpibackcreated']) {
-			Html::redirect($dataflow->getFormURL()."?id=".$newID);
-		}
-		Html::back();
-	}
+   $newID=$dataflow->add($_POST);
+   if ($_SESSION['glpibackcreated']) {
+		Html::redirect($dataflow->getFormURL()."?id=".$newID);
+   }
+   Html::back();
 
 } else if (isset($_POST["delete"])) {
 
@@ -78,16 +63,8 @@ if (isset($_POST["add"])) {
 } else if (isset($_POST["update"])) {
 
    $dataflow->check($_POST['id'], UPDATE);
-   $dataflow->update($_POST, 1, $options);
-	if (isset($options['message']['plugin_statecheck'])) {
-		echo "<script type='text/javascript' >\n";
-		echo "alert(\"".str_replace(";","\\n",$options['message']['plugin_statecheck'])."\\n".__("Record not updated")." !\");";
-		echo "history.go(-1);";
-		echo "</script>";
-	}
-	else {
-		Html::back();
-	}
+   $dataflow->update($_POST);
+   Html::back();
 
 } else if (isset($_POST["additem"])) {
 

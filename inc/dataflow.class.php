@@ -143,14 +143,14 @@ class PluginDataflowsDataflow extends CommonDBTM {
       $tab[12]['table']          = 'glpi_users';
       $tab[12]['field']          = 'name';
       $tab[12]['linkfield']      = 'users_id';
-      $tab[12]['name']           = __('Dataflow Expert');
+      $tab[12]['name']           = __('Dataflow Expert', 'dataflows');
       $tab[12]['datatype']       = 'dropdown';
       $tab[12]['right']          = 'interface';
 
       $tab[13]['table']          = 'glpi_groups';
       $tab[13]['field']          = 'name';
       $tab[13]['linkfield']      = 'groups_id';
-      $tab[13]['name']           = __('Dataflow Follow-up');
+      $tab[13]['name']           = __('Dataflow Follow-up', 'dataflows');
       $tab[13]['condition']      = '`is_assign`';
       $tab[13]['datatype']       = 'dropdown';
 
@@ -180,7 +180,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       $tab[18]['table']          = $this->getTable();
       $tab[18]['field']          = 'statedate';
       $tab[18]['massiveaction']  = false;
-      $tab[18]['name']           = __('Status StartDate');
+      $tab[18]['name']           = __('Status StartDate', 'dataflows');
       $tab[18]['datatype']       = 'datetime';
 
       $tab[30]['table']          = $this->getTable();
@@ -230,11 +230,6 @@ class PluginDataflowsDataflow extends CommonDBTM {
 */
    function showForm ($ID, $options=array()) {
 
-      $plugin = new Plugin();
-	  if ($plugin->isActivated("statecheck")) {
-			Session::addMessageAfterRedirect('<font color="red"><b>'.__('!! Highlighted fields are controlled !!').'</b></font>');
-			Html::displayMessageAfterRedirect();
-	  }
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
@@ -253,7 +248,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //short description of dataflows
-      echo "<td>".__('Short description')."</td>";
+      echo "<td>".__('Short description', 'dataflows')."</td>";
       echo "<td class='top center' colspan='4'>";
 //      echo "<textarea cols='100' rows='1' name='shortdescription'>".$this->fields["shortdescription"]."</textarea>";
       Html::autocompletionTextField($this,"shortdescription",array('size' => 100));
@@ -262,7 +257,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //long description of dataflows
-      echo "<td>".__('Long description')."</td>";
+      echo "<td>".__('Long description', 'dataflows')."</td>";
       echo "<td class='top center' colspan='4'>";
       echo "<textarea cols='100' rows='3' name='longdescription'>".$this->fields["longdescription"]."</textarea>";
       echo "</td>";
@@ -275,7 +270,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       Dropdown::show('PluginDataflowsState', array('name' => "plugin_dataflows_states_id", 'value' => $this->fields["plugin_dataflows_states_id"], 'entity' => $this->fields["entities_id"]));
       echo "</td>";
       //status date of dataflows
-      echo "<td>".__('Status StartDate')."</td>";
+      echo "<td>".__('Status StartDate', 'dataflows')."</td>";
       echo "<td>";
       Html::showDateField("statedate", array('value' => $this->fields["statedate"]));
       echo "</td>";
@@ -283,18 +278,18 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //transfer protocol
-      echo "<td class='top center' colspan='4'>". __('Transfer Protocol').": ";
+      echo "<td class='top center' colspan='4'>". __('Transfer Protocol', 'dataflows').": ";
       Dropdown::show('PluginDataflowsTransferProtocol', array('name' => "plugin_dataflows_transferprotocols_id", 'value' => $this->fields["plugin_dataflows_transferprotocols_id"]));
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
       //from application
-      echo "<td>".__('From application').": </td><td>";
+      echo "<td>".__('From application', 'dataflows').": </td><td>";
       Dropdown::show('PluginDataflowsFromSwcomponent', array('name' => "plugin_dataflows_fromswcomponents_id", 'value' => $this->fields["plugin_dataflows_fromswcomponents_id"],'entity' => $this->fields["entities_id"]));
       echo "</td>";
       //to application
-      echo "<td>".__('To application').": </td>";
+      echo "<td>".__('To application', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsToSwcomponent', array('name' => "plugin_dataflows_toswcomponents_id", 'value' => $this->fields["plugin_dataflows_toswcomponents_id"],'entity' => $this->fields["entities_id"]));
       echo "</td>";
@@ -302,12 +297,12 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //source connector
-      echo "<td>".__('Source Connector').": </td>";
+      echo "<td>".__('Source Connector', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsSourceConnector', array('name' => "plugin_dataflows_sourceconnectors_id", 'value' => $this->fields["plugin_dataflows_sourceconnectors_id"]));
       echo "</td>";
       //destination connector
-      echo "<td>".__('Destination Connector').": </td>";
+      echo "<td>".__('Destination Connector', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsDestinationConnector', array('name' => "plugin_dataflows_destinationconnectors_id", 'value' => $this->fields["plugin_dataflows_destinationconnectors_id"]));
       echo "</td>";
@@ -316,11 +311,11 @@ class PluginDataflowsDataflow extends CommonDBTM {
 	if (class_exists('PluginAccountsAccount')) {
       echo "<tr class='tab_bg_1'>";
       //from credential
-      echo "<td>".__('Source User').": </td><td>";
+      echo "<td>".__('Source User', 'dataflows').": </td><td>";
       Dropdown::show('PluginDataflowsFromCredential', array('name' => "plugin_dataflows_fromcredentials_id", 'value' => $this->fields["plugin_dataflows_fromcredentials_id"],'entity' => $this->fields["entities_id"]));
       echo "</td>";
       //to credential
-      echo "<td>".__('Destination User').": </td><td>";
+      echo "<td>".__('Destination User', 'dataflows').": </td><td>";
       Dropdown::show('PluginDataflowsToCredential', array('name' => "plugin_dataflows_tocredentials_id", 'value' => $this->fields["plugin_dataflows_tocredentials_id"],'entity' => $this->fields["entities_id"]));
 //      Dropdown::show('PluginAccountsAccount', array('value' => $this->fields["plugin_dataflows_tocredentials_id"],'entity' => $this->fields["entities_id"]));
       echo "</td>";
@@ -329,12 +324,12 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //source path
-      echo "<td>".__('From external server').": </td>";
+      echo "<td>".__('From external server', 'dataflows').": </td>";
       echo "<td>";
       Html::autocompletionTextField($this,"plugin_dataflows_fromexternal",array('size' => 65));
       echo "</td>";
       //destination path
-      echo "<td>".__('To external server').": </td>";
+      echo "<td>".__('To external server', 'dataflows').": </td>";
       echo "<td>";
       Html::autocompletionTextField($this,"plugin_dataflows_toexternal",array('size' => 65));
       echo "</td>";
@@ -342,12 +337,12 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //source path
-      echo "<td>".__('Source directory/ ProgramId/ port').": </td>";
+      echo "<td>".__('Source directory/ ProgramId/ port', 'dataflows').": </td>";
       echo "<td>";
       Html::autocompletionTextField($this,"plugin_dataflows_srcuri",array('size' => 65));
       echo "</td>";
       //destination path
-      echo "<td>".__('Destination directory/ ProgramId/ port').": </td>";
+      echo "<td>".__('Destination directory/ ProgramId/ port', 'dataflows').": </td>";
       echo "<td>";
       Html::autocompletionTextField($this,"plugin_dataflows_desturi",array('size' => 65));
       echo "</td>";
@@ -355,12 +350,12 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //source format
-      echo "<td>".__('Source format (Idoc, table, file pattern, ...)').": </td>";
+      echo "<td>".__('Source format (Idoc, table, file pattern, ...)', 'dataflows').": </td>";
       echo "<td>";
       Html::autocompletionTextField($this,"srcformat",array('size' => 45));
       echo "</td>";
       //destination format
-      echo "<td>".__('Destination format (Idoc, table, file pattern, ...)').": </td>";
+      echo "<td>".__('Destination format (Idoc, table, file pattern, ...)', 'dataflows').": </td>";
       echo "<td>";
       Html::autocompletionTextField($this,"destformat",array('size' => 45));
       echo "</td>";
@@ -368,24 +363,24 @@ class PluginDataflowsDataflow extends CommonDBTM {
 	  
       echo "<tr class='tab_bg_1'>";
       //extract method
-      echo "<td>".__('Extract Method (Bapi, Stored Proc, ...)').": </td>";
+      echo "<td>".__('Extract Method (Bapi, Stored Proc, ...)', 'dataflows').": </td>";
       echo "<td>";
       Html::autocompletionTextField($this,"extractmethod",array('size' => 45));
       echo "</td>";
       //load method
-      echo "<td>".__('Load Method (Bapi, Stored Proc, ...)').": </td>";
+      echo "<td>".__('Load Method (Bapi, Stored Proc, ...)', 'dataflows').": </td>";
       echo "<td>";
       Html::autocompletionTextField($this,"loadmethod",array('size' => 45));
       echo "</td>";
       
       echo "<tr class='tab_bg_1'>";
       //source preprocessing
-      echo "<td>".__('Transfer Preprocessing').": </td>";
+      echo "<td>".__('Transfer Preprocessing', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsSrcPreproc', array('name' => "plugin_dataflows_srcpreprocs_id", 'value' => $this->fields["plugin_dataflows_srcpreprocs_id"]));
       echo "</td>";
       //destination postprocessing
-      echo "<td>".__('Transfer Postprocessing').": </td>";
+      echo "<td>".__('Transfer Postprocessing', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsDestPostproc', array('name' => "plugin_dataflows_destpostprocs_id", 'value' => $this->fields["plugin_dataflows_destpostprocs_id"]));
       echo "</td>";
@@ -393,14 +388,14 @@ class PluginDataflowsDataflow extends CommonDBTM {
 	  
       echo "<tr class='tab_bg_1'>";
       //transfer trigger
-      echo "<td class='top center' colspan='4'>".__('Transfer trigger').": ";
+      echo "<td class='top center' colspan='4'>".__('Transfer trigger', 'dataflows').": ";
 //      echo "<td>".$LANG['plugin_dataflows'][32].": </td>";
 //      echo "<td>";
       Dropdown::show('PluginDataflowsTriggerType', array('name' => "plugin_dataflows_triggertypes_id", 'value' => $this->fields["plugin_dataflows_triggertypes_id"]));
 //      echo "</td>";
       //trigger format
 //      echo "<td>"
-	  echo " (".__('Trigger name').": ";
+	  echo " (".__('Trigger name', 'dataflows').": ";
 //      echo "</td><td>";
       Html::autocompletionTextField($this,"triggerformat",array('size' => 45));
       echo ")</td>";
@@ -408,12 +403,12 @@ class PluginDataflowsDataflow extends CommonDBTM {
       
       echo "<tr class='tab_bg_1'>";
       //transfer frequency
-      echo "<td>".__('Transfer frequency (def : per day)').": </td><td>";
+      echo "<td>".__('Transfer frequency (def : per day)', 'dataflows').": </td><td>";
       Dropdown::show('PluginDataflowsTransferFreq', array('name' => "plugin_dataflows_transferfreqs_id", 'value' => $this->fields["plugin_dataflows_transferfreqs_id"]));
       echo "</td>";
       
       //transfer timetable
-      echo "<td>".__('Transfer Timetable').": </td>";
+      echo "<td>".__('Transfer Timetable', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsTransferTimetable', array('name' => "plugin_dataflows_transfertimetables_id", 'value' => $this->fields["plugin_dataflows_transfertimetables_id"]));
       echo "</td>";
@@ -421,13 +416,13 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //error handling
-      echo "<td>".__('Transfer Error handling').": </td>";
+      echo "<td>".__('Transfer Error handling', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsErrorHandling', array('name' => "plugin_dataflows_errorhandlings_id", 'value' => $this->fields["plugin_dataflows_errorhandlings_id"]));
       echo "</td>";
       
       //transfer on holiday
-      echo "<td>".__('Transfer On holiday').": </td>";
+      echo "<td>".__('Transfer On holiday', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsHolidayAction', array('name' => "plugin_dataflows_holidayactions_id", 'value' => $this->fields["plugin_dataflows_holidayactions_id"]));
       echo "</td>";
@@ -435,12 +430,12 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //url of functional documentation
-      echo "<td>".__('URL to functional doc (mapping, ...)').": </td>";
+      echo "<td>".__('URL to functional doc (mapping, ...)', 'dataflows').": </td>";
       echo "<td>";
       Html::autocompletionTextField($this,"mappingdocurl",array('size' => 65));
       echo "</td>";
       //url of technical documentation
-      echo "<td>".__('URL to technical doc (design, ...)').": </td>";
+      echo "<td>".__('URL to technical doc (design, ...)', 'dataflows').": </td>";
       echo "<td>";
       Html::autocompletionTextField($this,"technicaldocurl",array('size' => 65));
       echo "</td>";
@@ -448,12 +443,12 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //transfer volume
-      echo "<td>".__('Transfer Volume (MB)').": </td>";
+      echo "<td>".__('Transfer Volume (MB)', 'dataflows').": </td>";
       echo "<td>";
       Html::autocompletionTextField($this,"transfervolume",array('size' => 45));
       echo "</td>";
       //transfer priority
-      echo "<td>".__('Priority').": </td>";
+      echo "<td>".__('Priority', 'dataflows').": </td>";
       echo "<td>";
       Html::autocompletionTextField($this,"transferpriority",array('size' => 45));
       echo "</td>";
@@ -466,7 +461,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       Dropdown::show('PluginDataflowsType', array('name' => "plugin_dataflows_types_id", 'value' => $this->fields["plugin_dataflows_types_id"]));
       echo "</td>";
       //indicator
-      echo "<td>".__('Indicator').": </td>";
+      echo "<td>".__('Indicator', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsIndicator', array('name' => "plugin_dataflows_indicators_id", 'value' => $this->fields["plugin_dataflows_indicators_id"]));
       echo "</td>";
@@ -474,7 +469,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
 	  
       echo "<tr class='tab_bg_1'>";
       //service level of dataflows
-      echo "<td>".__('Service Level').": </td>";
+      echo "<td>".__('Service Level', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsServicelevel', array('name' => "plugin_dataflows_servicelevels_id", 'value' => $this->fields["plugin_dataflows_servicelevels_id"]));
       echo "</td>";
@@ -487,11 +482,11 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //data owner
-      echo "<td>".__('Dataflow Follow-up')."</td><td>";
+      echo "<td>".__('Dataflow Follow-up', 'dataflows')."</td><td>";
       Group::dropdown(array('name'      => 'groups_id', 'value'     => $this->fields['groups_id'], 'entity'    => $this->fields['entities_id'], 'condition' => '`is_assign`'));
       echo "</td>";
       //technical maintainer
-      echo "<td>".__('Dataflow Expert')."</td><td>";
+      echo "<td>".__('Dataflow Expert', 'dataflows')."</td><td>";
       User::dropdown(array('name' => "users_id", 'value' => $this->fields["users_id"], 'entity' => $this->fields["entities_id"], 'right' => 'interface'));
       echo "</td>";
       echo "</tr>";
@@ -499,12 +494,12 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //other group
-      echo "<td>".__('Other group')."</td>";
+      echo "<td>".__('Other group', 'dataflows')."</td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsOtherGroup', array('name' => "plugin_dataflows_othergroups_id", 'value' => $this->fields["plugin_dataflows_othergroups_id"], 'entity' => $this->fields["entities_id"]));
       echo "</td>";
       //other expert
-      echo "<td>".__('Other expert').": </td>";
+      echo "<td>".__('Other expert', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsOtherUser', array('value' => $this->fields["plugin_dataflows_otherusers_id"],'entity' => $this->fields["entities_id"]));
       echo "</td>";
@@ -512,7 +507,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //support group
-      echo "<td>".__('Dataflow Support').": </td><td>";
+      echo "<td>".__('Dataflow Support', 'dataflows').": </td><td>";
       Dropdown::show('PluginDataflowsSupportGroup', array('value' => $this->fields["plugin_dataflows_supportgroups_id"],'entity' => $this->fields["entities_id"]));
       echo "</td>";
       //modification date
@@ -521,12 +516,6 @@ class PluginDataflowsDataflow extends CommonDBTM {
       echo "</td>";
 */
       echo "</tr>";
-
-	  if ($this->canCreate() && $plugin->isActivated("statecheck")) {
-			$classname = get_class($this);
-			$statecheckrule = new PluginStatecheckRule;
-			$statecheckrule->plugin_statecheck_renderfields($classname);
-	  }
 
       $this->showFormButtons($options);
 

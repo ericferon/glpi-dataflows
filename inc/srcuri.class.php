@@ -35,7 +35,7 @@ class PluginDataflowsSrcUri extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Source URI (ProgramID, ...)','Source URIs',$nb);
+      return _n('Source URI (ProgramID, ...)','Source URIs',$nb,'dataflows');
    }
 }
 

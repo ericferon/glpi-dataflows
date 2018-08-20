@@ -35,7 +35,7 @@ class PluginDataflowsOtherUser extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Other user','Other users',$nb);
+      return _n('Other user','Other users',$nb,'dataflows');
    }
 }
 

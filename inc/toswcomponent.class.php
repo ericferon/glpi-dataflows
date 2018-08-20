@@ -35,7 +35,7 @@ class PluginDataflowsToSwcomponent extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('To App','To Apps',$nb);
+      return _n('To App','To Apps',$nb,'dataflows');
    }
 }
 

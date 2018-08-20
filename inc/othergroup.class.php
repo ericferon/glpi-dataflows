@@ -35,7 +35,7 @@ class PluginDataflowsOtherGroup extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Other Group','Other Groups',$nb);
+      return _n('Other Group','Other Groups',$nb,'dataflows');
    }
 }
 

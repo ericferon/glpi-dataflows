@@ -82,10 +82,10 @@ function plugin_version_dataflows() {
 
    return array (
       'name' => _n('Dataflow', 'Dataflows', 2, 'dataflows'),
-      'version' => '2.0.1',
+      'version' => '2.0.2',
       'author'  => "Eric Feron",
       'license' => 'GPLv2+',
-      'homepage'=>'',
+      'homepage'=> 'https://github.com/ericferon/glpi-dataflows',
       'minGlpiVersion' => '9.2',
    );
 

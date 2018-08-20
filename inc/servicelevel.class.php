@@ -35,7 +35,7 @@ class PluginDataflowsServicelevel extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Service Level','Service Levels',$nb);
+      return _n('Service Level','Service Levels',$nb,'dataflows');
    }
 }
 

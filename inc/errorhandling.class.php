@@ -35,7 +35,7 @@ class PluginDataflowsErrorHandling extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Transfer Error handling','Transfer Error handlings',$nb);
+      return _n('Transfer Error handling','Transfer Error handlings',$nb, 'dataflows');
    }
 }
 

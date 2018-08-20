@@ -35,7 +35,7 @@ class PluginDataflowsHolidayAction extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Transfer On holiday','Transfers On holiday',$nb);
+      return _n('Transfer On holiday','Transfers On holiday',$nb,'dataflows');
    }
 }
 

@@ -35,7 +35,7 @@ class PluginDataflowsTransferFreq extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Transfer frequency (def : per day)','Transfer frequencies',$nb);
+      return _n('Transfer frequency (def : per day)','Transfer frequencies',$nb,'dataflows');
    }
 }
 

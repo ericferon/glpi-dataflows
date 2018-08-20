@@ -35,7 +35,7 @@ class PluginDataflowsDestUri extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Destination URI (ProgramID, ...)','Destination URIs',$nb);
+      return _n('Destination URI (ProgramID, ...)','Destination URIs',$nb,'dataflows');
    }
 }
 

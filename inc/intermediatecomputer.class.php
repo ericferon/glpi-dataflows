@@ -35,7 +35,7 @@ class PluginDataflowsIntermediateComputer extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Intermediate computer','Intermediate computers',$nb);
+      return _n('Intermediate computer','Intermediate computers',$nb,'dataflows');
    }
 }
 

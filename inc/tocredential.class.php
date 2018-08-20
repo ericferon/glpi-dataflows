@@ -32,7 +32,7 @@ if (class_exists('PluginAccountsAccount')) {
 
 		static function getTypeName($nb=0) {
 
-			return _n('Destination User','Destination Users',$nb);
+			return _n('Destination User','Destination Users',$nb,'dataflows');
 		}
 	}
 }

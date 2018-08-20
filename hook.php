@@ -704,5 +704,4 @@ function plugin_dataflows_addWhere($link,$nott,$type,$id,$val,$searchtype) {
    }
 }
 */
-include_once(GLPI_ROOT . "/plugins/statecheck/hookinclude.php");
 ?>

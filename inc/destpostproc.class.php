@@ -35,7 +35,7 @@ class PluginDataflowsDestPostproc extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Transfer Postprocessing','Transfer Postprocessings',$nb);
+      return _n('Transfer Postprocessing','Transfer Postprocessings',$nb,'dataflows');
    }
 }
 

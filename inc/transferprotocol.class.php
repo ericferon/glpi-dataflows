@@ -35,7 +35,7 @@ class PluginDataflowsTransferProtocol extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Protocol','Protocols',$nb);
+      return _n('Protocol','Protocols',$nb,'dataflows');
    }
 }
 

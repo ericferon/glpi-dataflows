@@ -35,7 +35,7 @@ class PluginDataflowsTransferTimetable extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Transfer Timetable','Transfer Timetables',$nb);
+      return _n('Transfer Timetable','Transfer Timetables',$nb,'dataflows');
    }
 }
 

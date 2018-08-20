@@ -35,7 +35,7 @@ class PluginDataflowsFromComputer extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('From computer','From computers',$nb);
+      return _n('From computer','From computers',$nb,'dataflows');
    }
 }
 

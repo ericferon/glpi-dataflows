@@ -35,7 +35,7 @@ class PluginDataflowsIndicator extends CommonDropdown {
    
    static function getTypeName($nb=0) {
 
-      return _n('Indicator','Indicators',$nb);
+      return _n('Indicator','Indicators',$nb,'dataflows');
    }
 }
 
