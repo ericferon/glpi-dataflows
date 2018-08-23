@@ -100,16 +100,6 @@ function plugin_dataflows_install() {
       $query="ALTER TABLE `glpi_plugin_dataflows_profiles`
                DROP `name` ;";
       $result=$DB->query($query);
-
-      Plugin::migrateItemType(
-         array(2400=>'PluginDataflowsDataflow'),
-         array("glpi_bookmarks", "glpi_bookmarks_users", "glpi_displaypreferences",
-               "glpi_documents_items", "glpi_infocoms", "glpi_logs", "glpi_items_tickets"),
-         array("glpi_plugin_dataflows_dataflows_items"));
-
-      Plugin::migrateItemType(
-         array(1200 => "PluginAppliancesAppliance",1300 => "PluginWebapplicationsWebapplication"),
-         array("glpi_plugin_dataflows_dataflows_items"));
    }
 
    PluginDataflowsProfile::initProfile();

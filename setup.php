@@ -82,7 +82,7 @@ function plugin_version_dataflows() {
 
    return array (
       'name' => _n('Dataflow', 'Dataflows', 2, 'dataflows'),
-      'version' => '2.0.2',
+      'version' => '2.0.3',
       'author'  => "Eric Feron",
       'license' => 'GPLv2+',
       'homepage'=> 'https://github.com/ericferon/glpi-dataflows',
@@ -95,7 +95,7 @@ function plugin_version_dataflows() {
 function plugin_dataflows_check_prerequisites() {
    global $DB;
    if (version_compare(GLPI_VERSION,'9.2','lt') || version_compare(GLPI_VERSION,'9.3','ge')) {
-      _e('This plugin requires GLPI >= 9.2 and <= 9.2', 'dataflows');
+      _e('This plugin requires GLPI >= 9.2 and < 9.3', 'dataflows');
       return false;
 	} else {
 		$query = "select * from glpi_plugins where directory = 'archisw' and state = 1";
