@@ -191,7 +191,6 @@ function plugin_dataflows_AssignToTicket($types) {
 
    if (Session::haveRight("plugin_dataflows_open_ticket", "1")) {
       $types['PluginDataflowsDataflow']=PluginDataflowsDataflow::getTypeName(2);
-      //$types['PluginDataflowsDataflow_Item'] = _n('Dataflow item', 'Dataflows item', 2, 'dataflows');
    }
    return $types;
 }
