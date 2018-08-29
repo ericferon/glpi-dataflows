@@ -200,6 +200,173 @@ class PluginDataflowsDataflow extends CommonDBTM {
       return $tab;
    }
 
+   // search fields from GLPI 9.3 on
+/*   function rawSearchOptions() {
+
+      $tab = [];
+
+      $tab[] = [
+         'id'   => 'common',
+         'name' => self::getTypeName(2)
+      ];
+
+      $tab[] = [
+         'id'            => '1',
+         'table'         => $this->getTable(),
+         'field'         => 'name',
+         'name'          => __('Name'),
+         'datatype'      => 'itemlink',
+         'itemlink_type' => $this->getType()
+      ];
+
+      $tab[] = [
+         'id'       => '2',
+         'table'    => 'glpi_plugin_dataflows_flowgroups',
+         'field'    => 'name',
+         'name'     => PluginDataflowsFlowgroup::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'       => '3',
+         'table'    => 'glpi_plugin_dataflows_transferprotocols',
+         'field'    => 'name',
+         'name'     => PluginDataflowsFlowgroup::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'       => '4',
+         'table'    => 'glpi_plugin_dataflows_states',
+         'field'    => 'name',
+         'name'     => PluginDataflowsState::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'       => '5',
+         'table'    => 'glpi_plugin_dataflows_fromswcomponents',
+         'field'    => 'name',
+         'name'     => PluginDataflowsFromSwcomponent::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'       => '6',
+         'table'    => 'glpi_plugin_dataflows_toswcomponents',
+         'field'    => 'name',
+         'name'     => PluginDataflowsToSwcomponent::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'       => '7',
+         'table'    => 'glpi_plugin_dataflows_sourceconnectors',
+         'field'    => 'name',
+         'name'     => PluginDataflowsSourceConnector::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'       => '8',
+         'table'    => 'glpi_plugin_dataflows_destinationconnectors',
+         'field'    => 'name',
+         'name'     => PluginDataflowsDestinationConnector::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'       => '9',
+         'table'    => 'glpi_plugin_dataflows_types',
+         'field'    => 'name',
+         'name'     => PluginDataflowsType::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'       => '15',
+         'table'    => 'glpi_suppliers',
+         'field'    => 'name',
+         'name'     => __('Supplier'),
+         'datatype' => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'       => '16',
+         'table'    => 'glpi_manufacturers',
+         'field'    => 'name',
+         'name'     => __('Editor', 'dataflows'),
+         'datatype' => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'            => '17',
+         'table'         => 'glpi_plugin_dataflows_dataflows_items`',
+         'field'         => 'items_id',
+         'nosearch'      => true,
+         'massiveaction' => false,
+         'name'          => _n('Associated item', 'Associated items', 2),
+         'forcegroupby'  => true,
+         'joinparams'    => [
+            'jointype' => 'child'
+         ]
+      ];
+
+      $tab[] = [
+         'id'        => '21',
+         'table'     => 'glpi_users',
+         'field'     => 'name',
+         'linkfield' => 'users_id_tech',
+         'name'      => __('Dataflow Expert', 'dataflows'),
+         'datatype'  => 'dropdown',
+         'right'     => 'interface'
+      ];
+
+      $tab[] = [
+         'id'        => '22',
+         'table'     => 'glpi_groups',
+         'field'     => 'name',
+         'linkfield' => 'groups_id_tech',
+         'name'      => __('Dataflow Follow-up', 'dataflows'),
+         'condition' => '`is_assign`',
+         'datatype'  => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'            => '24',
+         'table'         => $this->getTable(),
+         'field'         => 'statedate',
+         'massiveaction' => false,
+         'name'          => __('Status StartDate', 'dataflows'),
+         'datatype'      => 'datetime'
+      ];
+
+      $tab[] = [
+         'id'       => '30',
+         'table'    => $this->getTable(),
+         'field'    => 'id',
+         'name'     => __('ID'),
+         'datatype' => 'number'
+      ];
+
+      $tab[] = [
+         'id'       => '80',
+         'table'    => 'glpi_entities',
+         'field'    => 'completename',
+         'name'     => __('Entity'),
+         'datatype' => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'    => '81',
+         'table' => 'glpi_entities',
+         'field' => 'entities_id',
+         'name'  => __('Entity') . "-" . __('ID')
+      ];
+
+      return $tab;
+   }
+*/
    //define header form
    function defineTabs($options=array()) {
 
