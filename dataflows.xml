@@ -5,10 +5,12 @@
             <logo>https://raw.githubusercontent.com/ericferon/glpi-dataflows/master/dataflows.png</logo>
             <description>
                <short>
+                  <cs>Inventář toků vašich dat. Je možné zadat zdrojovou a cílovou aplikaci, typ spojení, formát výměny, četnost přenosů a kalendář, …a přiřadit datové toky k ostatním prvkům inventáře (účty pro připojení a hesla k nim, např.).</cs>
                   <en>Inventory of your dataflows. You can specify source and destination applications, connection type, exchange format, transfer frequency and calendar, ... and associate the dataflows with other elements of the inventory (accounts for connecting login and password, f.i).</en>
                   <fr>Inventaire de vos flux de données. Vous pouvez spécifier les applications source et destination, le type de connexion, le format d'échange, la fréquence et le calendrier d'échange, ... et associer ces flux avec d'autres éléments d'inventaire (les comptes, pour les login et mot de passe de connexion aux applications, par exemple).</fr>
                </short>
                <long>
+                  <cs>Inventář toků vašich dat.<br/>Tento zásuvný modul umožňuje spravovat inventář datových toků (zdrojové a cílové aplikace, typ spojení, formát výměny, četnost přenosu a kalendář, …) a přiřadit tyto datové toky k prvkům inventáře.<br/>- Inventura aplikací<br/>- Je možné použít ve Službě podpory<br/>- Kontrolovat platnost údaje v kolonce zásuvným modulem Kontrola stavu<br/>- Účty pro správu přihlašovacích jmen a hesel</cs>
                   <en>Inventory of your dataflows.<br/>This plugin enables you to manage the dataflows inventory (source and destination applications, connection type, exchange format, transfer frequency and calendar, ...) and associate the dataflows with elements of the inventory.<br/>- Applications inventory<br/>- Can be used with helpdesk<br/>- Field validity check with Statecheck plugin<br/>- Accounts for connecting login/password management</en>
                   <fr>Inventaire de vos flux de données<br/>Ce plugin vous permet de spécifier les applications source et destination, le type de connexion, le format d'échange, la fréquence et le calendrier d'échange, ... et associer ces flux avec d'autres éléments d'inventaire<br/>- Inventaire des applications<br/>- Peut être utilisé avec le helpdesk<br/>- Contrôle de validté des champs, avec le plugin Statecheck<br/>- Comptes pour la gestion des login/mot de passe de connexion aux applications</fr>
                </long>
@@ -44,6 +46,11 @@
             </langs>
             <license>GPL v2+</license>
             <tags>
+               <cs>
+                  <tag>Toky dat</tag>
+                  <tag>Architektura</tag>
+                  <tag>Data</tag>
+               </cs>
                <en>
                   <tag>Dataflows</tag>
                   <tag>Architecture</tag>
