@@ -24,7 +24,7 @@
  --------------------------------------------------------------------------
  */
 
-if (strpos($_SERVER['PHP_SELF'],"dropdownTypeDataflows.php")) {
+if (strpos($_SERVER['PHP_SELF'],"dropdownFlowgroupDataflows.php")) {
    $AJAX_INCLUDE=1;
    include ('../../../inc/includes.php');
    header("Content-Type: text/html; charset=UTF-8");
@@ -34,7 +34,7 @@ if (strpos($_SERVER['PHP_SELF'],"dropdownTypeDataflows.php")) {
 Session::checkCentralAccess();
 
 // Make a select box
-if (isset($_POST["dataflowtype"])) {
+if (isset($_POST["flowgroup"])) {
    $used = array();
 
    // Clean used array
@@ -42,7 +42,7 @@ if (isset($_POST["dataflowtype"])) {
       $query = "SELECT `id`
                 FROM `glpi_plugin_dataflows_dataflows`
                 WHERE `id` IN (".implode(',',$_POST['used']).")
-                      AND `plugin_dataflows_dataflowtypes_id` = '".$_POST["dataflowtype"]."'";
+                      AND `plugin_dataflows_flowgroups_id` = '".$_POST["flowgroup"]."'";
 
       foreach ($DB->request($query) AS $data) {
          $used[$data['id']] = $data['id'];
@@ -55,7 +55,7 @@ if (isset($_POST["dataflowtype"])) {
                         'width'     => '50%',
                         'entity'    => $_POST['entity'],
                         'rand'      => $_POST['rand'],
-                        'condition' => "glpi_plugin_dataflows_dataflows.plugin_dataflows_dataflowtypes_id='".$_POST["dataflowtype"]."'"));
+                        'condition' => "glpi_plugin_dataflows_dataflows.plugin_dataflows_flowgroups_id='".$_POST["flowgroup"]."'"));
 
 }
 

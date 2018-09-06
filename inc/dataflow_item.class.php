@@ -489,10 +489,10 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
       if (Session::isMultiEntitiesMode()) {
          echo "<th>".__('Entity')."</th>";
       }
-      echo "<th>".PluginDataflowsServerType::getTypeName(1)."</th>";
-      echo "<th>".PluginDataflowsDataflowCategory::getTypeName(1)."</th>";
-      echo "<th>".__('Supplier')."</th>";
-      echo "<th>".__('Editor', 'dataflows')."</th>";
+      echo "<th>".PluginDataflowsFlowgroup::getTypeName(1)."</th>";
+      echo "<th>".PluginDataflowsTransferProtocol::getTypeName(1)."</th>";
+      echo "<th>".PluginDataflowsState::getTypeName(1)."</th>";
+      echo "<th>".__('Dataflow Follow-up', 'dataflows')."</th>";
       echo "</tr>";
       $used = array();
 
@@ -529,14 +529,14 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
                echo "<td class='center'>".Dropdown::getDropdownName("glpi_entities", $data['entities_id']).
                     "</td>";
             }
-            echo "<td>".Dropdown::getDropdownName("glpi_plugin_dataflows_servertypes",$data["plugin_dataflows_servertypes_id"])."</td>";
-            echo "<td>".Dropdown::getDropdownName("glpi_plugin_dataflows_dataflowtypes",$data["plugin_dataflows_dataflowtypes_id"])."</td>";
-            echo "<td>".Dropdown::getDropdownName("glpi_manufacturers",$data["manufacturers_id"])."</td>";
+            echo "<td>".Dropdown::getDropdownName("glpi_plugin_dataflows_flowgroups",$data["plugin_dataflows_flowgroups_id"])."</td>";
+            echo "<td>".Dropdown::getDropdownName("glpi_plugin_dataflows_transferprotocols",$data["plugin_dataflows_transferprotocols_id"])."</td>";
+            echo "<td>".Dropdown::getDropdownName("glpi_plugin_dataflows_states",$data["plugin_dataflows_states_id"])."</td>";
             echo "<td>";
-            echo "<a href=\"".$CFG_GLPI["root_doc"]."/front/supplier.form.php?id=".$data["suppliers_id"]."\">";
-            echo Dropdown::getDropdownName("glpi_suppliers",$data["suppliers_id"]);
+            echo "<a href=\"".$CFG_GLPI["root_doc"]."/front/supplier.form.php?id=".$data["groups_id"]."\">";
+            echo Dropdown::getDropdownName("glpi_suppliers",$data["groups_id"]);
             if ($_SESSION["glpiis_ids_visible"] == 1 )
-               echo " (".$data["suppliers_id"].")";
+               echo " (".$data["groups_id"].")";
             echo "</a></td>";
             echo "</tr>";
             $i++;

@@ -693,7 +693,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
     * Make a select box for link dataflow
     *
     * Parameters which could be used in options array :
-    *    - name : string / name of the select (default is plugin_dataflows_dataflowtypes_id)
+    *    - name : string / name of the select (default is plugin_dataflows_flowgroups_id)
     *    - entity : integer or array / restrict to a defined entity or array of entities
     *                   (default -1 : no restriction)
     *    - used : array / Already used items ID: not to display in dropdown (default empty)
@@ -726,8 +726,8 @@ class PluginDataflowsDataflow extends CommonDBTM {
       }
 
       $query = "SELECT *
-                FROM `glpi_plugin_dataflows_dataflowtypes`
-                WHERE `id` IN (SELECT DISTINCT `plugin_dataflows_dataflowtypes_id`
+                FROM `glpi_plugin_dataflows_flowgroups`
+                WHERE `id` IN (SELECT DISTINCT `plugin_dataflows_flowgroups_id`
                                FROM `glpi_plugin_dataflows_dataflows`
                              $where)
                 ORDER BY `name`";
@@ -739,26 +739,26 @@ class PluginDataflowsDataflow extends CommonDBTM {
          $values[$data['id']] = $data['name'];
       }
       $rand = mt_rand();
-      $out  = Dropdown::showFromArray('_dataflowtype', $values, array('width'   => '30%',
+      $out  = Dropdown::showFromArray('_flowgroup', $values, array('width'   => '30%',
                                                                      'rand'    => $rand,
                                                                      'display' => false));
-      $field_id = Html::cleanId("dropdown__dataflowtype$rand");
+      $field_id = Html::cleanId("dropdown__flowgroup$rand");
 
-      $params   = array('dataflowtype' => '__VALUE__',
+      $params   = array('flowgroup' => '__VALUE__',
                         'entity' => $p['entity'],
                         'rand'   => $rand,
                         'myname' => $p['name'],
                         'used'   => $p['used']);
 
       $out .= Ajax::updateItemOnSelectEvent($field_id,"show_".$p['name'].$rand,
-                                            $CFG_GLPI["root_doc"]."/plugins/dataflows/ajax/dropdownTypeDataflows.php",
+                                            $CFG_GLPI["root_doc"]."/plugins/dataflows/ajax/dropdownFlowgroupDataflows.php",
                                             $params, false);
       $out .= "<span id='show_".$p['name']."$rand'>";
       $out .= "</span>\n";
 
-      $params['dataflowtype'] = 0;
+      $params['flowgroup'] = 0;
       $out .= Ajax::updateItem("show_".$p['name'].$rand,
-                               $CFG_GLPI["root_doc"]. "/plugins/dataflows/ajax/dropdownTypeDataflows.php",
+                               $CFG_GLPI["root_doc"]. "/plugins/dataflows/ajax/dropdownFlowgroupDataflows.php",
                                $params, false);
       if ($p['display']) {
          echo $out;
