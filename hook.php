@@ -51,7 +51,7 @@ function plugin_dataflows_install() {
 			$update=true;
 			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.2.1.sql");
 		}
-		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_other_users_id"))) {
+		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_otherusers_id"))) {
 			$update=true;
 			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.2.2.sql");
 		}
