@@ -35,23 +35,23 @@ function plugin_dataflows_install() {
 		$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/empty-1.2.2.sql");
 	}
 	else {
-		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && !FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_indicators_id")) {
+		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && !$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_indicators_id")) {
 			$update=true;
 			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.0.1.sql");
 		}
-		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_fromswcomponents_id") || !FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_toswcomponents_id"))) {
+		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_fromswcomponents_id") || !$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_toswcomponents_id"))) {
 			$update=true;
 			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.1.0.sql");
 		}
-		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_triggertypes_id"))) {
+		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_triggertypes_id"))) {
 			$update=true;
 			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.2.0.sql");
 		}
-		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_errorhandlings_id"))) {
+		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_errorhandlings_id"))) {
 			$update=true;
 			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.2.1.sql");
 		}
-		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_other_users_id"))) {
+		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_other_users_id"))) {
 			$update=true;
 			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.2.2.sql");
 		}
@@ -64,7 +64,7 @@ function plugin_dataflows_install() {
 
       foreach ($notepad_tables as $t) {
          // Migrate data
-         if (FieldExists($t, 'notepad')) {
+         if ($DB->FieldExists($t, 'notepad')) {
             $query = "SELECT id, notepad
                       FROM `$t`
                       WHERE notepad IS NOT NULL
