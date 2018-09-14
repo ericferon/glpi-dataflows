@@ -439,7 +439,7 @@ function plugin_dataflows_getAddSearchOptions($itemtype) {
 function plugin_dataflows_giveItem($type,$ID,$data,$num) {
    global $DB;
 
-/*   $searchopt=&Search::getOptions($type);
+   $searchopt=&Search::getOptions($type);
    $table=$searchopt[$ID]["table"];
    $field=$searchopt[$ID]["field"];
 
@@ -515,7 +515,7 @@ function plugin_dataflows_giveItem($type,$ID,$data,$num) {
          break;
 
    }
-*/   return "";
+   return "";
 }
 
 ////// SPECIFIC MODIF MASSIVE FUNCTIONS ///////

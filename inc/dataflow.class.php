@@ -154,39 +154,95 @@ class PluginDataflowsDataflow extends CommonDBTM {
       $tab[13]['condition']      = '`is_assign`';
       $tab[13]['datatype']       = 'dropdown';
 
-/*      $tab[4]['table']           = 'glpi_locations';
-      $tab[4]['field']           = 'completename';
-      $tab[4]['name']            = __('Location');
-      $tab[4]['datatype']        = 'dropdown';
-*/
-      $tab[15]['table']           = 'glpi_suppliers';
-      $tab[15]['field']           = 'name';
-      $tab[15]['name']            = __('Supplier');
-      $tab[15]['datatype']        = 'dropdown';
+      $tab[15]['table']			 = $this->getTable();
+      $tab[15]['field']			 = 'extractmethod';
+      $tab[15]['name']			 = __('Extract Method (Bapi, Stored Proc, ...)', 'dataflows');
+      $tab[15]['datatype']		 = 'text';
 
-      $tab[16]['table']           = 'glpi_manufacturers';
-      $tab[16]['field']           = 'name';
-      $tab[16]['name']            = __('Editor', 'dataflows');
-      $tab[16]['datatype']        = 'dropdown';
+      $tab[16]['table']			 = $this->getTable();
+      $tab[16]['field']			 = 'loadmethod';
+      $tab[16]['name']			 = __('Load Method (Bapi, Stored Proc, ...)', 'dataflows');
+      $tab[16]['datatype']		 = 'text';
 
-/*      $tab[7]['table']           = 'glpi_plugin_dataflows_dataflows_items';
-      $tab[7]['field']           = 'items_id';
-      $tab[7]['nosearch']        = true;
-      $tab[7]['massiveaction']   = false;
-      $tab[7]['name']            = _n('Associated item' , 'Associated items', 2);
-      $tab[7]['forcegroupby']    = true;
-      $tab[7]['joinparams']      = array('jointype' => 'child');
-*/
-      $tab[18]['table']          = $this->getTable();
-      $tab[18]['field']          = 'statedate';
+      $tab[17]['table']			 = 'glpi_plugin_dataflows_indicators';
+      $tab[17]['field']			 = 'name';
+      $tab[17]['name']			 = __('Indicator', 'dataflows');
+      $tab[17]['datatype']		 = 'dropdown';
+      
+      $tab[18]['table']			 = $this->getTable();
+      $tab[18]['field']			 = 'date_mod';
       $tab[18]['massiveaction']  = false;
-      $tab[18]['name']           = __('Status StartDate', 'dataflows');
-      $tab[18]['datatype']       = 'datetime';
+      $tab[18]['name']			 = __('Last update');
+      $tab[18]['datatype']		 = 'datetime';
+            
+      $tab[19]['table']          = $this->getTable();
+      $tab[19]['field']          = 'statedate';
+      $tab[19]['massiveaction']  = false;
+      $tab[19]['name']           = __('Status StartDate', 'dataflows');
+      $tab[19]['datatype']       = 'datetime';
 
-      $tab[30]['table']          = $this->getTable();
-      $tab[30]['field']          = 'id';
-      $tab[30]['name']           = __('ID');
-      $tab[30]['datatype']       = 'number';
+      $tab[20]['table']			 = 'glpi_plugin_dataflows_transferfreqs';
+      $tab[20]['field']			 = 'name';
+      $tab[20]['name']			 = __('Transfer frequency (def : per day)', 'dataflows');
+      $tab[20]['datatype']		 = 'dropdown';
+           
+      $tab[21]['table']			 = 'glpi_plugin_dataflows_transfertimetables';
+      $tab[21]['field']			 = 'name';
+      $tab[21]['name']			 = __('Transfer Timetable', 'dataflows');
+      $tab[21]['datatype']		 = 'dropdown';
+           
+      $tab[22]['table']			 = 'glpi_plugin_dataflows_srcpreprocs';
+      $tab[22]['field']			 = 'name';
+      $tab[22]['name']			 = __('Transfer Preprocessing', 'dataflows');
+      $tab[22]['datatype']		 = 'dropdown';
+           
+      $tab[23]['table']			 = 'glpi_plugin_dataflows_destpostprocs';
+      $tab[23]['field']			 = 'name';
+      $tab[23]['name']			 = __('Transfer Postprocessing', 'dataflows');
+      $tab[23]['datatype']		 = 'dropdown';
+            
+      $tab[26]['table']			 = $this->getTable();
+      $tab[26]['field']			 = 'srcformat';
+      $tab[26]['name']			 = __('Source format (Idoc, table, file pattern, ...)', 'dataflows');
+      $tab[26]['datatype']		 = 'text';
+      
+      $tab[27]['table']			 = $this->getTable();
+      $tab[27]['field']			 = 'destformat';
+      $tab[27]['name']			 = __('Destination format (Idoc, table, file pattern, ...)', 'dataflows');
+      $tab[27]['datatype']		 = 'text';
+      
+      $tab[28]['table']			 = 'glpi_plugin_dataflows_servicelevels';
+      $tab[28]['field']			 = 'name';
+      $tab[28]['name']			 = __('Service Level', 'dataflows');
+      $tab[28]['datatype']		 = 'dropdown';
+
+      $tab[29]['table']			 = 'glpi_plugin_dataflows_otherusers';
+      $tab[29]['field']			 = 'name';
+      $tab[29]['name']			 = __('Other expert', 'dataflows');
+      $tab[29]['datatype']		 = 'user';
+      
+      $tab[30]['table']			 = 'glpi_plugin_dataflows_othergroups';
+      $tab[30]['field']			 = 'name';
+      $tab[30]['name']			 = __('Other group', 'dataflows');
+      $tab[30]['datatype']		 = 'dropdown';
+
+      $tab[31]['table']			 = 'glpi_plugin_dataflows_supportgroups';
+      $tab[31]['field']			 = 'name';
+      $tab[31]['name']			 = __('Dataflow Support', 'dataflows');
+      $tab[31]['datatype']		 = 'dropdown';
+
+      $tab[60]['table']          = $this->getTable();
+      $tab[60]['field']          = 'id';
+      $tab[60]['name']           = __('ID');
+      $tab[60]['datatype']       = 'number';
+
+      $tab[70]['table']           = 'glpi_plugin_dataflows_dataflows_items';
+      $tab[70]['field']           = 'items_id';
+      $tab[70]['nosearch']        = true;
+      $tab[70]['massiveaction']   = false;
+      $tab[70]['name']            = _n('Associated item' , 'Associated items', 2);
+      $tab[70]['forcegroupby']    = true;
+      $tab[70]['joinparams']      = array('jointype' => 'child');
 
       $tab[80]['table']          = 'glpi_entities';
       $tab[80]['field']          = 'completename';
@@ -284,36 +340,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
 
       $tab[] = [
-         'id'       => '15',
-         'table'    => 'glpi_suppliers',
-         'field'    => 'name',
-         'name'     => __('Supplier'),
-         'datatype' => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'       => '16',
-         'table'    => 'glpi_manufacturers',
-         'field'    => 'name',
-         'name'     => __('Editor', 'dataflows'),
-         'datatype' => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'            => '17',
-         'table'         => 'glpi_plugin_dataflows_dataflows_items`',
-         'field'         => 'items_id',
-         'nosearch'      => true,
-         'massiveaction' => false,
-         'name'          => _n('Associated item', 'Associated items', 2),
-         'forcegroupby'  => true,
-         'joinparams'    => [
-            'jointype' => 'child'
-         ]
-      ];
-
-      $tab[] = [
-         'id'        => '21',
+         'id'        => '12',
          'table'     => 'glpi_users',
          'field'     => 'name',
          'linkfield' => 'users_id_tech',
@@ -323,7 +350,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
 
       $tab[] = [
-         'id'        => '22',
+         'id'        => '13',
          'table'     => 'glpi_groups',
          'field'     => 'name',
          'linkfield' => 'groups_id_tech',
@@ -333,7 +360,40 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
 
       $tab[] = [
-         'id'            => '24',
+         'id'        => '15',
+         'table'     => $this->getTable(),
+         'field'     => 'extractmethod',
+         'name'      => __('Extract Method (Bapi, Stored Proc, ...)', 'dataflows'),
+         'datatype'  => 'text'
+      ];
+
+      $tab[] = [
+         'id'        => '16',
+         'table'     => $this->getTable(),
+         'field'     => 'loadmethod',
+         'name'      => __('Load Method (Bapi, Stored Proc, ...)', 'dataflows'),
+         'datatype'  => 'text'
+      ];
+
+      $tab[] = [
+         'id'        => '17',
+         'table'     => 'glpi_plugin_dataflows_indicators',
+         'field'     => 'name',
+         'name'      => __('Indicator', 'dataflows'),
+         'datatype'  => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'            => '18',
+         'table'         => $this->getTable(),
+         'field'         => 'date_mod',
+         'massiveaction' => false,
+         'name'          => __('Last update'),
+         'datatype'      => 'datetime'
+      ];
+
+      $tab[] = [
+         'id'            => '19',
          'table'         => $this->getTable(),
          'field'         => 'statedate',
          'massiveaction' => false,
@@ -342,11 +402,110 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
 
       $tab[] = [
-         'id'       => '30',
+         'id'        => '20',
+         'table'     => 'glpi_plugin_dataflows_transferfreqs',
+         'field'     => 'name',
+         'name'      => __('Transfer frequency (def : per day)', 'dataflows'),
+         'datatype'  => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'        => '21',
+         'table'     => 'glpi_plugin_dataflows_transfertimetables',
+         'field'     => 'name',
+         'name'      => __('Transfer Timetable', 'dataflows'),
+         'datatype'  => 'dropdown'
+      ];
+           
+      $tab[] = [
+         'id'        => '22',
+         'table'     => 'glpi_plugin_dataflows_srcpreprocs',
+         'field'     => 'name',
+         'name'      => __('Transfer Preprocessing', 'dataflows'),
+         'datatype'  => 'dropdown'
+      ];
+           
+      $tab[] = [
+         'id'        => '23',
+         'table'     => 'glpi_plugin_dataflows_destpostprocs',
+         'field'     => 'name',
+         'name'      => __('Transfer Postprocessing', 'dataflows'),
+         'datatype'  => 'dropdown'
+      ];
+            
+      $tab[] = [
+         'id'        => '26',
+         'table'     => $this->getTable(),
+         'field'     => 'srcformat',
+         'name'      => __('Source format (Idoc, table, file pattern, ...)', 'dataflows'),
+         'datatype'  => 'text'
+      ];
+      
+      $tab[] = [
+         'id'        => '27',
+         'table'     => $this->getTable(),
+         'field'     => 'destformat',
+         'name'      => __('Destination format (Idoc, table, file pattern, ...)', 'dataflows'),
+         'datatype'  => 'text'
+      ];
+     
+      $tab[] = [
+         'id'        => '28',
+         'table'     => 'glpi_plugin_dataflows_servicelevels',
+         'field'     => 'name',
+         'name'      => __('Service Level', 'dataflows'),
+         'datatype'  => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'        => '29',
+         'table'     => 'glpi_users',
+         'field'     => 'name',
+         'linkfield' => 'plugin_dataflows_otherusers_id',
+         'name'      => __('Other Expert', 'dataflows'),
+         'datatype'  => 'dropdown',
+         'right'     => 'interface'
+      ];
+      
+      $tab[] = [
+         'id'        => '30',
+         'table'     => 'glpi_groups',
+         'field'     => 'name',
+         'linkfield' => 'plugin_dataflows_othergroups_id',
+         'name'      => __('Other group', 'dataflows'),
+         'condition' => '`is_assign`',
+         'datatype'  => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'        => '31',
+         'table'     => 'glpi_groups',
+         'field'     => 'name',
+         'linkfield' => 'plugin_dataflows_supportgroups_id',
+         'name'      => __('Dataflow Support', 'dataflows'),
+         'condition' => '`is_assign`',
+         'datatype'  => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'       => '60',
          'table'    => $this->getTable(),
          'field'    => 'id',
          'name'     => __('ID'),
          'datatype' => 'number'
+      ];
+
+      $tab[] = [
+         'id'            => '70',
+         'table'         => 'glpi_plugin_dataflows_dataflows_items`',
+         'field'         => 'items_id',
+         'nosearch'      => true,
+         'massiveaction' => false,
+         'name'          => _n('Associated item', 'Associated items', 2),
+         'forcegroupby'  => true,
+         'joinparams'    => [
+            'jointype' => 'child'
+         ]
       ];
 
       $tab[] = [
