@@ -26,13 +26,7 @@
 
 include ('../../../inc/includes.php');
 
-$plugin = new Plugin();
-if ($plugin->isActivated("environment")) {
-   Html::header(PluginDataflowsDataflow::getTypeName(2)
-                  ,'',"assets","pluginenvironmentdisplay","dataflows");
-} else {
-   Html::header(PluginDataflowsDataflow::getTypeName(2), '', "assets","plugindataflowsmenu");
-}
+Html::header(PluginDataflowsDataflow::getTypeName(2), '', "assets","plugindataflowsmenu");
 $dataflow = new PluginDataflowsDataflow();
 
 if ($dataflow->canView() || Session::haveRight("config", UPDATE)) {

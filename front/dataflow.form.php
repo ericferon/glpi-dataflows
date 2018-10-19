@@ -96,14 +96,8 @@ if (isset($_POST["add"])) {
 
    $dataflow->checkGlobal(READ);
 
-   $plugin = new Plugin();
-   if ($plugin->isActivated("environment")) {
-      Html::header(PluginDataflowsDataflow::getTypeName(2),
-                     '',"assets","pluginenvironmentdisplay","dataflows");
-   } else {
-      Html::header(PluginDataflowsDataflow::getTypeName(2), '', "assets",
+   Html::header(PluginDataflowsDataflow::getTypeName(2), '', "assets",
                    "plugindataflowsmenu");
-   }
    $dataflow->display($_GET);
 
    Html::footer();
