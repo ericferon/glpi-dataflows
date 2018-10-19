@@ -577,7 +577,7 @@ function plugin_dataflows_MassiveActionsProcess($data) {
 */
 function plugin_datainjection_populate_dataflows() {
    global $INJECTABLE_TYPES;
-   $INJECTABLE_TYPES['PluginDataflowsDataflowInjection'] = 'dataflows';
+   $INJECTABLE_TYPES['PluginDataflowsDataflowInjection'] = 'datainjection';
 }
 
 /*
