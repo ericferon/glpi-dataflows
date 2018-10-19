@@ -69,9 +69,6 @@ class PluginDataflowsDataflowInjection extends PluginDataflowsDataflow
 
       $tab = Search::getOptions(get_parent_class($this));
 
-      //Specific to location
-      $tab[12]['linkfield'] = 'locations_id';
-
       //$blacklist = PluginDatainjectionCommonInjectionLib::getBlacklistedOptions();
       //Remove some options because some fields cannot be imported
       $notimportable            = [60, 70, 80];
