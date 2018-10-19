@@ -236,6 +236,16 @@ class PluginDataflowsDataflow extends CommonDBTM {
       $tab[60]['name']           = __('ID');
       $tab[60]['datatype']       = 'number';
 
+      $tab[61]['table']			 = $this->getTable();
+      $tab[61]['field']			 = 'is_helpdesk_visible';
+      $tab[61]['name']			 = __('Associable to a ticket');
+      $tab[61]['datatype']		 = 'bool';
+
+      $tab[62]['table']			 = $this->getTable();
+      $tab[62]['field']			 = 'is_recursive';
+      $tab[62]['name']			 = __('Child entities');
+      $tab[62]['datatype']		 = 'bool';
+
       $tab[70]['table']           = 'glpi_plugin_dataflows_dataflows_items';
       $tab[70]['field']           = 'items_id';
       $tab[70]['nosearch']        = true;
@@ -493,6 +503,22 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'field'    => 'id',
          'name'     => __('ID'),
          'datatype' => 'number'
+      ];
+
+      $tab[] = [
+         'id'       => '61',
+         'table'    => $this->getTable(),
+         'field'    => 'is_helpdesk_visible',
+         'name'     => __('Associable to a ticket'),
+         'datatype' => 'bool'
+      ];
+
+      $tab[] = [
+         'id'       => '62',
+         'table'    => $this->getTable(),
+         'field'    => 'is_recursive',
+         'name'     => __('Child entities'),
+         'datatype' => 'bool'
       ];
 
       $tab[] = [

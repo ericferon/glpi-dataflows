@@ -74,13 +74,13 @@ class PluginDataflowsDataflowInjection extends PluginDataflowsDataflow
 
       //$blacklist = PluginDatainjectionCommonInjectionLib::getBlacklistedOptions();
       //Remove some options because some fields cannot be imported
-      $notimportable            = [7, 30, 80];
+      $notimportable            = [60, 70, 80];
       $options['ignore_fields'] = $notimportable;
-      $options['displaytype']   = ["dropdown"       => [2, 3, 4, 6, 10, 12],
-                                   "user"           => [11],
-                                   "multiline_text" => [9],
-                                   "date"           => [14],
-                                   "bool"           => [8, 13]];
+      $options['displaytype']   = ["dropdown"       => [3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 20, 21, 22, 23, 28, 30, 31],
+                                   "user"           => [12],
+                                   "multiline_text" => [2, 15, 16, 26, 27],
+                                   "date"           => [18, 19],
+                                   "bool"           => [61, 62]];
 
       return PluginDatainjectionCommonInjectionLib::addToSearchOptions($tab, $options, $this);
 
