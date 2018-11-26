@@ -1,0 +1,36 @@
+language: php
+php:
+- '7.2'
+sudo: false
+branches:
+  only:
+  - master
+#addons:
+#  mariadb: '10.2'
+env:
+# in sequence :
+# get the directory name after the sign "-"
+# "git for-each-ref --sort=-taggerdate --count=1 --format '%(refname:short)' refs/tags" displays the last tag's shortname
+# "git for-each-ref --sort=-taggerdate --count=1 --format '%(contents:subject)' refs/tags" displays the last tag's first line
+# "git for-each-ref --sort=-taggerdate --count=1 --format '%(contents:body)' refs/tags" displays the last tag's 3d line and following ones
+>
+  - GLPI_PLUGIN_NAME=`echo $TRAVIS_BUILD_DIR | sed -e 's/^.*-//'`
+    TRAVIS_TAG=`git for-each-ref --sort=-taggerdate --count=1 --format '%(refname:short)' refs/tags`
+    RELEASE_NAME=`git for-each-ref --sort=-taggerdate --count=1 --format '%(contents:subject)' refs/tags`
+    RELEASE_BODY=`git for-each-ref --sort=-taggerdate --count=1 --format '%(contents:body)' refs/tags`
+install: true
+script: true
+after_success:
+- tar --transform "s%^%$GLPI_PLUGIN_NAME/%" --show-transformed -zcvf $GLPI_PLUGIN_NAME-$TRAVIS_TAG.tar.gz ajax front inc locales sql *.png *.xml *.php  LICENSE README.md
+deploy:
+  provider: releases
+  api_key:
+    secure: KKz2JIKcsrcvEWkG251kPtBgDX2sjI9/KMDg/d8Tb74tcubvkAsnRwX9lngiHyuWEIIC4/p0xDiMfUY45FUBe7sACsNBKqkWddsPv6GMfxY1UXD1Akq/RJiIv/GoLnjn4wtCgxgdjPWvNAb+45ZTmRegzblS7AnLNZ9kBx2ljMRyT/7im/d9dKPl4hoEzn3HjRtdvnpkmrn4fDZ6hyWuDV3UZb8VwGTNLT28psJUPe35mRgrKvtX5s0i/kxvs27bCIFIkgNkkuDnxAKyb0JU3dxkSsXcnW4MkpMgAhdjcHSDz7EqZTrrDBFKy7q0JqRg0K89j1K/u474jL2llqpn89HIul0qgQYo81ZdafsMyc6gJzjtZzzzuRlJg9T4u55clnidgs0BAwVGlQoRHwxEMMRZvNfHuxUIfnbv4OSiFaE1BYYGMa+RfxUtyZ2GtHgcY62bptpp/tfwiI/QLJRVBAITNlQMpbpPg6NzWyYvi0mT6xvlkwitn9eR9RS1ZSNjIfH2rUPu651bD8x116O7TwE4/gRW1gAIoichwsfu1rFKi1nTVNdEXusjqQBXLXSiHTSBmUpjsNryvkC87Bld8IlPhTVJX07i2SqS65dF/5djgfS6iyPGQrxvLixXZ1i3m4w5A+NQkBpPiK03BYCXf43ffhZy14irAkvc39VQnnQ=
+  skip_cleanup: true
+  file: $GLPI_PLUGIN_NAME-$TRAVIS_TAG.tar.gz
+  name: $RELEASE_NAME
+  body: $RELEASE_BODY
+  prerelease: false
+  on:
+    repo: ericferon/glpi-$GLPI_PLUGIN_NAME
+    tags: true
