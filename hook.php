@@ -32,7 +32,7 @@ function plugin_dataflows_install() {
    $update=false;
    if (!$DB->TableExists("glpi_plugin_dataflows_dataflows")) {
 
-		$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/empty-1.2.2.sql");
+		$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/empty-1.2.3.sql");
 	}
 	else {
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && !$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_indicators_id")) {
@@ -53,9 +53,12 @@ function plugin_dataflows_install() {
 		}
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_otherusers_id"))) {
 			$update=true;
-			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.2.2.sql");
+			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.2.3.sql");
 		}
 	}
+    if (class_exists('PluginAccountsAccount')) {
+			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/addon-accounts-1.2.3.sql");
+    }
 
    
    if ($DB->TableExists("glpi_plugin_dataflows_profiles")) {
