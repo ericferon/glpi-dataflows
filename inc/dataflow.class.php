@@ -72,7 +72,8 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
    static function countForItem(CommonDBTM $item) {
 
-      return countElementsInTable('glpi_plugin_dataflows_dataflows',
+      $dbu = new DbUtils();
+      return $dbu->countElementsInTable('glpi_plugin_dataflows_dataflows',
                                   "`suppliers_id` = '".$item->getID()."'");
    }
 

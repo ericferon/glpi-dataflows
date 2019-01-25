@@ -130,7 +130,8 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
       if (empty($types)) {
          return 0;
       }
-      return countElementsInTable('glpi_plugin_dataflows_dataflows_items',
+      $dbu = new DbUtils();
+      return $dbu->countElementsInTable('glpi_plugin_dataflows_dataflows_items',
                                   "`itemtype` IN ('$types')
                                    AND `plugin_dataflows_dataflows_id` = '".$item->getID()."'");
    }
@@ -138,7 +139,8 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
 
    static function countForItem(CommonDBTM $item) {
 
-      return countElementsInTable('glpi_plugin_dataflows_dataflows_items',
+      $dbu = new DbUtils();
+      return $dbu->countElementsInTable('glpi_plugin_dataflows_dataflows_items',
                                   "`itemtype`='".$item->getType()."'
                                    AND `items_id` = '".$item->getID()."'");
    }
