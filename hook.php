@@ -148,11 +148,11 @@ function plugin_dataflows_uninstall() {
 					"glpi_plugin_dataflows_toswcomponents");
 				
 	foreach($views as $view)
-		$DB->query("DROP VIEW IF EXISTS `$table`;");
+		$DB->query("DROP VIEW IF EXISTS `$view`;");
 
 	$tables_glpi = array("glpi_displaypreferences",
                "glpi_documents_items",
-               "glpi_bookmarks",
+               "glpi_savedsearches",
                "glpi_logs",
                "glpi_items_tickets",
                "glpi_notepads",
