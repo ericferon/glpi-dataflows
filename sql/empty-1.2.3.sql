@@ -86,7 +86,7 @@ CREATE  TABLE `glpi_plugin_dataflows_dataflows` (
   KEY is_helpdesk_visible (is_helpdesk_visible),
   KEY `is_deleted` (`is_deleted`),
   UNIQUE INDEX `flowname_UNIQUE` (`name` ASC, `plugin_dataflows_transferprotocols_id` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------------------------------------------
 -- Table `glpi_plugin_dataflows_dataflows_items`
@@ -101,7 +101,8 @@ CREATE TABLE `glpi_plugin_dataflows_dataflows_items` (
 	UNIQUE KEY `unicity` (`plugin_dataflows_dataflows_id`,`items_id`,`itemtype`),
   KEY `FK_device` (`items_id`,`itemtype`),
   KEY `item` (`itemtype`,`items_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+)
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `glpi_plugin_dataflows_profiles`
@@ -114,7 +115,8 @@ CREATE TABLE `glpi_plugin_dataflows_profiles` (
 	`open_ticket` char(1) collate utf8_unicode_ci default NULL,
 	PRIMARY KEY  (`id`),
 	KEY `profiles_id` (`profiles_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+)
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `glpi_plugin_dataflows_types`
@@ -126,7 +128,7 @@ CREATE  TABLE `glpi_plugin_dataflows_types` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `glpi_plugin_dataflows_types_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `glpi_plugin_dataflows_types` ( `id` , `name` , `comment` )  VALUES (1,'Low complexity','');
 INSERT INTO `glpi_plugin_dataflows_types` ( `id` , `name` , `comment` )  VALUES (2,'Medium complexity','');
@@ -142,7 +144,7 @@ CREATE  TABLE `glpi_plugin_dataflows_indicators` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `glpi_plugin_dataflows_indicators_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `glpi_plugin_dataflows_indicators` ( `id` , `name` , `comment` )  VALUES (1,'No documentation','Undocumented');
 INSERT INTO `glpi_plugin_dataflows_indicators` ( `id` , `name` , `comment` )  VALUES (2,'Partial documentation','Partially documented');
@@ -157,7 +159,7 @@ CREATE  TABLE `glpi_plugin_dataflows_states` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `glpi_plugin_dataflows_states_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `glpi_plugin_dataflows_states` ( `id` , `name` , `comment` )  VALUES (1,'ACTIVE','Active');
 INSERT INTO `glpi_plugin_dataflows_states` ( `id` , `name` , `comment` )  VALUES (2,'STOPPED','Stopped');
@@ -173,7 +175,7 @@ CREATE  TABLE `glpi_plugin_dataflows_flowgroups` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `glpi_plugin_dataflows_flowgroup_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
@@ -186,7 +188,7 @@ CREATE  TABLE `glpi_plugin_dataflows_servicelevels` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `glpi_plugin_dataflows_servicelevel_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
@@ -199,7 +201,7 @@ CREATE  TABLE IF NOT EXISTS `glpi_plugin_dataflows_transferprotocols` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `glpi_plugin_dataflows_transferprotocol_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `glpi_plugin_dataflows_sourceconnectors`
@@ -211,7 +213,7 @@ CREATE  TABLE IF NOT EXISTS `glpi_plugin_dataflows_sourceconnectors` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `glpi_plugin_dataflows_sourceconnector_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `glpi_plugin_dataflows_destinationconnectors`
@@ -279,7 +281,7 @@ CREATE  TABLE IF NOT EXISTS `glpi_plugin_dataflows_triggertypes` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `plugin_dataflows_triggertype_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 insert glpi_plugin_dataflows_triggertypes (name,comment) values 
 ('FILE','Flow triggered by file presence'),
 ('EVENTJMS','Flow triggered by JMS event message');
@@ -294,7 +296,7 @@ CREATE  TABLE IF NOT EXISTS `glpi_plugin_dataflows_transferfreqs` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `plugin_dataflows_transferfreq_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `plugin_dataflows_transfertimetables`
@@ -306,7 +308,7 @@ CREATE  TABLE IF NOT EXISTS `glpi_plugin_dataflows_transfertimetables` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `plugin_dataflows_transfertimetable_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `plugin_dataflows_holidayactions`
@@ -318,7 +320,7 @@ CREATE  TABLE IF NOT EXISTS `glpi_plugin_dataflows_holidayactions` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `plugin_dataflows_holidayaction_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `plugin_dataflows_srcuris`
@@ -330,7 +332,7 @@ CREATE  TABLE IF NOT EXISTS `glpi_plugin_dataflows_srcuris` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `plugin_dataflows_srcuri_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `plugin_dataflows_srcpreprocs`
@@ -342,7 +344,7 @@ CREATE  TABLE IF NOT EXISTS `glpi_plugin_dataflows_srcpreprocs` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `plugin_dataflows_srcpreproc_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `plugin_dataflows_desturis`
@@ -354,7 +356,7 @@ CREATE  TABLE IF NOT EXISTS `glpi_plugin_dataflows_desturis` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `plugin_dataflows_desturi_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `plugin_dataflows_destpostprocs`
@@ -366,7 +368,7 @@ CREATE  TABLE IF NOT EXISTS `glpi_plugin_dataflows_destpostprocs` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `plugin_dataflows_destpostproc_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `plugin_dataflows_errorhandlings`
@@ -378,7 +380,7 @@ CREATE  TABLE IF NOT EXISTS `glpi_plugin_dataflows_errorhandlings` (
   `comment` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `plugin_dataflows_errorhandling_name` (`name` ASC) )
-ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginDataflowsDataflow','2','2','0');
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginDataflowsDataflow','6','3','0');
