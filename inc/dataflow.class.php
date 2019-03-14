@@ -87,6 +87,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
    function getSearchOptions() {
 
       $tab                       = array();
+      if (version_compare(GLPI_VERSION,'9.3','ge')) return $tab;
 
       $tab['common']             = self::getTypeName(2);
 
@@ -268,9 +269,10 @@ class PluginDataflowsDataflow extends CommonDBTM {
    }
 
    // search fields from GLPI 9.3 on
-/*   function rawSearchOptions() {
+   function rawSearchOptions() {
 
       $tab = [];
+      if (version_compare(GLPI_VERSION,'9.2','le')) return $tab;
 
       $tab[] = [
          'id'   => 'common',
@@ -298,7 +300,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'id'       => '3',
          'table'    => 'glpi_plugin_dataflows_transferprotocols',
          'field'    => 'name',
-         'name'     => PluginDataflowsFlowgroup::getTypeName(1),
+         'name'     => PluginDataflowsTransferProtocol::getTypeName(1),
          'datatype' => 'dropdown'
       ];
 
@@ -351,10 +353,10 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
 
       $tab[] = [
-         'id'        => '12',
+         'id'        => '11',
          'table'     => 'glpi_users',
          'field'     => 'name',
-         'linkfield' => 'users_id_tech',
+         'linkfield' => 'users_id',
          'name'      => __('Dataflow Expert', 'dataflows'),
          'datatype'  => 'dropdown',
          'right'     => 'interface'
@@ -364,7 +366,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'id'        => '13',
          'table'     => 'glpi_groups',
          'field'     => 'name',
-         'linkfield' => 'groups_id_tech',
+         'linkfield' => 'groups_id',
          'name'      => __('Dataflow Follow-up', 'dataflows'),
          'condition' => '`is_assign`',
          'datatype'  => 'dropdown'
@@ -523,8 +525,8 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
 
       $tab[] = [
-         'id'            => '70',
-         'table'         => 'glpi_plugin_dataflows_dataflows_items`',
+         'id'            => '71',
+         'table'         => 'glpi_plugin_dataflows_dataflows_items',
          'field'         => 'items_id',
          'nosearch'      => true,
          'massiveaction' => false,
@@ -552,7 +554,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       return $tab;
    }
-*/
+
    //define header form
    function defineTabs($options=array()) {
 
