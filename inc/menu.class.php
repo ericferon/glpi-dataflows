@@ -34,7 +34,7 @@ class PluginDataflowsMenu extends CommonGLPI {
    static function getMenuContent() {
       global $CFG_GLPI;
 
-      $menu                                           = array();
+      $menu                                           = [];
       $menu['title']                                  = self::getMenuName();
       $menu['page']                                   = "/plugins/dataflows/front/dataflow.php";
       $menu['links']['search']                        = PluginDataflowsDataflow::getSearchURL(false);

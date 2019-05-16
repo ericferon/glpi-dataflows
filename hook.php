@@ -63,7 +63,7 @@ function plugin_dataflows_install() {
    
    if ($DB->TableExists("glpi_plugin_dataflows_profiles")) {
    
-      $notepad_tables = array('glpi_plugin_dataflows_dataflows');
+      $notepad_tables = ['glpi_plugin_dataflows_dataflows'];
 
       foreach ($notepad_tables as $t) {
          // Migrate data
@@ -119,7 +119,7 @@ function plugin_dataflows_uninstall() {
    include_once (GLPI_ROOT."/plugins/dataflows/inc/profile.class.php");
    include_once (GLPI_ROOT."/plugins/dataflows/inc/menu.class.php");
    
-	$tables = array("glpi_plugin_dataflows_dataflows",
+	$tables = ["glpi_plugin_dataflows_dataflows",
 					"glpi_plugin_dataflows_dataflows_items",
 					"glpi_plugin_dataflows_profiles",
 					"glpi_plugin_dataflows_states",
@@ -138,37 +138,37 @@ function plugin_dataflows_uninstall() {
 					"glpi_plugin_dataflows_srcpreprocs",
 					"glpi_plugin_dataflows_desturis",
 					"glpi_plugin_dataflows_destpostprocs",
-					"glpi_plugin_dataflows_errorhandlings");
+					"glpi_plugin_dataflows_errorhandlings"];
 
    foreach($tables as $table)
       $DB->query("DROP TABLE IF EXISTS `$table`;");
 
-	$views = array("glpi_plugin_dataflows_sourceconnectors",
+	$views = ["glpi_plugin_dataflows_sourceconnectors",
 					"glpi_plugin_dataflows_fromswcomponents",
-					"glpi_plugin_dataflows_toswcomponents");
+					"glpi_plugin_dataflows_toswcomponents"];
 				
 	foreach($views as $view)
 		$DB->query("DROP VIEW IF EXISTS `$view`;");
 
-	$tables_glpi = array("glpi_displaypreferences",
+	$tables_glpi = ["glpi_displaypreferences",
                "glpi_documents_items",
                "glpi_savedsearches",
                "glpi_logs",
                "glpi_items_tickets",
                "glpi_notepads",
-               "glpi_dropdowntranslations");
+               "glpi_dropdowntranslations"];
 
    foreach($tables_glpi as $table_glpi)
       $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` LIKE 'PluginDataflows%' ;");
 
    if (class_exists('PluginDatainjectionModel')) {
-      PluginDatainjectionModel::clean(array('itemtype'=>'PluginDataflowsDataflow'));
+      PluginDatainjectionModel::clean(['itemtype'=>'PluginDataflowsDataflow']);
    }
    
    //Delete rights associated with the plugin
    $profileRight = new ProfileRight();
    foreach (PluginDataflowsProfile::getAllRights() as $right) {
-      $profileRight->deleteByCriteria(array('name' => $right['field']));
+      $profileRight->deleteByCriteria(['name' => $right['field']]);
    }
    PluginDataflowsMenu::removeRightsFromSession();
    PluginDataflowsProfile::removeRightsFromSession();
@@ -179,12 +179,12 @@ function plugin_dataflows_uninstall() {
 function plugin_dataflows_postinit() {
    global $PLUGIN_HOOKS;
 
-   $PLUGIN_HOOKS['item_purge']['dataflows'] = array();
+   $PLUGIN_HOOKS['item_purge']['dataflows'] = [];
 
    foreach (PluginDataflowsDataflow::getTypes(true) as $type) {
 
       $PLUGIN_HOOKS['item_purge']['dataflows'][$type]
-         = array('PluginDataflowsDataflow_Item','cleanForItem');
+         = ['PluginDataflowsDataflow_Item','cleanForItem'];
 
       CommonGLPI::registerStandardTab($type, 'PluginDataflowsDataflow_Item');
    }
@@ -207,10 +207,10 @@ function plugin_dataflows_AssignToTicketDropdown($data) {
       $rand = mt_rand();
       $field_id = Html::cleanId("dropdown_".$data['myname'].$rand);
 
-      $p = array('itemtype'            => $data["itemtype"],
+      $p = ['itemtype'            => $data["itemtype"],
                  'entity_restrict'     => $data['entity_restrict'],
                  'table'               => $table,
-                 'myname'              => $data["myname"]);
+                 'myname'              => $data["myname"]];
 
       if(isset($data["used"]) && !empty($data["used"])){
          if(isset($data["used"][$data["itemtype"]])){
@@ -222,8 +222,8 @@ function plugin_dataflows_AssignToTicketDropdown($data) {
                                  $CFG_GLPI['root_doc']."/ajax/getDropdownFindNum.php",
                                  $p);
       // Auto update summary of active or just solved tickets
-      $params = array('items_id' => '__VALUE__',
-                      'itemtype' => $data['itemtype']);
+      $params = ['items_id' => '__VALUE__',
+                      'itemtype' => $data['itemtype']];
 
       Ajax::updateItemOnSelectEvent($field_id,"item_ticket_selection_information",
                                     $CFG_GLPI["root_doc"]."/ajax/ticketiteminformation.php",
@@ -237,14 +237,14 @@ function plugin_dataflows_AssignToTicketDropdown($data) {
               . "    ON `plugin_dataflows_dataflows_id` = `glpi_plugin_dataflows_dataflows`.`id`";
 
       $result = $DB->query($sql);
-      $elements = array();
+      $elements = [];
       while ($res = $DB->fetch_array($result)) {
          $itemtype = $res['itemtype'];
          $item = new $itemtype;
          $item->getFromDB($res['items_id']);
          $elements[$res['name']][$res['id']] = $item->getName();
       }
-      Dropdown::showFromArray('items_id', $elements, array());
+      Dropdown::showFromArray('items_id', $elements, []);
    }
 }
 
@@ -307,8 +307,8 @@ function plugin_dataflows_AssignToTicketGiveItem($data) {
       $paDataflow->getFromDB($paDataflow_item->fields['plugin_dataflows_dataflows_id']);
       $item = new $itemtype;
       $item->getFromDB($paDataflow_item->fields['items_id']);
-      return $item->getLink(array('comments' => true))." (".
-              $paDataflow->getLink(array('comments' => true)).")";
+      return $item->getLink(['comments' => true])." (".
+              $paDataflow->getLink(['comments' => true]).")";
    }
 }
 
@@ -318,31 +318,31 @@ function plugin_dataflows_getDataflowRelations() {
 
    $plugin = new Plugin();
    if ($plugin->isActivated("dataflows"))
-		return array("glpi_plugin_dataflows_fromswcomponents"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_fromswcomponents_id"),
-					 "glpi_plugin_dataflows_toswcomponents"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_toswcomponents_id"),
-					 "glpi_plugin_dataflows_dataflows"=>array("glpi_plugin_dataflows_dataflows_items"=>"plugin_dataflows_dataflows_id"),
-					 "glpi_plugin_dataflows_flowgroups"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_flowgroups_id"),
-					 "glpi_plugin_dataflows_types"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_types_id"),
-					 "glpi_plugin_dataflows_indicators"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_indicators_id"),
-					 "glpi_plugin_dataflows_states"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_states_id"),
-					 "glpi_plugin_dataflows_servicelevels"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_servicelevels_id"),
-					 "glpi_plugin_dataflows_transferprotocols"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_transferprotocols_id"),
-					 "glpi_plugin_dataflows_sourceconnectors"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_sourceconnectors_id"),
-					 "glpi_plugin_dataflows_triggertypes"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_triggertypes_id"),
-					 "glpi_plugin_dataflows_transferfreqs"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_transferfreqs_id"),
-					 "glpi_plugin_dataflows_transfertimetables"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_transfertimetables_id"),
-					 "glpi_plugin_dataflows_holidayactions"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_holidayactions_id"),
-					 "glpi_plugin_dataflows_srcuris"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_srcuris_id"),
-					 "glpi_plugin_dataflows_srcpreprocs"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_srcpreprocs_id"),
-					 "glpi_plugin_dataflows_desturis"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_desturis_id"),
-					 "glpi_plugin_dataflows_destpostprocs"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_destpostprocs_id"),
-					 "glpi_plugin_dataflows_errorhandlings"=>array("glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_errorhandlings_id"),
-					 "glpi_entities"=>array("glpi_plugin_dataflows_dataflows"=>"entities_id"),
-					 "glpi_groups"=>array("glpi_plugin_dataflows_dataflows"=>"dataowner"),
-					 "glpi_users"=>array("glpi_plugin_dataflows_dataflows"=>"technicalmaintainer")
-					 );
+		return ["glpi_plugin_dataflows_fromswcomponents"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_fromswcomponents_id"],
+					 "glpi_plugin_dataflows_toswcomponents"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_toswcomponents_id"],
+					 "glpi_plugin_dataflows_dataflows"=>["glpi_plugin_dataflows_dataflows_items"=>"plugin_dataflows_dataflows_id"],
+					 "glpi_plugin_dataflows_flowgroups"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_flowgroups_id"],
+					 "glpi_plugin_dataflows_types"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_types_id"],
+					 "glpi_plugin_dataflows_indicators"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_indicators_id"],
+					 "glpi_plugin_dataflows_states"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_states_id"],
+					 "glpi_plugin_dataflows_servicelevels"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_servicelevels_id"],
+					 "glpi_plugin_dataflows_transferprotocols"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_transferprotocols_id"],
+					 "glpi_plugin_dataflows_sourceconnectors"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_sourceconnectors_id"],
+					 "glpi_plugin_dataflows_triggertypes"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_triggertypes_id"],
+					 "glpi_plugin_dataflows_transferfreqs"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_transferfreqs_id"],
+					 "glpi_plugin_dataflows_transfertimetables"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_transfertimetables_id"],
+					 "glpi_plugin_dataflows_holidayactions"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_holidayactions_id"],
+					 "glpi_plugin_dataflows_srcuris"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_srcuris_id"],
+					 "glpi_plugin_dataflows_srcpreprocs"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_srcpreprocs_id"],
+					 "glpi_plugin_dataflows_desturis"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_desturis_id"],
+					 "glpi_plugin_dataflows_destpostprocs"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_destpostprocs_id"],
+					 "glpi_plugin_dataflows_errorhandlings"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_errorhandlings_id"],
+					 "glpi_entities"=>["glpi_plugin_dataflows_dataflows"=>"entities_id"],
+					 "glpi_groups"=>["glpi_plugin_dataflows_dataflows"=>"dataowner"],
+					 "glpi_users"=>["glpi_plugin_dataflows_dataflows"=>"technicalmaintainer"]
+					 ];
    else
-      return array();
+      return [];
 }
 
 // Define Dropdown tables to be manage in GLPI :
@@ -350,7 +350,7 @@ function plugin_dataflows_getDropdown() {
 
    $plugin = new Plugin();
    if ($plugin->isActivated("dataflows"))
-		return array('PluginDataflowsFlowgroup'=>PluginDataflowsFlowgroup::getTypeName(2),
+		return ['PluginDataflowsFlowgroup'=>PluginDataflowsFlowgroup::getTypeName(2),
                 'PluginDataflowsState'=>PluginDataflowsState::getTypeName(2),
                 'PluginDataflowsType'=>PluginDataflowsType::getTypeName(2),
                 'PluginDataflowsIndicator'=>PluginDataflowsIndicator::getTypeName(2),
@@ -367,16 +367,16 @@ function plugin_dataflows_getDropdown() {
                 'PluginDataflowsDestUri'=>PluginDataflowsDestUri::getTypeName(2),
                 'PluginDataflowsDestPostproc'=>PluginDataflowsDestPostproc::getTypeName(2),
                 'PluginDataflowsErrorHandling'=>PluginDataflowsErrorHandling::getTypeName(2)
-                );
+                ];
    else
-      return array();
+      return [];
 }
 
 ////// SEARCH FUNCTIONS ///////() {
 
 function plugin_dataflows_getAddSearchOptions($itemtype) {
 
-   $sopt=array();
+   $sopt=[];
 
    if (in_array($itemtype, PluginDataflowsDataflow::getTypes(true))) {
       if (Session::haveRight("plugin_dataflows", READ)) {
@@ -388,18 +388,18 @@ function plugin_dataflows_getAddSearchOptions($itemtype) {
          $sopt[2410]['datatype']      = 'itemlink';
          $sopt[2410]['massiveaction'] = false;
          $sopt[2410]['itemlink_type'] = 'PluginDataflowsDataflow';
-         $sopt[2410]['joinparams']    = array('beforejoin'
-                                                => array('table'      => 'glpi_plugin_dataflows_dataflows_items',
-                                                         'joinparams' => array('jointype' => 'itemtype_item')));
+         $sopt[2410]['joinparams']    = ['beforejoin'
+                                                => ['table'      => 'glpi_plugin_dataflows_dataflows_items',
+                                                         'joinparams' => ['jointype' => 'itemtype_item']]];
 
 
          $sopt[2411]['table']        = 'glpi_plugin_dataflows_flowgroups';
          $sopt[2411]['field']        = 'name';
          $sopt[2411]['name']         = PluginDataflowsDataflow::getTypeName(2)." - ".PluginDataflowsFlowgroup::getTypeName(1);
          $sopt[2411]['forcegroupby'] = true;
-         $sopt[2411]['joinparams']   = array('beforejoin' => array(
-                                                   array('table'      => 'glpi_plugin_dataflows_dataflows',
-                                                         'joinparams' => $sopt[2410]['joinparams'])));
+         $sopt[2411]['joinparams']   = ['beforejoin' => [
+                                                   ['table'      => 'glpi_plugin_dataflows_dataflows',
+                                                         'joinparams' => $sopt[2410]['joinparams']]]];
          $sopt[2411]['datatype']       = 'dropdown';
          $sopt[2411]['massiveaction']  = false;
 
@@ -407,9 +407,9 @@ function plugin_dataflows_getAddSearchOptions($itemtype) {
          $sopt[2412]['field']        = 'name';
          $sopt[2412]['name']         = PluginDataflowsDataflow::getTypeName(2)." - ".PluginDataflowsState::getTypeName(1);
          $sopt[2412]['forcegroupby'] = true;
-         $sopt[2412]['joinparams']   = array('beforejoin' => array(
-                                                   array('table'      => 'glpi_plugin_dataflows_dataflows',
-                                                         'joinparams' => $sopt[2410]['joinparams'])));
+         $sopt[2412]['joinparams']   = ['beforejoin' => [
+                                                   ['table'      => 'glpi_plugin_dataflows_dataflows',
+                                                         'joinparams' => $sopt[2410]['joinparams']]]];
          $sopt[2412]['datatype']       = 'dropdown';
          $sopt[2412]['massiveaction']  = false;
 
@@ -417,9 +417,9 @@ function plugin_dataflows_getAddSearchOptions($itemtype) {
          $sopt[2413]['field']        = 'name';
          $sopt[2413]['name']         = PluginDataflowsDataflow::getTypeName(2)." - ".PluginDataflowsType::getTypeName(1);
          $sopt[2413]['forcegroupby'] = true;
-         $sopt[2413]['joinparams']   = array('beforejoin' => array(
-                                                   array('table'      => 'glpi_plugin_dataflows_dataflows',
-                                                         'joinparams' => $sopt[2410]['joinparams'])));
+         $sopt[2413]['joinparams']   = ['beforejoin' => [
+                                                   ['table'      => 'glpi_plugin_dataflows_dataflows',
+                                                         'joinparams' => $sopt[2410]['joinparams']]]];
          $sopt[2413]['datatype']       = 'dropdown';
          $sopt[2413]['massiveaction']  = false;
       }
@@ -501,13 +501,13 @@ function plugin_dataflows_giveItem($type,$ID,$data,$num) {
 
       case 'glpi_plugin_dataflows_dataflows.name':
          if ($type == 'Ticket') {
-            $dataflows_id = array();
+            $dataflows_id = [];
             if ($data['raw']["ITEM_$num"] != '') {
                $dataflows_id = explode('$$$$', $data['raw']["ITEM_$num"]);
             } else {
                $dataflows_id = explode('$$$$', $data['raw']["ITEM_".$num."_2"]);
             }
-            $ret = array();
+            $ret = [];
             $paDataflow = new PluginDataflowsDataflow();
             foreach ($dataflows_id as $ap_id) {
                $paDataflow->getFromDB($ap_id);
@@ -525,15 +525,18 @@ function plugin_dataflows_giveItem($type,$ID,$data,$num) {
 
 function plugin_dataflows_MassiveActions($type) {
 
-   if (in_array($type,PluginDataflowsDataflow::getTypes(true))) {
-      return array('PluginDataflowsDataflow'.MassiveAction::CLASS_ACTION_SEPARATOR.'plugin_dataflows__add_item' =>
-                                                              __('Associate to the dataflow', 'dataflows'));
-   }
-   return array();
+    $plugin = new Plugin();
+    if ($plugin->isActivated('dataflows')) {
+        if (in_array($type,PluginDataflowsDataflow::getTypes(true))) {
+            return ['PluginDataflowsDataflow'.MassiveAction::CLASS_ACTION_SEPARATOR.'plugin_dataflows__add_item' =>
+                                                              __('Associate to the dataflow', 'dataflows')];
+        }
+    }
+    return [];
 }
 
 /*
-function plugin_dataflows_MassiveActionsDisplay($options=array()) {
+function plugin_dataflows_MassiveActionsDisplay($options=[]) {
 
    $dataflow=new PluginDataflowsDataflow;
 
@@ -547,9 +550,9 @@ function plugin_dataflows_MassiveActionsDisplay($options=array()) {
 
 function plugin_dataflows_MassiveActionsProcess($data) {
 
-   $res = array('ok' => 0,
+   $res = ['ok' => 0,
             'ko' => 0,
-            'noright' => 0);
+            'noright' => 0];
 
    $dataflow_item = new PluginDataflowsDataflow_Item();
 
@@ -558,9 +561,9 @@ function plugin_dataflows_MassiveActionsProcess($data) {
       case "plugin_dataflows_add_item":
          foreach ($data["item"] as $key => $val) {
             if ($val == 1) {
-               $input = array('plugin_dataflows_dataflows_id' => $data['plugin_dataflows_dataflows_id'],
+               $input = ['plugin_dataflows_dataflows_id' => $data['plugin_dataflows_dataflows_id'],
                               'items_id'      => $key,
-                              'itemtype'      => $data['itemtype']);
+                              'itemtype'      => $data['itemtype']];
                if ($dataflow_item->can(-1,'w',$input)) {
                   if ($dataflow_item->can(-1,'w',$input)) {
                      $dataflow_item->add($input);
@@ -659,7 +662,7 @@ function plugin_dataflows_addWhere($link,$nott,$type,$id,$val,$searchtype) {
                   break;
 
             }
-            if (in_array($searchtype, array('equals', 'notequals'))) {
+            if (in_array($searchtype, ['equals', 'notequals'])) {
                if ($table != getTableForItemType($type) || $type == 'States') {
                   $out = " $link (`glpi_plugin_dataflows_dataflows`.`id`".$SEARCH;
                } else {

@@ -29,25 +29,25 @@ function plugin_init_dataflows() {
    global $PLUGIN_HOOKS;
 
    $PLUGIN_HOOKS['csrf_compliant']['dataflows'] = true;
-   $PLUGIN_HOOKS['change_profile']['dataflows'] = array('PluginDataflowsProfile', 'initProfile');
+   $PLUGIN_HOOKS['change_profile']['dataflows'] = ['PluginDataflowsProfile', 'initProfile'];
    $PLUGIN_HOOKS['assign_to_ticket']['dataflows'] = true;
    
    //$PLUGIN_HOOKS['assign_to_ticket_dropdown']['dataflows'] = true;
-   //$PLUGIN_HOOKS['assign_to_ticket_itemtype']['dataflows'] = array('PluginDataflowsDataflow_Item');
+   //$PLUGIN_HOOKS['assign_to_ticket_itemtype']['dataflows'] = ['PluginDataflowsDataflow_Item'];
    
-   Plugin::registerClass('PluginDataflowsDataflow', array(
+   Plugin::registerClass('PluginDataflowsDataflow', [
 //         'linkgroup_tech_types'   => true,
 //         'linkuser_tech_types'    => true,
          'document_types'         => true,
          'ticket_types'           => true,
          'helpdesk_visible_types' => true//,
 //         'addtabon'               => 'Supplier'
-   ));
+   ]);
    Plugin::registerClass('PluginDataflowsProfile',
-                         array('addtabon' => 'Profile'));
+                         ['addtabon' => 'Profile']);
                          
    //Plugin::registerClass('PluginDataflowsDataflow_Item',
-   //                      array('ticket_types' => true));
+   //                      ['ticket_types' => true]);
 
    if (class_exists('PluginAccountsAccount')) {
       PluginAccountsAccount::registerType('PluginDataflowsDataflow');
@@ -57,7 +57,7 @@ function plugin_init_dataflows() {
 
       if (Session::haveRight("plugin_dataflows", READ)) {
 
-         $PLUGIN_HOOKS['menu_toadd']['dataflows'] = array('assets'   => 'PluginDataflowsMenu');
+         $PLUGIN_HOOKS['menu_toadd']['dataflows'] = ['assets'   => 'PluginDataflowsMenu'];
       }
 
       if (Session::haveRight("plugin_dataflows", UPDATE)) {
@@ -82,11 +82,11 @@ function plugin_version_dataflows() {
 
    return array (
       'name' => _n('Dataflow', 'Dataflows', 2, 'dataflows'),
-      'version' => '2.0.15',
+      'version' => '2.1.0',
       'author'  => "Eric Feron",
       'license' => 'GPLv2+',
       'homepage'=> 'https://github.com/ericferon/glpi-dataflows',
-      'minGlpiVersion' => '9.2',
+      'minGlpiVersion' => '9.4',
    );
 
 }
@@ -95,7 +95,7 @@ function plugin_version_dataflows() {
 function plugin_dataflows_check_prerequisites() {
    global $DB;
    if (version_compare(GLPI_VERSION,'9.2','lt') || version_compare(GLPI_VERSION,'9.5','ge')) {
-      _e('This plugin requires GLPI >= 9.2 and < 9.5', 'dataflows');
+      _e('This plugin requires GLPI >= 9.4 and < 9.5', 'dataflows');
       return false;
 	} else {
 		$query = "select * from glpi_plugins where directory = 'archisw' and state = 1";

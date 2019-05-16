@@ -31,7 +31,7 @@ if (!isset($_GET["withtemplate"])) $_GET["withtemplate"] = "";
 
 $dataflow=new PluginDataflowsDataflow();
 $dataflow_item=new PluginDataflowsDataflow_Item();
-//$options = array();
+//$options = [];
 
 if (isset($_POST["add"])) {
 
@@ -77,7 +77,7 @@ if (isset($_POST["add"])) {
 } else if (isset($_POST["deleteitem"])) {
 
    foreach ($_POST["item"] as $key => $val) {
-         $input = array('id' => $key);
+         $input = ['id' => $key];
          if ($val==1) {
             $dataflow_item->check($key, UPDATE);
             $dataflow_item->delete($input);
@@ -87,7 +87,7 @@ if (isset($_POST["add"])) {
 
 } else if (isset($_POST["deletedataflows"])) {
 
-   $input = array('id' => $_POST["id"]);
+   $input = ['id' => $_POST["id"]];
    $dataflow_item->check($_POST["id"], UPDATE);
    $dataflow_item->delete($input);
    Html::back();

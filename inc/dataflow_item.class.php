@@ -61,8 +61,8 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
 
       $temp = new self();
       $temp->deleteByCriteria(
-         array('itemtype' => $item->getType(),
-               'items_id' => $item->getField('id'))
+         ['itemtype' => $item->getType(),
+               'items_id' => $item->getField('id')]
       );
    }
 
@@ -132,8 +132,9 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
       }
       $dbu = new DbUtils();
       return $dbu->countElementsInTable('glpi_plugin_dataflows_dataflows_items',
-                                  "`itemtype` IN ('$types')
-                                   AND `plugin_dataflows_dataflows_id` = '".$item->getID()."'");
+                                        ["plugin_dataflows_dataflows_id" => $item->getID(),
+                                         "itemtype"                      => $item->getTypes()
+                                        ]);
    }
 
 
@@ -141,8 +142,8 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
 
       $dbu = new DbUtils();
       return $dbu->countElementsInTable('glpi_plugin_dataflows_dataflows_items',
-                                  "`itemtype`='".$item->getType()."'
-                                   AND `items_id` = '".$item->getID()."'");
+                                        ["itemtype" => $item->getType(),
+                                         "items_id" => $item->getID()]);
    }
 
    function getFromDBbyDataflowsAndItem($plugin_dataflows_dataflows_id,$items_id,$itemtype) {
@@ -168,16 +169,16 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
 
    function addItem($values) {
 
-      $this->add(array('plugin_dataflows_dataflows_id'=>$values["plugin_dataflows_dataflows_id"],
+      $this->add(['plugin_dataflows_dataflows_id'=>$values["plugin_dataflows_dataflows_id"],
                         'items_id'=>$values["items_id"],
-                        'itemtype'=>$values["itemtype"]));
+                        'itemtype'=>$values["itemtype"]]);
 
    }
 
    function deleteItemByDataflowsAndItem($plugin_dataflows_dataflows_id,$items_id,$itemtype) {
 
       if ($this->getFromDBbyDataflowsAndItem($plugin_dataflows_dataflows_id,$items_id,$itemtype)) {
-         $this->delete(array('id'=>$this->fields["id"]));
+         $this->delete(['id'=>$this->fields["id"]]);
       }
    }
 
@@ -235,7 +236,7 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
 
          echo "<tr class='tab_bg_1'><td colspan='".(3+$colsup)."' class='center'>";
          echo "<input type='hidden' name='plugin_dataflows_dataflows_id' value='$instID'>";
-         Dropdown::showSelectItemFromItemtypes(array('items_id_name' => 'items_id',
+         Dropdown::showSelectItemFromItemtypes(['items_id_name' => 'items_id',
                                                      'itemtypes'     => PluginDataflowsDataflow::getTypes(true),
                                                      'entity_restrict'
                                                                      => ($dataflow->fields['is_recursive']
@@ -244,7 +245,7 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
                                                         : $dataflow->fields['entities_id']),
                                                      'checkright'
                                                                      => true,
-                                               ));
+                                               ]);
          echo "</td>";
          echo "<td colspan='2' class='tab_bg_2'>";
          echo "<input type='submit' name='additem' value=\""._sx('button','Add')."\" class='submit'>";
@@ -257,7 +258,7 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
       echo "<div class='spaced'>";
       if ($canedit && $number) {
          Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
-         $massiveactionparams = array();
+         $massiveactionparams = [];
          Html::showMassiveActions($massiveactionparams);
       }
       echo "<table class='tab_cadre_fixe'>";
@@ -406,9 +407,9 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
       $number = $DB->numrows($result);
       $i      = 0;
 
-      $dataflows      = array();
+      $dataflows      = [];
       $dataflow       = new PluginDataflowsDataflow();
-      $used          = array();
+      $used          = [];
       if ($numrows = $DB->numrows($result)) {
          while ($data = $DB->fetch_assoc($result)) {
             $dataflows[$data['assocID']] = $data;
@@ -460,8 +461,8 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
                echo "<input type='hidden' name='tickets_id' value='$ID'>";
             }
             
-            PluginDataflowsDataflow::dropdownDataflow(array('entity' => $entities ,
-                                                     'used'   => $used));
+            PluginDataflowsDataflow::dropdownDataflow(['entity' => $entities ,
+                                                     'used'   => $used]);
 
             echo "</td><td class='center' width='20%'>";
             echo "<input type='submit' name='additem' value=\"".
@@ -478,7 +479,7 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
       echo "<div class='spaced'>";
       if ($canedit && $number && ($withtemplate < 2)) {
          Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
-         $massiveactionparams = array('num_displayed'  => $number);
+         $massiveactionparams = ['num_displayed'  => $number];
          Html::showMassiveActions($massiveactionparams);
       }
       echo "<table class='tab_cadre_fixe'>";
@@ -496,7 +497,7 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
       echo "<th>".PluginDataflowsState::getTypeName(1)."</th>";
       echo "<th>".__('Dataflow Follow-up', 'dataflows')."</th>";
       echo "</tr>";
-      $used = array();
+      $used = [];
 
       if ($number) {
 
