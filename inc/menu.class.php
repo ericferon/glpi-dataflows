@@ -41,8 +41,13 @@ class PluginDataflowsMenu extends CommonGLPI {
       if (PluginDataflowsDataflow::canCreate()) {
          $menu['links']['add']                        = PluginDataflowsDataflow::getFormURL(false);
       }
+      $menu['icon'] = self::getIcon();
 
       return $menu;
+   }
+
+   static function getIcon() {
+      return "fas fa-arrows-alt-h";
    }
 
    static function removeRightsFromSession() {
