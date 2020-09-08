@@ -51,11 +51,11 @@ if (isset($_POST["flowgroup"])) {
 
    Dropdown::show('PluginDataflowsDataflow',
                   ['name'      => $_POST['myname'],
-                        'used'      => $used,
-                        'width'     => '50%',
-                        'entity'    => $_POST['entity'],
-                        'rand'      => $_POST['rand'],
-                        'condition' => "glpi_plugin_dataflows_dataflows.plugin_dataflows_flowgroups_id='".$_POST["flowgroup"]."'"]);
+					'used'      => $used,
+					'width'     => '50%',
+					'entity'    => $_POST['entity'],
+					'rand'      => $_POST['rand'],
+					'condition' => ["glpi_plugin_dataflows_dataflows.plugin_dataflows_flowgroups_id"=>$_POST["flowgroup"]]]);
 
 }
 
