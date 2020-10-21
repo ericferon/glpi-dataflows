@@ -157,7 +157,7 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
          if ($DB->numrows($result) != 1) {
             return false;
          }
-         $this->fields = $DB->fetch_assoc($result);
+         $this->fields = $DB->fetchAssoc($result);
          if (is_array($this->fields) && count($this->fields)) {
             return true;
          } else {
@@ -307,7 +307,7 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
 
                   Session::initNavigateListItems($itemType,PluginDataflowsDataflow::getTypeName(2)." = ".$dataflow->fields['name']);
 
-                  while ($data=$DB->fetch_assoc($result_linked)) {
+                  while ($data=$DB->fetchAssoc($result_linked)) {
 
                      $item->getFromDB($data["id"]);
 
@@ -411,7 +411,7 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
       $dataflow       = new PluginDataflowsDataflow();
       $used          = [];
       if ($numrows = $DB->numrows($result)) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $dataflows[$data['assocID']] = $data;
             $used[$data['id']] = $data['id'];
          }

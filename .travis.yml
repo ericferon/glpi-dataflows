@@ -1,7 +1,6 @@
 language: php
 php:
 - '7.2'
-sudo: false
 branches:
   only:
   - master
@@ -24,12 +23,12 @@ after_success:
 - tar --transform "s%^%$GLPI_PLUGIN_NAME/%" --show-transformed -zcvf $GLPI_PLUGIN_NAME-$TRAVIS_TAG.tar.gz ajax front inc locales sql *.png *.xml *.php  LICENSE README.md INSTALL.md
 deploy:
   provider: releases
-  api_key:
+  token:
     secure: ciQZuHjsGEhE3qeP8G3IerbKUrvMrRSO8fbTq9/rxBO0XtOoc52iq97o5vGjHKbeacYOtU+B3TNq4vrTGpj/4H22r5hIdRzd5ygKJe4S4UEzC6fKfCST2I9pOrJ9QSBI/FhfWqTPEzsBaUU4dJg1k5qfmxDXtYYHsuaZab/WKBR8nwgf7/fxkf7MFVKZYR7bZURM4E4NhISxqQJmkG7Z0sCeNrZmmLiknU2tlPyrVJVBFGehFUitVrwYlTL7C3SWAZUUfMFz9V/OcFecRlwCDLuaImffE2u0ZIr+Lms1LMHa5IXaDcN1xHZSdFe78psmxfFEidMp8naGwPFcuLrFQmmmiwzCERI31IqZKs7ebqjRsHJYvsh7EOeYlYn/8ISjhGrvYE66S3X2knDKyAQzQaobL2MtcPQxl3aKCAMUsqVon+ncg/s7/5few2tNh5KqbJ6Rw6f9donVyHP14KP/K2LLF8zeF9k1vGUtY+XxufO7Gs54w0QsfuGEm6qLOXyZzGg7jHkyr2JMx9d8WN3HgdY5tx+z4HYP2CTcB/ZV81eBk1sdjy7bcwBpa/mnnBp5ETxeQDNjkkAM/teeLPdi3d01x+qrxi2Ens+nruKf/PzSCkK6AEhQ4+uDc1n5bmL7RB6fbO6il1xtOG8JQBg2x0Wuf4EJrxKcKu7BLxjmohs=
   skip_cleanup: true
   file: $GLPI_PLUGIN_NAME-$TRAVIS_TAG.tar.gz
   name: $RELEASE_NAME
-  body: $RELEASE_BODY
+  release_notes: $RELEASE_BODY
   prerelease: false
   on:
     repo: ericferon/glpi-$GLPI_PLUGIN_NAME
