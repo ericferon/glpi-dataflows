@@ -198,7 +198,7 @@ function plugin_dataflows_AssignToTicket($types) {
    return $types;
 }
 
-
+/*
 function plugin_dataflows_AssignToTicketDropdown($data) {
    global $DB, $CFG_GLPI;
 
@@ -311,7 +311,7 @@ function plugin_dataflows_AssignToTicketGiveItem($data) {
               $paDataflow->getLink(['comments' => true]).")";
    }
 }
-
+*/
 
 // Define dropdown relations
 function plugin_dataflows_getDataflowRelations() {

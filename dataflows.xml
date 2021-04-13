@@ -25,9 +25,14 @@
 	</authors>
 	<versions>
 		<version>
+			<num>2.2.3</num>
+			<compatibility>9.5</compatibility>
+			<download_url>//github.com/ericferon/glpi-dataflows/releases/download/2.2.3/dataflows-2.2.3.tar.gz</download_url>
+		</version>
+		<version>
 			<num>2.2.2</num>
 			<compatibility>9.5</compatibility>
-			<download_url>//github.com/ericferon/glpi-dataflows/releases/download/2.2.1/dataflows-2.2.2.tar.gz</download_url>
+			<download_url>//github.com/ericferon/glpi-dataflows/releases/download/2.2.2/dataflows-2.2.2.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.2.1</num>
