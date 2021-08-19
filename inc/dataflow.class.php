@@ -34,7 +34,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
    static $rightname = "plugin_dataflows";
    protected $usenotepad         = true;
    
-   static $types = ['Computer','Software', 'SoftwareLicense', 'Contract'];
+   static $types = ['Computer','Software', 'SoftwareLicense', 'Contract', 'Project'];
 
    static function getTypeName($nb=0) {
 
@@ -203,6 +203,11 @@ class PluginDataflowsDataflow extends CommonDBTM {
       $tab[23]['name']			 = __('Transfer Postprocessing', 'dataflows');
       $tab[23]['datatype']		 = 'dropdown';
             
+      $tab[24]['table']			 = $this->getTable();
+      $tab[24]['field']			 = 'transferpriority';
+      $tab[24]['name']			 = __('Priority', 'dataflows');
+      $tab[24]['datatype']		 = 'text';
+           
       $tab[26]['table']			 = $this->getTable();
       $tab[26]['field']			 = 'srcformat';
       $tab[26]['name']			 = __('Source format (Idoc, table, file pattern, ...)', 'dataflows');
@@ -447,6 +452,14 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
             
       $tab[] = [
+         'id'        => '24',
+         'table'     => $this->getTable(),
+         'field'     => 'transferpriority',
+         'name'      => __('Priority', 'dataflows'),
+         'datatype'  => 'text'
+      ];
+      
+      $tab[] = [
          'id'        => '26',
          'table'     => $this->getTable(),
          'field'     => 'srcformat',
@@ -524,6 +537,22 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'datatype' => 'bool'
       ];
 
+      $tab[] = [
+         'id'        => '63',
+         'table'     => $this->getTable(),
+         'field'     => 'shortdescription',
+         'name'      => __('Short description', 'dataflows'),
+         'datatype'  => 'text'
+      ];
+      
+      $tab[] = [
+         'id'        => '64',
+         'table'     => $this->getTable(),
+         'field'     => 'longdescription',
+         'name'      => __('Long description', 'dataflows'),
+         'datatype'  => 'text'
+      ];
+      
       $tab[] = [
          'id'            => '71',
          'table'         => 'glpi_plugin_dataflows_dataflows_items',
@@ -606,7 +635,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       echo "<td>".__('Short description', 'dataflows')."</td>";
       echo "<td class='top center' colspan='4'>";
 //      echo "<textarea cols='100' rows='1' name='shortdescription'>".$this->fields["shortdescription"]."</textarea>";
-      Html::autocompletionTextField($this,"shortdescription",['size' => 100]);
+      Html::autocompletionTextField($this,"shortdescription",['option' => 'style="width:98%"']);
       echo "</td>";
       echo "</tr>";
 
