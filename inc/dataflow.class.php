@@ -84,195 +84,6 @@ class PluginDataflowsDataflow extends CommonDBTM {
 //      $temp->deleteByCriteria(['plugin_dataflows_dataflows_id' => $this->fields['id']]);
    }
 
-   function getSearchOptions() {
-
-      $tab                       = [];
-      if (version_compare(GLPI_VERSION,'9.3','ge')) return $tab;
-
-      $tab['common']             = self::getTypeName(2);
-
-      $tab[1]['table']           = $this->getTable();
-      $tab[1]['field']           = 'name';
-      $tab[1]['name']            = __('Name');
-      $tab[1]['datatype']        = 'itemlink';
-      $tab[1]['itemlink_type']   = $this->getType();
-
-      $tab[2]['table']			 = $this->getTable();
-      $tab[2]['field']			 = 'shortdescription';
-      $tab[2]['name']            = __('Description');
-      $tab[2]['datatype']        = 'text';
-
-      $tab[3]['table']           = 'glpi_plugin_dataflows_flowgroups';
-      $tab[3]['field']           = 'name';
-      $tab[3]['name']            = PluginDataflowsFlowgroup::getTypeName(1);
-      $tab[3]['datatype']        = 'dropdown';
-
-      $tab[5]['table']          = 'glpi_plugin_dataflows_transferprotocols';
-      $tab[5]['field']          = 'name';
-      $tab[5]['name']           = PluginDataflowsTransferProtocol::getTypeName(1);
-      $tab[5]['datatype']       = 'dropdown';
-
-      $tab[6]['table']          = 'glpi_plugin_dataflows_states';
-      $tab[6]['field']          = 'name';
-      $tab[6]['name']           = PluginDataflowsState::getTypeName(1);
-      $tab[6]['datatype']       = 'dropdown';
-
-      $tab[7]['table']          = 'glpi_plugin_dataflows_fromswcomponents';
-      $tab[7]['field']          = 'name';
-      $tab[7]['name']           = PluginDataflowsFromSwcomponent::getTypeName(1);
-      $tab[7]['datatype']       = 'dropdown';
-
-      $tab[8]['table']          = 'glpi_plugin_dataflows_toswcomponents';
-      $tab[8]['field']          = 'name';
-      $tab[8]['name']           = PluginDataflowsToSwcomponent::getTypeName(1);
-      $tab[8]['datatype']       = 'dropdown';
-
-      $tab[9]['table']          = 'glpi_plugin_dataflows_sourceconnectors';
-      $tab[9]['field']          = 'name';
-      $tab[9]['name']           = PluginDataflowsSourceConnector::getTypeName(1);
-      $tab[9]['datatype']       = 'dropdown';
-
-      $tab[10]['table']          = 'glpi_plugin_dataflows_destinationconnectors';
-      $tab[10]['field']          = 'name';
-      $tab[10]['name']           = PluginDataflowsDestinationConnector::getTypeName(1);
-      $tab[10]['datatype']       = 'dropdown';
-
-      $tab[11]['table']          = 'glpi_plugin_dataflows_types';
-      $tab[11]['field']          = 'name';
-      $tab[11]['name']           = PluginDataflowsType::getTypeName(1);
-      $tab[11]['datatype']       = 'dropdown';
-
-      $tab[12]['table']          = 'glpi_users';
-      $tab[12]['field']          = 'name';
-      $tab[12]['linkfield']      = 'users_id';
-      $tab[12]['name']           = __('Dataflow Expert', 'dataflows');
-      $tab[12]['datatype']       = 'dropdown';
-      $tab[12]['right']          = 'interface';
-
-      $tab[13]['table']          = 'glpi_groups';
-      $tab[13]['field']          = 'name';
-      $tab[13]['linkfield']      = 'groups_id';
-      $tab[13]['name']           = __('Dataflow Follow-up', 'dataflows');
-      $tab[13]['condition']      = '`is_assign`';
-      $tab[13]['datatype']       = 'dropdown';
-
-      $tab[15]['table']			 = $this->getTable();
-      $tab[15]['field']			 = 'extractmethod';
-      $tab[15]['name']			 = __('Extract Method (Bapi, Stored Proc, ...)', 'dataflows');
-      $tab[15]['datatype']		 = 'text';
-
-      $tab[16]['table']			 = $this->getTable();
-      $tab[16]['field']			 = 'loadmethod';
-      $tab[16]['name']			 = __('Load Method (Bapi, Stored Proc, ...)', 'dataflows');
-      $tab[16]['datatype']		 = 'text';
-
-      $tab[17]['table']			 = 'glpi_plugin_dataflows_indicators';
-      $tab[17]['field']			 = 'name';
-      $tab[17]['name']			 = __('Indicator', 'dataflows');
-      $tab[17]['datatype']		 = 'dropdown';
-      
-      $tab[18]['table']			 = $this->getTable();
-      $tab[18]['field']			 = 'date_mod';
-      $tab[18]['massiveaction']  = false;
-      $tab[18]['name']			 = __('Last update');
-      $tab[18]['datatype']		 = 'datetime';
-            
-      $tab[19]['table']          = $this->getTable();
-      $tab[19]['field']          = 'statedate';
-      $tab[19]['massiveaction']  = false;
-      $tab[19]['name']           = __('Status StartDate', 'dataflows');
-      $tab[19]['datatype']       = 'datetime';
-
-      $tab[20]['table']			 = 'glpi_plugin_dataflows_transferfreqs';
-      $tab[20]['field']			 = 'name';
-      $tab[20]['name']			 = __('Transfer frequency (def : per day)', 'dataflows');
-      $tab[20]['datatype']		 = 'dropdown';
-           
-      $tab[21]['table']			 = 'glpi_plugin_dataflows_transfertimetables';
-      $tab[21]['field']			 = 'name';
-      $tab[21]['name']			 = __('Transfer Timetable', 'dataflows');
-      $tab[21]['datatype']		 = 'dropdown';
-           
-      $tab[22]['table']			 = 'glpi_plugin_dataflows_srcpreprocs';
-      $tab[22]['field']			 = 'name';
-      $tab[22]['name']			 = __('Transfer Preprocessing', 'dataflows');
-      $tab[22]['datatype']		 = 'dropdown';
-           
-      $tab[23]['table']			 = 'glpi_plugin_dataflows_destpostprocs';
-      $tab[23]['field']			 = 'name';
-      $tab[23]['name']			 = __('Transfer Postprocessing', 'dataflows');
-      $tab[23]['datatype']		 = 'dropdown';
-            
-      $tab[24]['table']			 = $this->getTable();
-      $tab[24]['field']			 = 'transferpriority';
-      $tab[24]['name']			 = __('Priority', 'dataflows');
-      $tab[24]['datatype']		 = 'text';
-           
-      $tab[26]['table']			 = $this->getTable();
-      $tab[26]['field']			 = 'srcformat';
-      $tab[26]['name']			 = __('Source format (Idoc, table, file pattern, ...)', 'dataflows');
-      $tab[26]['datatype']		 = 'text';
-      
-      $tab[27]['table']			 = $this->getTable();
-      $tab[27]['field']			 = 'destformat';
-      $tab[27]['name']			 = __('Destination format (Idoc, table, file pattern, ...)', 'dataflows');
-      $tab[27]['datatype']		 = 'text';
-      
-      $tab[28]['table']			 = 'glpi_plugin_dataflows_servicelevels';
-      $tab[28]['field']			 = 'name';
-      $tab[28]['name']			 = __('Service Level', 'dataflows');
-      $tab[28]['datatype']		 = 'dropdown';
-
-      $tab[29]['table']			 = 'glpi_plugin_dataflows_otherusers';
-      $tab[29]['field']			 = 'name';
-      $tab[29]['name']			 = __('Other expert', 'dataflows');
-      $tab[29]['datatype']		 = 'user';
-      
-      $tab[30]['table']			 = 'glpi_plugin_dataflows_othergroups';
-      $tab[30]['field']			 = 'name';
-      $tab[30]['name']			 = __('Other group', 'dataflows');
-      $tab[30]['datatype']		 = 'dropdown';
-
-      $tab[31]['table']			 = 'glpi_plugin_dataflows_supportgroups';
-      $tab[31]['field']			 = 'name';
-      $tab[31]['name']			 = __('Dataflow Support', 'dataflows');
-      $tab[31]['datatype']		 = 'dropdown';
-
-      $tab[60]['table']          = $this->getTable();
-      $tab[60]['field']          = 'id';
-      $tab[60]['name']           = __('ID');
-      $tab[60]['datatype']       = 'number';
-
-      $tab[61]['table']			 = $this->getTable();
-      $tab[61]['field']			 = 'is_helpdesk_visible';
-      $tab[61]['name']			 = __('Associable to a ticket');
-      $tab[61]['datatype']		 = 'bool';
-
-      $tab[62]['table']			 = $this->getTable();
-      $tab[62]['field']			 = 'is_recursive';
-      $tab[62]['name']			 = __('Child entities');
-      $tab[62]['datatype']		 = 'bool';
-
-      $tab[70]['table']           = 'glpi_plugin_dataflows_dataflows_items';
-      $tab[70]['field']           = 'items_id';
-      $tab[70]['nosearch']        = true;
-      $tab[70]['massiveaction']   = false;
-      $tab[70]['name']            = _n('Associated item' , 'Associated items', 2);
-      $tab[70]['forcegroupby']    = true;
-      $tab[70]['joinparams']      = ['jointype' => 'child'];
-
-      $tab[80]['table']          = 'glpi_entities';
-      $tab[80]['field']          = 'completename';
-      $tab[80]['name']           = __('Entity');
-      $tab[80]['datatype']       = 'dropdown';
-      
-      $tab[81]['table']       = 'glpi_entities';
-      $tab[81]['field']       = 'entities_id';
-      $tab[81]['name']        = __('Entity')."-".__('ID');
-      
-      return $tab;
-   }
-
    // search fields from GLPI 9.3 on
    function rawSearchOptions() {
 
@@ -814,12 +625,16 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //url of functional documentation
-      echo "<td>".__('URL to functional doc (mapping, ...)', 'dataflows').": </td>";
+//      echo "<td>".__('URL to functional doc (mapping, ...)', 'dataflows').": </td>";
+      echo "<td>";
+	  echo Html::link(__('URL to functional doc (mapping, ...)', 'dataflows'), $this->fields["mappingdocurl"]);
       echo "<td>";
       Html::autocompletionTextField($this,"mappingdocurl",['size' => 65]);
       echo "</td>";
       //url of technical documentation
-      echo "<td>".__('URL to technical doc (design, ...)', 'dataflows').": </td>";
+//      echo "<td>".__('URL to technical doc (design, ...)', 'dataflows').": </td>";
+      echo "<td>";
+	  echo Html::link(__('URL to technical doc (design, ...)', 'dataflows'), $this->fields["technicaldocurl"]);
       echo "<td>";
       Html::autocompletionTextField($this,"technicaldocurl",['size' => 65]);
       echo "</td>";
