@@ -34,7 +34,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
    static $rightname = "plugin_dataflows";
    protected $usenotepad         = true;
    
-   static $types = ['Computer','Software', 'SoftwareLicense', 'Contract', 'Project'];
+   static $types = ['Computer','Software', 'SoftwareLicense', 'Contract', 'Project', 'ProjectTask'];
 
    static function getTypeName($nb=0) {
 
@@ -389,7 +389,45 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'id'    => '81',
          'table' => 'glpi_entities',
          'field' => 'entities_id',
-         'name'  => __('Entity') . "-" . __('ID')
+         'name'  => __('Entity') . "-" . __('ID'),
+      ];
+
+      $tab[] = [
+         'id'                 => '100',
+         'table'        	  => 'glpi_projects',
+         'field'              => 'name',
+         'name'               => Project::getTypeName(2)." - ".__('Name'),
+         'linkfield'		  => 'items_id',
+         'datatype'           => 'itemlink',
+         'massiveaction'      => false,
+         'forcegroupby'       => true,
+         'itemlink_type'	  => Project::getType(),
+         'joinparams'    	  => [
+								'beforejoin'=> ['table'      => 'glpi_plugin_dataflows_dataflows_items',
+												'joinparams' => ['jointype' => 'itemtype_item',
+																'linkfield'		  => 'items_id'
+																]
+												]
+								]
+      ];
+
+      $tab[] = [
+         'id'                 => '101',
+         'table'        	  => 'glpi_projecttasks',
+         'field'              => 'name',
+         'name'               => ProjectTask::getTypeName(2)." - ".__('Name'),
+         'linkfield'		  => 'items_id',
+         'datatype'           => 'itemlink',
+         'massiveaction'      => false,
+         'forcegroupby'       => true,
+         'itemlink_type'	  => ProjectTask::getType(),
+         'joinparams'    	  => [
+								'beforejoin'=> ['table'      => 'glpi_plugin_dataflows_dataflows_items',
+												'joinparams' => ['jointype' => 'itemtype_item',
+																'linkfield'		  => 'items_id'
+																]
+												]
+								]
       ];
 
       return $tab;
