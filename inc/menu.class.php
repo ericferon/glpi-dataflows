@@ -36,7 +36,7 @@ class PluginDataflowsMenu extends CommonGLPI {
 
       $menu                                           = [];
       $menu['title']                                  = self::getMenuName();
-      $menu['page']                                   = "/plugins/dataflows/front/dataflow.php";
+      $menu['page']                                   = "/".Plugin::getWebDir('dataflows', false)."/front/dataflow.php";
       $menu['links']['search']                        = PluginDataflowsDataflow::getSearchURL(false);
       if (PluginDataflowsDataflow::canCreate()) {
          $menu['links']['add']                        = PluginDataflowsDataflow::getFormURL(false);

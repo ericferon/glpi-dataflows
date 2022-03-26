@@ -25,90 +25,109 @@
 	</authors>
 	<versions>
 		<version>
+			<num>2.2.6</num>
+			<compatibility>~9.5.0,~10.0.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.2.6/dataflows-v2.2.6.tar.gz</download_url>
+		</version>
+		<version>
 			<num>2.2.5</num>
-			<compatibility>9.5</compatibility>
-			<download_url>//github.com/ericferon/glpi-dataflows/releases/download/2.2.5/dataflows-2.2.5.tar.gz</download_url>
+			<compatibility>~9.5.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.2.5/dataflows-v2.2.5.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.2.4</num>
-			<compatibility>9.5</compatibility>
-			<download_url>//github.com/ericferon/glpi-dataflows/releases/download/2.2.4/dataflows-2.2.4.tar.gz</download_url>
+			<compatibility>~9.5.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.2.4/dataflows-v2.2.4.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.2.3</num>
-			<compatibility>9.5</compatibility>
-			<download_url>//github.com/ericferon/glpi-dataflows/releases/download/2.2.3/dataflows-2.2.3.tar.gz</download_url>
+			<compatibility>~9.5.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.2.3/dataflows-v2.2.3.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.2.2</num>
-			<compatibility>9.5</compatibility>
-			<download_url>//github.com/ericferon/glpi-dataflows/releases/download/2.2.2/dataflows-2.2.2.tar.gz</download_url>
+			<compatibility>~9.5.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.2.2/dataflows-v2.2.2.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.2.1</num>
-			<compatibility>9.5</compatibility>
-			<download_url>//github.com/ericferon/glpi-dataflows/releases/download/2.2.1/dataflows-2.2.1.tar.gz</download_url>
+			<compatibility>~9.5.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.2.1/dataflows-v2.2.1.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.2.0</num>
-			<compatibility>9.5</compatibility>
-			<download_url>//github.com/ericferon/glpi-dataflows/releases/download/2.2.0/dataflows-2.2.0.tar.gz</download_url>
+			<compatibility>~9.5.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.2.0/dataflows-v2.2.0.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.1.0</num>
-			<compatibility>9.4</compatibility>
+			<compatibility>~9.4.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.1.0/dataflows-v2.1.0.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.0.15</num>
-			<compatibility>9.3</compatibility>
+			<compatibility>~9.3.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.0.15/dataflows-v2.0.15.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.0.14</num>
-			<compatibility>9.3</compatibility>
+			<compatibility>~9.3.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.0.14/dataflows-v2.0.14.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.0.13</num>
-			<compatibility>9.3</compatibility>
+			<compatibility>~9.3.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.0.13/dataflows-v2.0.13.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.0.12</num>
-			<compatibility>9.3</compatibility>
+			<compatibility>~9.3.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.0.12/dataflows-v2.0.12.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.0.11</num>
-			<compatibility>9.3</compatibility>
+			<compatibility>~9.3.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.0.11/dataflows-v2.0.11.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.0.10</num>
-			<compatibility>9.3</compatibility>
+			<compatibility>~9.3.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.0.10/dataflows-v2.0.10.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.0.9</num>
-			<compatibility>9.2</compatibility>
+			<compatibility>~9.2.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.0.9/dataflows-v2.0.9.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.0.8</num>
-			<compatibility>9.2</compatibility>
+			<compatibility>~9.2.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.0.8/dataflows-v2.0.8.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.0.7</num>
-			<compatibility>9.2</compatibility>
+			<compatibility>~9.2.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.0.7/dataflows-v2.0.7.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.0.6</num>
-			<compatibility>9.2</compatibility>
+			<compatibility>~9.2.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.0.6/dataflows-v2.0.6.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.0.5</num>
-			<compatibility>9.2-9.3</compatibility>
+			<compatibility>~9.2.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.0.5/dataflows-v2.0.5.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.0.2</num>
-			<compatibility>9.2</compatibility>
+			<compatibility>~9.2.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.0.2/dataflows-v2.0.2.tar.gz</download_url>
 		</version>
 		<version>
 			<num>2.0.1</num>
-			<compatibility>9.2</compatibility>
+			<compatibility>~9.2.0</compatibility>
+			<download_url>https://github.com/ericferon/glpi-dataflows/releases/download/v2.0.1/dataflows-v2.0.1.tar.gz</download_url>
 		</version>
 	</versions>
 	<langs>

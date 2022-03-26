@@ -27,37 +27,37 @@
 function plugin_dataflows_install() {
    global $DB;
 
-   include_once (GLPI_ROOT."/plugins/dataflows/inc/profile.class.php");
+   include_once (Plugin::getPhpDir("dataflows")."/inc/profile.class.php");
 
    $update=false;
    if (!$DB->TableExists("glpi_plugin_dataflows_dataflows")) {
 
-		$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/empty-1.2.3.sql");
+		$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/empty-1.2.3.sql");
 	}
 	else {
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && !$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_indicators_id")) {
 			$update=true;
-			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.0.1.sql");
+			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-1.0.1.sql");
 		}
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_fromswcomponents_id") || !$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_toswcomponents_id"))) {
 			$update=true;
-			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.1.0.sql");
+			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-1.1.0.sql");
 		}
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_triggertypes_id"))) {
 			$update=true;
-			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.2.0.sql");
+			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-1.2.0.sql");
 		}
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_errorhandlings_id"))) {
 			$update=true;
-			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.2.1.sql");
+			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-1.2.1.sql");
 		}
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_otherusers_id"))) {
 			$update=true;
-			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/update-1.2.3.sql");
+			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-1.2.3.sql");
 		}
 	}
     if (class_exists('PluginAccountsAccount')) {
-			$DB->runFile(GLPI_ROOT ."/plugins/dataflows/sql/addon-accounts-1.2.3.sql");
+			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/addon-accounts-1.2.3.sql");
     }
 
    
@@ -116,8 +116,8 @@ function plugin_dataflows_install() {
 function plugin_dataflows_uninstall() {
    global $DB;
    
-   include_once (GLPI_ROOT."/plugins/dataflows/inc/profile.class.php");
-   include_once (GLPI_ROOT."/plugins/dataflows/inc/menu.class.php");
+   include_once (Plugin::getPhpDir("dataflows")."/inc/profile.class.php");
+   include_once (Plugin::getPhpDir("dataflows")."/inc/menu.class.php");
    
 	$tables = ["glpi_plugin_dataflows_dataflows",
 					"glpi_plugin_dataflows_dataflows_items",
