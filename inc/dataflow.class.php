@@ -405,7 +405,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'joinparams'    	  => [
 								'beforejoin'=> ['table'      => 'glpi_plugin_dataflows_dataflows_items',
 												'joinparams' => ['jointype' => 'itemtype_item',
-																'linkfield'		  => 'items_id'
+																'linkfield'		  => 'plugin_dataflows_dataflows_id'
 																]
 												]
 								]
@@ -424,7 +424,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'joinparams'    	  => [
 								'beforejoin'=> ['table'      => 'glpi_plugin_dataflows_dataflows_items',
 												'joinparams' => ['jointype' => 'itemtype_item',
-																'linkfield'		  => 'items_id'
+																'linkfield'		  => 'plugin_dataflows_dataflows_id'
 																]
 												]
 								]
