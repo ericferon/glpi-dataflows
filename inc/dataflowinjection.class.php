@@ -73,8 +73,8 @@ class PluginDataflowsDataflowInjection extends PluginDataflowsDataflow
       //Remove some options because some fields cannot be imported
       $notimportable            = [60, 70, 80];
       $options['ignore_fields'] = $notimportable;
-      $options['displaytype']   = ["dropdown"       => [3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 20, 21, 22, 23, 28, 30, 31],
-                                   "user"           => [12],
+      $options['displaytype']   = ["dropdown"       => [3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 20, 21, 22, 23, 28, 29, 30, 40, 41],
+                                   "user"           => [11, 40],
                                    "multiline_text" => [2, 15, 16, 26, 27],
                                    "date"           => [18, 19],
                                    "bool"           => [61, 62]];

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - dataflows plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-17 18:42+0200\n"
-"PO-Revision-Date: 2018-08-27 16:05+0200\n"
+"POT-Creation-Date: 2022-04-25 16:01+0200\n"
+"PO-Revision-Date: 2022-04-25 16:08+0200\n"
 "Last-Translator: Eric Feron <ericferon@scarlet.be>\n"
 "Language-Team: French (France) (http://www.transifex.com/tsmr/GLPI_dataflows/"
 "language/fr_FR/)\n"
@@ -19,11 +19,50 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.8\n"
+"X-Generator: Poedit 2.3\n"
 
-#: hook.php:538
+#. TRANS : %1$s is the itemtype name,
+#. %2$s is the name of the item (used for headings of a list)
+#: inc/dataflow_item.class.php:507
+#, php-format
+msgid "%1$s = %2$s"
+msgstr ""
+
+#: inc/dataflow_item.class.php:235
+msgid "Add an item"
+msgstr "Ajouter un élément"
+
+#: inc/profile.class.php:123 inc/profile.class.php:151
+msgid "Associable items to a ticket"
+msgstr "Eléments associables à un ticket"
+
+#. is_helpdesk_visible
+#: inc/dataflow.class.php:355 inc/dataflow.class.php:754
+msgid "Associable to a ticket"
+msgstr "Associable à un ticket"
+
+#: inc/dataflow_item.class.php:466
+msgctxt "button"
+msgid "Associate a dataflow"
+msgstr "Associer un flux de données"
+
+#: hook.php:538 hook.php:536
 msgid "Associate to the dataflow"
 msgstr "Associer au flux de données"
+
+#: inc/dataflow.class.php:363
+msgid "Child entities"
+msgstr "Entité enfant"
+
+#: inc/dataflow.class.php:958
+msgid "Comments"
+msgstr "Commentaires"
+
+#: inc/connector.class.php:38
+msgid "Connector"
+msgid_plural "Connectors"
+msgstr[0] "Connecteur à la source"
+msgstr[1] "Connecteurs"
 
 #: setup.php:84 inc/dataflow.class.php:41 inc/menu.class.php:31
 #: inc/profile.class.php:140
@@ -32,191 +71,22 @@ msgid_plural "Dataflows"
 msgstr[0] "Flux de données"
 msgstr[1] "Flux de données"
 
-#: setup.php:98
-msgid "This plugin requires GLPI >= 9.2 and <= 9.4"
-msgstr "Ce plugin nécessite une version GLPI >= 9.2 et < 9.4"
-
-#: inc/connector.class.php:38
-msgid "Connector"
-msgid_plural "Connectors"
-msgstr[0] "Connecteur à la source"
-msgstr[1] "Connecteurs"
-
+#. technical maintainer
 #: inc/dataflow.class.php:146 inc/dataflow.class.php:489
+#: inc/dataflow.class.php:176 inc/dataflow.class.php:769
 msgid "Dataflow Expert"
 msgstr "Expert du flux de données"
 
+#. data owner
 #: inc/dataflow.class.php:153 inc/dataflow.class.php:485
+#: inc/dataflow.class.php:186 inc/dataflow.class.php:762
+#: inc/dataflow_item.class.php:498
 msgid "Dataflow Follow-up"
 msgstr "Opérateur du flux de données"
 
-#: inc/dataflow.class.php:169 inc/dataflow_item.class.php:495
-msgid "Editor"
-msgstr "Editeur"
-
-#: inc/dataflow.class.php:183 inc/dataflow.class.php:273
-msgid "Status StartDate"
-msgstr "Date de début du statut"
-
-#: inc/dataflow.class.php:251
-msgid "Short description"
-msgstr "Description courte"
-
-#: inc/dataflow.class.php:260
-msgid "Long description"
-msgstr "Description longue"
-
-#: inc/dataflow.class.php:281
-msgid "Transfer Protocol"
-msgstr "Protocole de transfert"
-
-#: inc/dataflow.class.php:288
-msgid "From application"
-msgstr "Application à la source"
-
-#: inc/dataflow.class.php:292
-msgid "To application"
-msgstr "Application de destination"
-
-#: inc/dataflow.class.php:300 inc/sourceconnector.class.php:38
-msgid "Source Connector"
-msgid_plural "Source Connectors"
-msgstr[0] "Connecteur à la source"
-msgstr[1] "Connecteurs à la source"
-
-#: inc/dataflow.class.php:305 inc/destinationconnector.class.php:38
-msgid "Destination Connector"
-msgid_plural "Destination Connectors"
-msgstr[0] "Connecteur à la destination"
-msgstr[1] "Connecteurs à la destination"
-
-#: inc/dataflow.class.php:314 inc/fromcredential.class.php:36
-msgid "Source User"
-msgid_plural "Source Users"
-msgstr[0] "Utilisateur à la source"
-msgstr[1] "Utilisateurs à la source"
-
-#: inc/dataflow.class.php:318 inc/tocredential.class.php:35
-msgid "Destination User"
-msgid_plural "Destination Users"
-msgstr[0] "Utilisateurs à la destination"
-msgstr[1] "Utilisateur à la destination"
-
-#: inc/dataflow.class.php:327
-msgid "From external server"
-msgstr "Du serveur externe"
-
-#: inc/dataflow.class.php:332
-msgid "To external server"
-msgstr "Vers le serveur externe"
-
-#: inc/dataflow.class.php:340
-msgid "Source directory/ ProgramId/ port"
-msgstr "Répertoire/ProgramId/Port à la source"
-
-#: inc/dataflow.class.php:345
-msgid "Destination directory/ ProgramId/ port"
-msgstr "Répertoire/ProgramId/Port à la destination"
-
-#: inc/dataflow.class.php:353
-msgid "Source format (Idoc, table, file pattern, ...)"
-msgstr "Format à la source (Idoc, table, patron de fichier, ...)"
-
-#: inc/dataflow.class.php:358
-msgid "Destination format (Idoc, table, file pattern, ...)"
-msgstr "Format à la destination (Idoc, table, patron de fichier, ...)"
-
-#: inc/dataflow.class.php:366
-msgid "Extract Method (Bapi, Stored Proc, ...)"
-msgstr "Méthode d'extraction (Bapi, Procédure stockée, ...)"
-
-#: inc/dataflow.class.php:371
-msgid "Load Method (Bapi, Stored Proc, ...)"
-msgstr "Méthode de chargement (Bapi, Procédure stockée, ...)"
-
-#: inc/dataflow.class.php:378 inc/srcpreproc.class.php:38
-msgid "Transfer Preprocessing"
-msgid_plural "Transfer Preprocessings"
-msgstr[0] "Pré-traitement du transfert"
-msgstr[1] "Pré-traitements du transfert"
-
-#: inc/dataflow.class.php:383 inc/destpostproc.class.php:38
-msgid "Transfer Postprocessing"
-msgid_plural "Transfer Postprocessings"
-msgstr[0] "Post-traitements du transfert"
-msgstr[1] "Post-traitement du transfert"
-
-#: inc/dataflow.class.php:391 inc/triggertype.class.php:38
-msgid "Transfer trigger"
-msgid_plural "Transfer triggers"
-msgstr[0] "Déclencheur du transfert"
-msgstr[1] "Déclencheurs du transfert"
-
-#: inc/dataflow.class.php:398
-msgid "Trigger name"
-msgstr "Nom du déclencheur"
-
-#: inc/dataflow.class.php:406 inc/transferfreq.class.php:38
-msgid "Transfer frequency (def : per day)"
-msgid_plural "Transfer frequencies"
-msgstr[0] "Fréquences de transfert (def : par jour)"
-msgstr[1] "Fréquence de transfert (def : par jour)"
-
-#: inc/dataflow.class.php:411 inc/transfertimetable.class.php:38
-msgid "Transfer Timetable"
-msgid_plural "Transfer Timetables"
-msgstr[0] "Horaire de transfert"
-msgstr[1] "Horaires de transfert"
-
-#: inc/dataflow.class.php:419 inc/errorhandling.class.php:38
-msgid "Transfer Error handling"
-msgid_plural "Transfer Error handlings"
-msgstr[0] "Traitement d'erreur de transfert"
-msgstr[1] "Traitements d'erreur de transfert"
-
-#: inc/dataflow.class.php:425 inc/holidayaction.class.php:38
-msgid "Transfer On holiday"
-msgid_plural "Transfers On holiday"
-msgstr[0] "Transfert lors de congé"
-msgstr[1] "Transferts lors de congé"
-
-#: inc/dataflow.class.php:433
-msgid "URL to functional doc (mapping, ...)"
-msgstr "URL vers la doc. fonctionnelle (correspondances, ...)"
-
-#: inc/dataflow.class.php:438
-msgid "URL to technical doc (design, ...)"
-msgstr "URL vers la doc. technique (conception, ...)"
-
-#: inc/dataflow.class.php:446
-msgid "Transfer Volume (MB)"
-msgstr "Volume des transferts"
-
-#: inc/dataflow.class.php:451
-msgid "Priority"
-msgstr "Priorité"
-
-#: inc/dataflow.class.php:464 inc/indicator.class.php:38
-msgid "Indicator"
-msgid_plural "Indicators"
-msgstr[0] "Indicateur"
-msgstr[1] "Indicateurs"
-
-#: inc/dataflow.class.php:472 inc/servicelevel.class.php:38
-msgid "Service Level"
-msgid_plural "Service Levels"
-msgstr[0] "Niveau de service"
-msgstr[1] "Niveaux de service"
-
-#: inc/dataflow.class.php:497
-msgid "Other group"
-msgstr "Autre groupe"
-
-#: inc/dataflow.class.php:502
-msgid "Other expert"
-msgstr "Autre expert"
-
-#: inc/dataflow.class.php:510
+#. support group
+#: inc/dataflow.class.php:510 inc/dataflow.class.php:338
+#: inc/dataflow.class.php:790
 msgid "Dataflow Support"
 msgstr "Support du flux de données"
 
@@ -226,10 +96,13 @@ msgid_plural "Dataflows associated"
 msgstr[0] "Flux de données associé"
 msgstr[1] "Bases de données associées"
 
-#: inc/dataflow_item.class.php:466
-msgctxt "button"
-msgid "Associate a dataflow"
-msgstr "Associer un flux de données"
+#. destination connector
+#: inc/dataflow.class.php:305 inc/destinationconnector.class.php:38
+#: inc/dataflow.class.php:551
+msgid "Destination Connector"
+msgid_plural "Destination Connectors"
+msgstr[0] "Connecteur à la destination"
+msgstr[1] "Connecteurs à la destination"
 
 #: inc/desturi.class.php:38
 msgid "Destination URI (ProgramID, ...)"
@@ -237,17 +110,51 @@ msgid_plural "Destination URIs"
 msgstr[0] "Répertoire/ProgramId/Port à la destination"
 msgstr[1] "Répertoires/ProgramId/Ports à la destination"
 
+#. to credential
+#: inc/dataflow.class.php:318 inc/tocredential.class.php:35
+#: inc/dataflow.class.php:564
+msgid "Destination User"
+msgid_plural "Destination Users"
+msgstr[0] "Utilisateurs à la destination"
+msgstr[1] "Utilisateur à la destination"
+
+#. destination format
+#: inc/dataflow.class.php:617
+msgid "Destination data structure"
+msgstr "Structure de données destination"
+
+#. destination path
+#: inc/dataflow.class.php:345 inc/dataflow.class.php:591
+msgid "Destination directory/ ProgramId/ port"
+msgstr "Répertoire/ProgramId/Port à la destination"
+
+#. destination format
+#: inc/dataflow.class.php:358 inc/dataflow.class.php:285
+#: inc/dataflow.class.php:604
+msgid "Destination format (Idoc, table, file pattern, ...)"
+msgstr "Format à la destination (Idoc, table, patron de fichier, ...)"
+
+#: inc/dataflow.class.php:169 inc/dataflow_item.class.php:495
+msgid "Editor"
+msgstr "Editeur"
+
+#: inc/dataflow.class.php:400 inc/dataflow.class.php:408
+#: inc/dataflow.class.php:955 inc/dataflow_item.class.php:274
+#: inc/dataflow_item.class.php:493
+msgid "Entity"
+msgstr "Entité"
+
+#. extract method
+#: inc/dataflow.class.php:366 inc/dataflow.class.php:195
+#: inc/dataflow.class.php:625
+msgid "Extract Method (Bapi, Stored Proc, ...)"
+msgstr "Méthode d'extraction (Bapi, Procédure stockée, ...)"
+
 #: inc/flowgroup.class.php:38
 msgid "Flow group"
 msgid_plural "Flow groups"
 msgstr[0] "Groupe de flux"
 msgstr[1] "Groupes de flux"
-
-#: inc/fromcomputer.class.php:38
-msgid "From computer"
-msgid_plural "From computers"
-msgstr[0] "De l'ordinateur"
-msgstr[1] "Des ordinateurs"
 
 #: inc/fromswcomponent.class.php:38
 msgid "From App"
@@ -255,11 +162,93 @@ msgid_plural "From Apps"
 msgstr[0] "De l'application"
 msgstr[1] "Des applications"
 
+#. from application
+#: inc/dataflow.class.php:288 inc/dataflow.class.php:534
+msgid "From application"
+msgstr "Application à la source"
+
+#: inc/fromcomputer.class.php:38
+msgid "From computer"
+msgid_plural "From computers"
+msgstr[0] "De l'ordinateur"
+msgstr[1] "Des ordinateurs"
+
+#. source path
+#: inc/dataflow.class.php:327 inc/dataflow.class.php:573
+msgid "From external server"
+msgstr "Du serveur externe"
+
+#: inc/profile.class.php:116
+msgid "General"
+msgstr "Général"
+
+#: inc/profile.class.php:119
+msgid "Helpdesk"
+msgstr "Assistance"
+
+#: inc/dataflow.class.php:347 inc/dataflow.class.php:408
+msgid "ID"
+msgstr "ID"
+
+#. indicator
+#: inc/dataflow.class.php:464 inc/indicator.class.php:38
+#: inc/dataflow.class.php:211 inc/dataflow.class.php:741
+msgid "Indicator"
+msgid_plural "Indicators"
+msgstr[0] "Indicateur"
+msgstr[1] "Indicateurs"
+
 #: inc/intermediatecomputer.class.php:38
 msgid "Intermediate computer"
 msgid_plural "Intermediate computers"
 msgstr[0] "Ordinateur intermédiaire"
 msgstr[1] "Ordinateurs intermédiaires"
+
+#: inc/dataflow_item.class.php:276
+msgid "Inventory number"
+msgstr "Numéro d'inventaire"
+
+#: inc/dataflow.class.php:220
+msgid "Last update"
+msgstr "Dernière mise à jour"
+
+#. load method
+#: inc/dataflow.class.php:371 inc/dataflow.class.php:203
+#: inc/dataflow.class.php:630
+msgid "Load Method (Bapi, Stored Proc, ...)"
+msgstr "Méthode de chargement (Bapi, Procédure stockée, ...)"
+
+#: inc/mapping.class.php:74
+msgid "Load diagram"
+msgstr "Charger le diagramme"
+
+#. long description of dataflows
+#: inc/dataflow.class.php:260 inc/dataflow.class.php:379
+#: inc/dataflow.class.php:506
+msgid "Long description"
+msgstr "Description longue"
+
+#: inc/dataflow.class.php:301
+msgid "Mode"
+msgstr "Mode"
+
+#. source connector
+#: inc/dataflow.class.php:665
+msgid "Mode Full/Delta"
+msgstr "Mode Complet/Delta"
+
+#. name of dataflows
+#: hook.php:390 inc/dataflow.class.php:102 inc/dataflow.class.php:415
+#: inc/dataflow.class.php:434 inc/dataflow.class.php:484
+#: inc/dataflow.class.php:953 inc/dataflow_item.class.php:272
+#: inc/dataflow_item.class.php:491
+msgid "Name"
+msgstr "Nom"
+
+#: inc/dataflow.class.php:318
+#, fuzzy
+msgid "Other Expert"
+msgstr "Autre expert"
 
 #: inc/othergroup.class.php:38
 msgid "Other Group"
@@ -267,11 +256,65 @@ msgid_plural "Other Groups"
 msgstr[0] "Autre groupe"
 msgstr[1] "Autres groupes"
 
+#. other expert
+#: inc/dataflow.class.php:502 inc/dataflow.class.php:782
+msgid "Other expert"
+msgstr "Autre expert"
+
+#. other group
+#: inc/dataflow.class.php:497 inc/dataflow.class.php:328
+#: inc/dataflow.class.php:777
+msgid "Other group"
+msgstr "Autre groupe"
+
 #: inc/otheruser.class.php:38
 msgid "Other user"
 msgid_plural "Other users"
 msgstr[0] "Autres experts"
 msgstr[1] "Autre expert"
+
+#. destination connector
+#: inc/dataflow.class.php:309 inc/dataflow.class.php:670
+msgid "Pattern"
+msgstr "Patron"
+
+#. transfer priority
+#: inc/dataflow.class.php:451 inc/dataflow.class.php:269
+#: inc/dataflow.class.php:728
+msgid "Priority"
+msgstr "Priorité"
+
+#: inc/transferprotocol.class.php:38
+msgid "Protocol"
+msgid_plural "Protocols"
+msgstr[0] "Protocole de transfert"
+msgstr[1] "Protocoles de transfert"
+
+#: inc/dataflow_item.class.php:275
+msgid "Serial number"
+msgstr "Numéro de série"
+
+#. service level of dataflows
+#: inc/dataflow.class.php:472 inc/servicelevel.class.php:38
+#: inc/dataflow.class.php:293 inc/dataflow.class.php:749
+msgid "Service Level"
+msgid_plural "Service Levels"
+msgstr[0] "Niveau de service"
+msgstr[1] "Niveaux de service"
+
+#. short description of dataflows
+#: inc/dataflow.class.php:251 inc/dataflow.class.php:371
+#: inc/dataflow.class.php:497
+msgid "Short description"
+msgstr "Description courte"
+
+#. source connector
+#: inc/dataflow.class.php:300 inc/sourceconnector.class.php:38
+#: inc/dataflow.class.php:546
+msgid "Source Connector"
+msgid_plural "Source Connectors"
+msgstr[0] "Connecteur à la source"
+msgstr[1] "Connecteurs à la source"
 
 #: inc/srcuri.class.php:38
 msgid "Source URI (ProgramID, ...)"
@@ -279,11 +322,42 @@ msgid_plural "Source URIs"
 msgstr[0] "URI source (ProgramID, ...)"
 msgstr[1] "URI sources (ProgramID, ...)"
 
-#: inc/state.class.php:38
+#. from credential
+#: inc/dataflow.class.php:314 inc/fromcredential.class.php:36
+#: inc/dataflow.class.php:560
+msgid "Source User"
+msgid_plural "Source Users"
+msgstr[0] "Utilisateur à la source"
+msgstr[1] "Utilisateurs à la source"
+
+#. source format
+#: inc/dataflow.class.php:612
+msgid "Source data structure"
+msgstr "Structure de données source"
+
+#. source path
+#: inc/dataflow.class.php:340 inc/dataflow.class.php:586
+msgid "Source directory/ ProgramId/ port"
+msgstr "Répertoire/ProgramId/Port à la source"
+
+#. source format
+#: inc/dataflow.class.php:353 inc/dataflow.class.php:277
+#: inc/dataflow.class.php:599
+msgid "Source format (Idoc, table, file pattern, ...)"
+msgstr "Format à la source (Idoc, table, patron de fichier, ...)"
+
+#. status of dataflows
+#: inc/state.class.php:38 inc/dataflow.class.php:514
 msgid "Status"
 msgid_plural "States"
 msgstr[0] "Statut"
 msgstr[1] "Statuts"
+
+#. status date of dataflows
+#: inc/dataflow.class.php:183 inc/dataflow.class.php:273
+#: inc/dataflow.class.php:229 inc/dataflow.class.php:519
+msgid "Status StartDate"
+msgstr "Date de début du statut"
 
 #: inc/supportgroup.class.php:38
 msgid "SupportGroup"
@@ -291,11 +365,9 @@ msgid_plural "SupportGroups"
 msgstr[0] "Groupe de support"
 msgstr[1] "Groupes de support"
 
-#: inc/tocomputer.class.php:38
-msgid "To computer"
-msgid_plural "To computers"
-msgstr[0] "A l'ordinateur"
-msgstr[1] "Aux ordinateurs"
+#: setup.php:98
+msgid "This plugin requires GLPI >= 9.2 and <= 9.4"
+msgstr "Ce plugin nécessite une version GLPI >= 9.2 et < 9.4"
 
 #: inc/toswcomponent.class.php:38
 msgid "To App"
@@ -303,11 +375,112 @@ msgid_plural "To Apps"
 msgstr[0] "A l'application"
 msgstr[1] ""
 
-#: inc/transferprotocol.class.php:38
-msgid "Protocol"
-msgid_plural "Protocols"
-msgstr[0] "Protocole de transfert"
-msgstr[1] "Protocoles de transfert"
+#. to application
+#: inc/dataflow.class.php:292 inc/dataflow.class.php:538
+msgid "To application"
+msgstr "Application de destination"
+
+#: inc/tocomputer.class.php:38
+msgid "To computer"
+msgid_plural "To computers"
+msgstr[0] "A l'ordinateur"
+msgstr[1] "Aux ordinateurs"
+
+#. destination path
+#: inc/dataflow.class.php:332 inc/dataflow.class.php:578
+msgid "To external server"
+msgstr "Vers le serveur externe"
+
+#: inc/dataflow.class.php:1003
+msgid "Transfer"
+msgstr "Transfert"
+
+#. error handling
+#: inc/dataflow.class.php:419 inc/errorhandling.class.php:38
+#: inc/dataflow.class.php:691
+msgid "Transfer Error handling"
+msgid_plural "Transfer Error handlings"
+msgstr[0] "Traitement d'erreur de transfert"
+msgstr[1] "Traitements d'erreur de transfert"
+
+#. transfer on holiday
+#: inc/dataflow.class.php:425 inc/holidayaction.class.php:38
+#: inc/dataflow.class.php:697
+msgid "Transfer On holiday"
+msgid_plural "Transfers On holiday"
+msgstr[0] "Transfert lors de congé"
+msgstr[1] "Transferts lors de congé"
+
+#. destination postprocessing
+#: inc/dataflow.class.php:383 inc/destpostproc.class.php:38
+#: inc/dataflow.class.php:261 inc/dataflow.class.php:642
+msgid "Transfer Postprocessing"
+msgid_plural "Transfer Postprocessings"
+msgstr[0] "Post-traitements du transfert"
+msgstr[1] "Post-traitement du transfert"
+
+#. source preprocessing
+#: inc/dataflow.class.php:378 inc/srcpreproc.class.php:38
+#: inc/dataflow.class.php:253 inc/dataflow.class.php:637
+msgid "Transfer Preprocessing"
+msgid_plural "Transfer Preprocessings"
+msgstr[0] "Pré-traitement du transfert"
+msgstr[1] "Pré-traitements du transfert"
+
+#. transfer protocol
+#: inc/dataflow.class.php:281 inc/dataflow.class.php:527
+msgid "Transfer Protocol"
+msgstr "Protocole de transfert"
+
+#. transfer timetable
+#: inc/dataflow.class.php:411 inc/transfertimetable.class.php:38
+#: inc/dataflow.class.php:245 inc/dataflow.class.php:683
+msgid "Transfer Timetable"
+msgid_plural "Transfer Timetables"
+msgstr[0] "Horaire de transfert"
+msgstr[1] "Horaires de transfert"
+
+#. transfer volume
+#: inc/dataflow.class.php:446 inc/dataflow.class.php:723
+msgid "Transfer Volume (MB)"
+msgstr "Volume des transferts"
+
+#. transfer frequency
+#: inc/dataflow.class.php:406 inc/transferfreq.class.php:38
+#: inc/dataflow.class.php:237 inc/dataflow.class.php:678
+msgid "Transfer frequency (def : per day)"
+msgid_plural "Transfer frequencies"
+msgstr[0] "Fréquences de transfert (def : par jour)"
+msgstr[1] "Fréquence de transfert (def : par jour)"
+
+#. transfer trigger
+#: inc/dataflow.class.php:391 inc/triggertype.class.php:38
+#: inc/dataflow.class.php:650
+msgid "Transfer trigger"
+msgid_plural "Transfer triggers"
+msgstr[0] "Déclencheur du transfert"
+msgstr[1] "Déclencheurs du transfert"
+
+#. echo "</td>";
+#. trigger format
+#. echo "<td>"
+#: inc/dataflow.class.php:398 inc/dataflow.class.php:657
+msgid "Trigger name"
+msgstr "Nom du déclencheur"
+
+#. type
+#: inc/dataflow.class.php:736 inc/dataflow.class.php:957
+#: inc/dataflow_item.class.php:271
+msgid "Type"
+msgstr "Type"
+
+#: inc/dataflow.class.php:433 inc/dataflow.class.php:707
+msgid "URL to functional doc (mapping, ...)"
+msgstr "URL vers la doc. fonctionnelle (correspondances, ...)"
+
+#: inc/dataflow.class.php:438 inc/dataflow.class.php:715
+msgid "URL to technical doc (design, ...)"
+msgstr "URL vers la doc. technique (conception, ...)"
 
 #~ msgid "Category"
 #~ msgid_plural "Categories"
