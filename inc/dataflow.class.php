@@ -311,6 +311,40 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
 
       $tab[] = [
+         'id'        => '31',
+         'table'     => $this->getTable(),
+         'field'     => 'plugin_dataflows_srcuri',
+         'name'      => __('Source directory/ ProgramId/ port', 'dataflows'),
+         'datatype'  => 'text'
+      ];
+
+      $tab[] = [
+         'id'        => '32',
+         'table'     => $this->getTable(),
+         'field'     => 'plugin_dataflows_desturi',
+         'name'      => __('Destination directory/ ProgramId/ port', 'dataflows'),
+         'datatype'  => 'text'
+      ];
+
+      $tab[] = [
+         'id'        => '33',
+         'table'     => $this->getTable(),
+         'field'     => 'srcstructure',
+         'name'      => __('Source data structure', 'dataflows'),
+         'nosearch'      => true,
+         'datatype'  => 'text'
+      ];
+
+      $tab[] = [
+         'id'        => '34',
+         'table'     => $this->getTable(),
+         'field'     => 'deststructure',
+         'name'      => __('Destination data structure', 'dataflows'),
+         'nosearch'      => true,
+         'datatype'  => 'text'
+      ];
+
+      $tab[] = [
          'id'        => '40',
          'table'     => 'glpi_users',
          'field'     => 'name',
