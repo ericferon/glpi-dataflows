@@ -34,7 +34,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
    static $rightname = "plugin_dataflows";
    protected $usenotepad         = true;
    
-   static $types = ['Computer','Software', 'SoftwareLicense', 'Contract', 'Project', 'ProjectTask'];
+   static $types = ['Computer','Software', 'SoftwareLicense', 'Contract', 'Project', 'ProjectTask', 'PluginAccountsAccount'];
 
    static function getTypeName($nb=0) {
 
@@ -345,6 +345,46 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
 
       $tab[] = [
+         'id'        => '35',
+         'table'     => 'glpi_plugin_dataflows_errorhandlings',
+         'field'     => 'name',
+         'name'      => __('Transfer Error handling', 'dataflows'),
+         'datatype'  => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'        => '36',
+         'table'     => 'glpi_plugin_dataflows_fromauthtypes',
+         'field'     => 'name',
+         'name'      => __('Source authentication type', 'dataflows'),
+         'datatype'  => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'        => '37',
+         'table'     => 'glpi_plugin_dataflows_toauthtypes',
+         'field'     => 'name',
+         'name'      => __('Destination authentication type', 'dataflows'),
+         'datatype'  => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'        => '38',
+         'table'     => 'glpi_plugin_dataflows_srcstructuretypes',
+         'field'     => 'name',
+         'name'      => __('Source structure type', 'dataflows'),
+         'datatype'  => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'        => '39',
+         'table'     => 'glpi_plugin_dataflows_deststructuretypes',
+         'field'     => 'name',
+         'name'      => __('Destination structure type', 'dataflows'),
+         'datatype'  => 'dropdown'
+      ];
+
+      $tab[] = [
          'id'        => '40',
          'table'     => 'glpi_users',
          'field'     => 'name',
@@ -588,6 +628,18 @@ class PluginDataflowsDataflow extends CommonDBTM {
       echo "</td>";
 	  echo "</tr>";
 	  
+      echo "<tr class='tab_bg_1'>";
+      //from application
+      echo "<td>".__('Source authentication type', 'dataflows').": </td><td>";
+      Dropdown::show('PluginDataflowsFromAuthType', ['name' => "plugin_dataflows_fromauthtypes_id", 'value' => $this->fields["plugin_dataflows_fromauthtypes_id"]]);
+      echo "</td>";
+      //to application
+      echo "<td>".__('Destination authentication type', 'dataflows').": </td>";
+      echo "<td>";
+      Dropdown::show('PluginDataflowsToAuthType', ['name' => "plugin_dataflows_toauthtypes_id", 'value' => $this->fields["plugin_dataflows_toauthtypes_id"]]);
+      echo "</td>";
+      echo "</tr>";
+
 	if (class_exists('PluginAccountsAccount')) {
       echo "<tr class='tab_bg_1'>";
       //from credential
@@ -641,6 +693,18 @@ class PluginDataflowsDataflow extends CommonDBTM {
       echo "</td>";
 	  echo "</tr>";
 	  
+      echo "<tr class='tab_bg_1'>";
+      //from application
+      echo "<td>".__('Source structure type', 'dataflows').": </td><td>";
+      Dropdown::show('PluginDataflowsSrcStructureType', ['name' => "plugin_dataflows_srcstructuretypes_id", 'value' => $this->fields["plugin_dataflows_srcstructuretypes_id"]]);
+      echo "</td>";
+      //to application
+      echo "<td>".__('Destination structure type', 'dataflows').": </td>";
+      echo "<td>";
+      Dropdown::show('PluginDataflowsDestStructureType', ['name' => "plugin_dataflows_deststructuretypes_id", 'value' => $this->fields["plugin_dataflows_deststructuretypes_id"]]);
+      echo "</td>";
+      echo "</tr>";
+
       echo "<tr class='tab_bg_1'>";
       //source format
       echo "<td>".__('Source data structure', 'dataflows').": </td>";

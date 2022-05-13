@@ -49,9 +49,24 @@ function plugin_init_dataflows() {
    //Plugin::registerClass('PluginDataflowsDataflow_Item',
    //                      ['ticket_types' => true]);
 
-   if (class_exists('PluginAccountsAccount')) {
-      PluginAccountsAccount::registerType('PluginDataflowsDataflow');
+   // Add links to other plugins
+   $types = ['PluginAccountsAccount'];
+   foreach ($types as $itemtype) {
+      if (class_exists($itemtype)) {
+         $itemtype::registerType('PluginDataflowsDataflow');
+      }
    }
+// Add other plugin associations
+   $associatedtypes = [];
+   if (class_exists('PluginDataflowsDataflow'))
+	  foreach ($associatedtypes as $itemtype) {
+		if (class_exists($itemtype)) {
+			$itemtype::registerType('PluginDataflowsDataflow');
+		}
+	  }
+//   if (class_exists('PluginAccountsAccount')) {
+//      PluginAccountsAccount::registerType('PluginDataflowsDataflow');
+//   }
       
    if (Session::getLoginUserID()) {
 
@@ -82,7 +97,7 @@ function plugin_version_dataflows() {
 
    return array (
       'name' => _n('Dataflow', 'Dataflows', 2, 'dataflows'),
-      'version' => '2.2.9',
+      'version' => '2.2.10',
       'author'  => "Eric Feron",
       'license' => 'GPLv2+',
       'homepage'=> 'https://github.com/ericferon/glpi-dataflows',
