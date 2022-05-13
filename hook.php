@@ -63,6 +63,10 @@ function plugin_dataflows_install() {
 			$update=true;
 			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-1.2.5.sql");
 		}
+		if (!$DB->TableExists("glpi_plugin_dataflows_srcstructuretypes")) {
+			$update=true;
+			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-1.2.6.sql");
+		}
 	}
     if (class_exists('PluginAccountsAccount')) {
 			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/addon-accounts-1.2.3.sql");
