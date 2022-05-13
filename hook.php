@@ -32,7 +32,7 @@ function plugin_dataflows_install() {
    $update=false;
    if (!$DB->TableExists("glpi_plugin_dataflows_dataflows")) {
 
-		$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/empty-1.2.4.sql");
+		$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/empty-1.2.5.sql");
 	}
 	else {
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && !$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_indicators_id")) {
@@ -58,6 +58,10 @@ function plugin_dataflows_install() {
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_modes_id"))) {
 			$update=true;
 			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-1.2.4.sql");
+		}
+		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_fromauthtypes_id"))) {
+			$update=true;
+			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-1.2.5.sql");
 		}
 	}
     if (class_exists('PluginAccountsAccount')) {
