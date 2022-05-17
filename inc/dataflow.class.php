@@ -400,8 +400,9 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'field'     => 'name',
          'linkfield' => 'plugin_dataflows_othergroups_id',
          'name'      => __('Other group', 'dataflows'),
-         'condition' => '`is_assign`',
-         'datatype'  => 'dropdown'
+//         'condition' => '`is_assign`',
+         'datatype'  => 'dropdown',
+         'right'     => 'interface'
       ];
 
       $tab[] = [
@@ -410,8 +411,9 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'field'     => 'name',
          'linkfield' => 'plugin_dataflows_supportgroups_id',
          'name'      => __('Dataflow Support', 'dataflows'),
-         'condition' => '`is_assign`',
-         'datatype'  => 'dropdown'
+//         'condition' => '`is_assign`',
+         'datatype'  => 'dropdown',
+         'right'     => 'interface'
       ];
 
       $tab[] = [
@@ -597,6 +599,19 @@ class PluginDataflowsDataflow extends CommonDBTM {
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
+      //source connector
+      echo "<td>".__('Mode Full/Delta', 'dataflows').": </td>";
+      echo "<td>";
+      Dropdown::show('PluginDataflowsMode', ['name' => "plugin_dataflows_modes_id", 'value' => $this->fields["plugin_dataflows_modes_id"]]);
+      echo "</td>";
+      //destination connector
+      echo "<td>".__('Pattern', 'dataflows').": </td>";
+      echo "<td>";
+      Dropdown::show('PluginDataflowsPattern', ['name' => "plugin_dataflows_patterns_id", 'value' => $this->fields["plugin_dataflows_patterns_id"]]);
+      echo "</td>";
+	  echo "</tr>";
+	  
+      echo "<tr class='tab_bg_1'>";
       //transfer protocol
       echo "<td class='top center' colspan='4'>". __('Transfer Protocol', 'dataflows').": ";
       Dropdown::show('PluginDataflowsTransferProtocol', ['name' => "plugin_dataflows_transferprotocols_id", 'value' => $this->fields["plugin_dataflows_transferprotocols_id"]]);
@@ -758,19 +773,6 @@ class PluginDataflowsDataflow extends CommonDBTM {
       echo ")</td>";
       echo "</tr>";
       
-      echo "<tr class='tab_bg_1'>";
-      //source connector
-      echo "<td>".__('Mode Full/Delta', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsMode', ['name' => "plugin_dataflows_modes_id", 'value' => $this->fields["plugin_dataflows_modes_id"]]);
-      echo "</td>";
-      //destination connector
-      echo "<td>".__('Pattern', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsPattern', ['name' => "plugin_dataflows_patterns_id", 'value' => $this->fields["plugin_dataflows_patterns_id"]]);
-      echo "</td>";
-	  echo "</tr>";
-	  
       echo "<tr class='tab_bg_1'>";
       //transfer frequency
       echo "<td>".__('Transfer frequency (def : per day)', 'dataflows').": </td><td>";

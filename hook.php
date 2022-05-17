@@ -141,7 +141,10 @@ function plugin_dataflows_uninstall() {
 					"glpi_plugin_dataflows_flowgroups",
 					"glpi_plugin_dataflows_servicelevels",
 					"glpi_plugin_dataflows_transferprotocols",
+					"glpi_plugin_dataflows_modes",
+					"glpi_plugin_dataflows_patterns",
 					"glpi_plugin_dataflows_sourceconnectors",
+					"glpi_plugin_dataflows_fromauthtypes",
 					"glpi_plugin_dataflows_triggertypes",
 					"glpi_plugin_dataflows_transferfreqs",
 					"glpi_plugin_dataflows_transfertimetables",
@@ -150,12 +153,15 @@ function plugin_dataflows_uninstall() {
 					"glpi_plugin_dataflows_srcpreprocs",
 					"glpi_plugin_dataflows_desturis",
 					"glpi_plugin_dataflows_destpostprocs",
+					"glpi_plugin_dataflows_srcstructuretypes",
 					"glpi_plugin_dataflows_errorhandlings"];
 
    foreach($tables as $table)
       $DB->query("DROP TABLE IF EXISTS `$table`;");
 
 	$views = ["glpi_plugin_dataflows_sourceconnectors",
+					"glpi_plugin_dataflows_toauthtypes",
+					"glpi_plugin_dataflows_deststructuretypes",
 					"glpi_plugin_dataflows_fromswcomponents",
 					"glpi_plugin_dataflows_toswcomponents"];
 				
@@ -337,10 +343,14 @@ function plugin_dataflows_getDataflowRelations() {
 					 "glpi_plugin_dataflows_types"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_types_id"],
 					 "glpi_plugin_dataflows_indicators"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_indicators_id"],
 					 "glpi_plugin_dataflows_states"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_states_id"],
+					 "glpi_plugin_dataflows_modes"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_modes_id"],
+					 "glpi_plugin_dataflows_patterns"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_patterns_id"],
 					 "glpi_plugin_dataflows_servicelevels"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_servicelevels_id"],
 					 "glpi_plugin_dataflows_transferprotocols"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_transferprotocols_id"],
 					 "glpi_plugin_dataflows_sourceconnectors"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_sourceconnectors_id"],
 					 "glpi_plugin_dataflows_triggertypes"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_triggertypes_id"],
+					 "glpi_plugin_dataflows_fromauthtypes"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_fromauthtypes_id"],
+					 "glpi_plugin_dataflows_srcstructuretypes"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_srcstructuretypes_id"],
 					 "glpi_plugin_dataflows_transferfreqs"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_transferfreqs_id"],
 					 "glpi_plugin_dataflows_transfertimetables"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_transfertimetables_id"],
 					 "glpi_plugin_dataflows_holidayactions"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_holidayactions_id"],
