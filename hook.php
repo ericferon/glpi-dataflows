@@ -388,6 +388,10 @@ function plugin_dataflows_getDropdown() {
                 'PluginDataflowsSrcPreproc'=>PluginDataflowsSrcPreproc::getTypeName(2),
                 'PluginDataflowsDestUri'=>PluginDataflowsDestUri::getTypeName(2),
                 'PluginDataflowsDestPostproc'=>PluginDataflowsDestPostproc::getTypeName(2),
+                'PluginDataflowsMode'=>PluginDataflowsMode::getTypeName(2),
+                'PluginDataflowsPattern'=>PluginDataflowsPattern::getTypeName(2),
+                'PluginDataflowsFromAuthType'=>PluginDataflowsFromAuthType::getTypeName(2),
+                'PluginDataflowsSrcStructureType'=>PluginDataflowsSrcStructureType::getTypeName(2),
                 'PluginDataflowsErrorHandling'=>PluginDataflowsErrorHandling::getTypeName(2)
                 ];
    else

@@ -184,7 +184,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'field'     => 'name',
          'linkfield' => 'groups_id',
          'name'      => __('Dataflow Follow-up', 'dataflows'),
-         'condition' => '`is_assign`',
+//         'condition' => '`is_assign`',
          'datatype'  => 'dropdown'
       ];
 
