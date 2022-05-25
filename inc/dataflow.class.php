@@ -34,7 +34,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
    static $rightname = "plugin_dataflows";
    protected $usenotepad         = true;
    
-   static $types = ['Computer','Software', 'SoftwareLicense', 'Contract', 'Project', 'ProjectTask', 'PluginAccountsAccount'];
+   static $types = ['Computer','Software', 'SoftwareLicense', 'Contract', 'Project', 'ProjectTask', 'PluginAccountsAccount', "PluginArchiswSwcomponent"];
 
    static function getTypeName($nb=0) {
 
@@ -174,8 +174,8 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'field'     => 'name',
          'linkfield' => 'users_id',
          'name'      => __('Dataflow Expert', 'dataflows'),
-         'datatype'  => 'dropdown',
-         'right'     => 'interface'
+         'datatype'  => 'dropdown'/*,
+         'right'     => 'interface'*/
       ];
 
       $tab[] = [
@@ -390,8 +390,8 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'field'     => 'name',
          'linkfield' => 'plugin_dataflows_otherusers_id',
          'name'      => __('Other Expert', 'dataflows'),
-         'datatype'  => 'dropdown',
-         'right'     => 'interface'
+         'datatype'  => 'dropdown'/*,
+         'right'     => 'interface'*/
       ];
       
       $tab[] = [
@@ -401,8 +401,8 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'linkfield' => 'plugin_dataflows_othergroups_id',
          'name'      => __('Other group', 'dataflows'),
 //         'condition' => '`is_assign`',
-         'datatype'  => 'dropdown',
-         'right'     => 'interface'
+         'datatype'  => 'dropdown'/*,
+         'right'     => 'interface'*/
       ];
 
       $tab[] = [
@@ -412,8 +412,26 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'linkfield' => 'plugin_dataflows_supportgroups_id',
          'name'      => __('Dataflow Support', 'dataflows'),
 //         'condition' => '`is_assign`',
-         'datatype'  => 'dropdown',
-         'right'     => 'interface'
+         'datatype'  => 'dropdown'/*,
+         'right'     => 'interface'*/
+      ];
+
+      $tab[] = [
+         'id'        => '43',
+         'table'     => $this->getTable(),
+         'field'     => 'mappingdocurl',
+         'name'      => __('URL to functional doc (mapping, ...)', 'dataflows'),
+         'nosearch'  => true,
+         'datatype'  => 'text'
+      ];
+
+      $tab[] = [
+         'id'        => '44',
+         'table'     => $this->getTable(),
+         'field'     => 'technicaldocurl',
+         'name'      => __('URL to technical doc (design, ...)', 'dataflows'),
+         'nosearch'  => true,
+         'datatype'  => 'text'
       ];
 
       $tab[] = [
@@ -995,7 +1013,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
 
    /**
-    * Type than could be linked to a Rack
+    * Type that could be linked to a dataflow
     *
     * @param $all boolean, all type, or only allowed ones
     *

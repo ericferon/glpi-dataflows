@@ -192,7 +192,7 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
       return $forbidden;
    }
    /**
-    * Show items links to a dataflow
+    * Show items associated to a dataflow
     *
     * @since version 0.84
     *
@@ -357,7 +357,7 @@ class PluginDataflowsDataflow_Item extends CommonDBRelation {
    }
 
    /**
-   * Show dataflows associated to an item
+   * Show dataflows associated to an item (as a supplementary tab)
    *
    * @since version 0.84
    *

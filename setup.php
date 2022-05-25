@@ -56,7 +56,7 @@ function plugin_init_dataflows() {
          $itemtype::registerType('PluginDataflowsDataflow');
       }
    }
-// Add other plugin associations
+// Add other plugin associations (in side panel)
    $associatedtypes = [];
    if (class_exists('PluginDataflowsDataflow'))
 	  foreach ($associatedtypes as $itemtype) {
