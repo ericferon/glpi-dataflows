@@ -577,7 +577,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       //name of dataflows
       echo "<td>".__('Name')."</td>";
       echo "<td>";
-      Html::autocompletionTextField($this,"name");
+      echo Html::input('name',['value' => $this->fields['name'], 'id' => "name"]);
       echo "</td>";
       //flowgroup of dataflows
       echo "<td>".PluginDataflowsFlowgroup::getTypeName(1)."</td>";
@@ -591,7 +591,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       echo "<td>".__('Short description', 'dataflows')."</td>";
       echo "<td class='top center' colspan='4'>";
 //      echo "<textarea cols='100' rows='1' name='shortdescription'>".$this->fields["shortdescription"]."</textarea>";
-      Html::autocompletionTextField($this,"shortdescription",['option' => 'style="width:98%"']);
+      echo Html::input('shortdescription',['value' => $this->fields['shortdescription'], 'id' => "shortdescription", 'width' => "98%"]);
       echo "</td>";
       echo "</tr>";
 
@@ -688,15 +688,15 @@ class PluginDataflowsDataflow extends CommonDBTM {
 	}
 
       echo "<tr class='tab_bg_1'>";
-      //source path
+      //from external server
       echo "<td>".__('From external server', 'dataflows').": </td>";
       echo "<td>";
-      Html::autocompletionTextField($this,"plugin_dataflows_fromexternal",['size' => 65]);
+      echo Html::input('plugin_dataflows_fromexternal',['value' => $this->fields['plugin_dataflows_fromexternal'], 'id' => "plugin_dataflows_fromexternal", 'size' => 55]);
       echo "</td>";
-      //destination path
+      //to external server
       echo "<td>".__('To external server', 'dataflows').": </td>";
       echo "<td>";
-      Html::autocompletionTextField($this,"plugin_dataflows_toexternal",['size' => 65]);
+      echo Html::input('plugin_dataflows_toexternal',['value' => $this->fields['plugin_dataflows_toexternal'], 'id' => "plugin_dataflows_toexternal", 'size' => 55]);
       echo "</td>";
 	  echo "</tr>";
 
@@ -704,12 +704,12 @@ class PluginDataflowsDataflow extends CommonDBTM {
       //source path
       echo "<td>".__('Source directory/ ProgramId/ port', 'dataflows').": </td>";
       echo "<td>";
-      Html::autocompletionTextField($this,"plugin_dataflows_srcuri",['size' => 65]);
+      echo Html::input('plugin_dataflows_srcuri',['value' => $this->fields['plugin_dataflows_srcuri'], 'id' => "plugin_dataflows_srcuri", 'size' => 55]);
       echo "</td>";
       //destination path
       echo "<td>".__('Destination directory/ ProgramId/ port', 'dataflows').": </td>";
       echo "<td>";
-      Html::autocompletionTextField($this,"plugin_dataflows_desturi",['size' => 65]);
+      echo Html::input('plugin_dataflows_desturi',['value' => $this->fields['plugin_dataflows_desturi'], 'id' => "plugin_dataflows_desturi", 'size' => 55]);
       echo "</td>";
 	  echo "</tr>";
 
@@ -717,21 +717,21 @@ class PluginDataflowsDataflow extends CommonDBTM {
       //source format
       echo "<td>".__('Source format (Idoc, table, file pattern, ...)', 'dataflows').": </td>";
       echo "<td>";
-      Html::autocompletionTextField($this,"srcformat",['size' => 45]);
+      echo Html::input('srcformat',['value' => $this->fields['srcformat'], 'id' => "srcformat", 'size' => 45]);
       echo "</td>";
       //destination format
       echo "<td>".__('Destination format (Idoc, table, file pattern, ...)', 'dataflows').": </td>";
       echo "<td>";
-      Html::autocompletionTextField($this,"destformat",['size' => 45]);
+      echo Html::input('destformat',['value' => $this->fields['destformat'], 'id' => "destformat", 'size' => 45]);
       echo "</td>";
 	  echo "</tr>";
 	  
       echo "<tr class='tab_bg_1'>";
-      //from application
+      //source structure type
       echo "<td>".__('Source structure type', 'dataflows').": </td><td>";
       Dropdown::show('PluginDataflowsSrcStructureType', ['name' => "plugin_dataflows_srcstructuretypes_id", 'value' => $this->fields["plugin_dataflows_srcstructuretypes_id"]]);
       echo "</td>";
-      //to application
+      //destination structure type
       echo "<td>".__('Destination structure type', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsDestStructureType', ['name' => "plugin_dataflows_deststructuretypes_id", 'value' => $this->fields["plugin_dataflows_deststructuretypes_id"]]);
@@ -739,12 +739,12 @@ class PluginDataflowsDataflow extends CommonDBTM {
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      //source format
+      //source data structure
       echo "<td>".__('Source data structure', 'dataflows').": </td>";
       echo "<td>";
       echo "<textarea cols='40' rows='3' name='srcstructure'>".$this->fields["srcstructure"]."</textarea>";
       echo "</td>";
-      //destination format
+      //destination data structure
       echo "<td>".__('Destination data structure', 'dataflows').": </td>";
       echo "<td>";
       echo "<textarea cols='40' rows='3' name='deststructure'>".$this->fields["deststructure"]."</textarea>";
@@ -755,12 +755,12 @@ class PluginDataflowsDataflow extends CommonDBTM {
       //extract method
       echo "<td>".__('Extract Method (Bapi, Stored Proc, ...)', 'dataflows').": </td>";
       echo "<td>";
-      Html::autocompletionTextField($this,"extractmethod",['size' => 45]);
+      echo Html::input('extractmethod',['value' => $this->fields['extractmethod'], 'id' => "extractmethod", 'size' => 45]);
       echo "</td>";
       //load method
       echo "<td>".__('Load Method (Bapi, Stored Proc, ...)', 'dataflows').": </td>";
       echo "<td>";
-      Html::autocompletionTextField($this,"loadmethod",['size' => 45]);
+      echo Html::input('loadmethod',['value' => $this->fields['loadmethod'], 'id' => "loadmethod", 'size' => 45]);
       echo "</td>";
       
       echo "<tr class='tab_bg_1'>";
@@ -778,17 +778,15 @@ class PluginDataflowsDataflow extends CommonDBTM {
 	  
       echo "<tr class='tab_bg_1'>";
       //transfer trigger
-      echo "<td class='top center' colspan='4'>".__('Transfer trigger', 'dataflows').": ";
-//      echo "<td>".$LANG['plugin_dataflows'][32].": </td>";
-//      echo "<td>";
+      echo "<td>".__('Transfer trigger', 'dataflows').": ";
+      echo "<td>";
       Dropdown::show('PluginDataflowsTriggerType', ['name' => "plugin_dataflows_triggertypes_id", 'value' => $this->fields["plugin_dataflows_triggertypes_id"]]);
-//      echo "</td>";
+      echo "</td>";
       //trigger format
-//      echo "<td>"
-	  echo " (".__('Trigger name', 'dataflows').": ";
-//      echo "</td><td>";
-      Html::autocompletionTextField($this,"triggerformat",['size' => 45]);
-      echo ")</td>";
+      echo "<td>".__('Trigger name', 'dataflows').": ";
+      echo "</td><td>";
+      echo Html::input('triggerformat',['value' => $this->fields['triggerformat'], 'id' => "triggerformat", 'size' => 45]);
+      echo "</td>";
       echo "</tr>";
       
       echo "<tr class='tab_bg_1'>";
@@ -820,19 +818,17 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //url of functional documentation
-//      echo "<td>".__('URL to functional doc (mapping, ...)', 'dataflows').": </td>";
       echo "<td>";
 	  echo Html::link(__('URL to functional doc (mapping, ...)', 'dataflows'), $this->fields["mappingdocurl"]);
       echo "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this,"mappingdocurl",['size' => 65]);
+      echo Html::input('mappingdocurl',['value' => $this->fields['mappingdocurl'], 'id' => "mappingdocurl", 'size' => 65]);
       echo "</td>";
       //url of technical documentation
-//      echo "<td>".__('URL to technical doc (design, ...)', 'dataflows').": </td>";
       echo "<td>";
 	  echo Html::link(__('URL to technical doc (design, ...)', 'dataflows'), $this->fields["technicaldocurl"]);
       echo "<td>";
-      Html::autocompletionTextField($this,"technicaldocurl",['size' => 65]);
+      echo Html::input('technicaldocurl',['value' => $this->fields['technicaldocurl'], 'id' => "technicaldocurl", 'size' => 65]);
       echo "</td>";
 	  echo "</tr>";
 
@@ -840,12 +836,12 @@ class PluginDataflowsDataflow extends CommonDBTM {
       //transfer volume
       echo "<td>".__('Transfer Volume (MB)', 'dataflows').": </td>";
       echo "<td>";
-      Html::autocompletionTextField($this,"transfervolume",['size' => 45]);
+      echo Html::input('transfervolume',['value' => $this->fields['transfervolume'], 'id' => "transfervolume", 'size' => 45]);
       echo "</td>";
       //transfer priority
       echo "<td>".__('Priority', 'dataflows').": </td>";
       echo "<td>";
-      Html::autocompletionTextField($this,"transferpriority",['size' => 45]);
+      echo Html::input('transferpriority',['value' => $this->fields['transferpriority'], 'id' => "transferpriority", 'size' => 45]);
       echo "</td>";
       echo "</tr>";
 	  
