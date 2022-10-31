@@ -978,14 +978,14 @@ class PluginDataflowsDataflow extends CommonDBTM {
                         'used'   => $p['used']];
 
       $out .= Ajax::updateItemOnSelectEvent($field_id,"show_".$p['name'].$rand,
-                                            Plugin::getPhpDir("dataflows")."/ajax/dropdownFlowgroupDataflows.php",
+                                            Plugin::getWebDir("dataflows")."/ajax/dropdownFlowgroupDataflows.php",
                                             $params, false);
       $out .= "<span id='show_".$p['name']."$rand'>";
       $out .= "</span>\n";
 
       $params['flowgroup'] = 0;
       $out .= Ajax::updateItem("show_".$p['name'].$rand,
-                               Plugin::getPhpDir("dataflows")."/ajax/dropdownFlowgroupDataflows.php",
+                               Plugin::getWebDir("dataflows")."/ajax/dropdownFlowgroupDataflows.php",
                                $params, false);
       if ($p['display']) {
          echo $out;
