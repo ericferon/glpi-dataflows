@@ -174,10 +174,16 @@ function plugin_dataflows_uninstall() {
                "glpi_logs",
                "glpi_items_tickets",
                "glpi_notepads",
-               "glpi_dropdowntranslations"];
+               "glpi_dropdowntranslations",
+               "glpi_impactitems"];
 
    foreach($tables_glpi as $table_glpi)
       $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` LIKE 'PluginDataflows%' ;");
+
+   $DB->query("DELETE
+                  FROM `glpi_impactrelations`
+                  WHERE `itemtype_source` IN ('PluginDataflowsDataflow')
+                    OR `itemtype_impacted` IN ('PluginDataflowsDataflow')");
 
    if (class_exists('PluginDatainjectionModel')) {
       PluginDatainjectionModel::clean(['itemtype'=>'PluginDataflowsDataflow']);

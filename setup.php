@@ -26,7 +26,7 @@
 
 // Init the hooks of the plugins -Needed
 function plugin_init_dataflows() {
-   global $PLUGIN_HOOKS;
+   global $PLUGIN_HOOKS, $CFG_GLPI;
 
    $PLUGIN_HOOKS['csrf_compliant']['dataflows'] = true;
    $PLUGIN_HOOKS['change_profile']['dataflows'] = ['PluginDataflowsProfile', 'initProfile'];
@@ -48,6 +48,8 @@ function plugin_init_dataflows() {
                          
    //Plugin::registerClass('PluginDataflowsDataflow_Item',
    //                      ['ticket_types' => true]);
+
+   $CFG_GLPI['impact_asset_types']['PluginDataflowsDataflow'] = Plugin::getPhpDir("dataflows", false)."/dataflows.png";
 
    // Add links to other plugins
    $types = ['PluginAccountsAccount'];
@@ -97,7 +99,7 @@ function plugin_version_dataflows() {
 
    return array (
       'name' => _n('Dataflow', 'Dataflows', 2, 'dataflows'),
-      'version' => '2.2.15',
+      'version' => '2.2.16',
       'author'  => "Eric Feron",
       'license' => 'GPLv2+',
       'homepage'=> 'https://github.com/ericferon/glpi-dataflows',
