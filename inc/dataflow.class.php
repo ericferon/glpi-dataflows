@@ -34,7 +34,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
    static $rightname = "plugin_dataflows";
    protected $usenotepad         = true;
    
-   static $types = ['Computer','Software', 'SoftwareLicense', 'Contract', 'Project', 'ProjectTask', 'PluginAccountsAccount', "PluginArchiswSwcomponent"];
+   static $types = ['Computer','Software', 'SoftwareLicense', 'Contract', 'Project', 'ProjectTask', 'PluginAccountsAccount', "PluginArchiswSwcomponent", "Certificate", "Appliance"];
 
    static function getTypeName($nb=0) {
 
