@@ -99,7 +99,7 @@ function plugin_version_dataflows() {
 
    return array (
       'name' => _n('Dataflow', 'Dataflows', 2, 'dataflows'),
-      'version' => '2.2.17',
+      'version' => '2.2.18',
       'author'  => "Eric Feron",
       'license' => 'GPLv2+',
       'homepage'=> 'https://github.com/ericferon/glpi-dataflows',
@@ -116,10 +116,10 @@ function plugin_version_dataflows() {
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_dataflows_check_prerequisites() {
    global $DB;
-   if (version_compare(GLPI_VERSION, '9.5', 'lt')
+   if (version_compare(GLPI_VERSION, '10.0', 'lt')
        || version_compare(GLPI_VERSION, '10.1', 'ge')) {
       if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', '9.5');
+         echo Plugin::messageIncompatible('core', '10.0');
       }
       return false;
    } else {
@@ -128,7 +128,8 @@ function plugin_dataflows_check_prerequisites() {
 		if($DB->numRows($result_query) == 1) {
 			return true;
 		} else {
-			echo "the plugin 'archisw' must be installed before using 'dataflows'";
+			echo "the plugin 'Apps structure (archisw)' must be installed before using 'Dataflows'";
+			return false;
 		}
 	}
 }

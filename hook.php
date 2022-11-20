@@ -32,7 +32,7 @@ function plugin_dataflows_install() {
    $update=false;
    if (!$DB->TableExists("glpi_plugin_dataflows_dataflows")) {
 
-		$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/empty-1.2.5.sql");
+		$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/empty-1.2.6.sql");
 	}
 	else {
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && !$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_indicators_id")) {
