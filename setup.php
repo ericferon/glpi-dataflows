@@ -72,9 +72,22 @@ function plugin_init_dataflows() {
       
    if (Session::getLoginUserID()) {
 
+      // link to fields plugin
+      $plugin = new Plugin();
+      if ($plugin->isActivated('fields')
+      && Session::haveRight("plugin_dataflows", READ))
+      {
+         $PLUGIN_HOOKS['plugin_fields']['dataflows'] = 'PluginDataflowsDataflow';
+      }
+
       if (Session::haveRight("plugin_dataflows", READ)) {
 
-         $PLUGIN_HOOKS['menu_toadd']['dataflows'] = ['assets'   => 'PluginDataflowsMenu'];
+         $PLUGIN_HOOKS['menu_toadd']['dataflows'] = ['assets'   => 'PluginDataflowsMenu', "config" => 'PluginDataflowsConfigdfMenu'];
+      }
+
+      if (Session::haveRight("plugin_dataflows", READ)
+          || Session::haveRight("config", UPDATE)) {
+         $PLUGIN_HOOKS['config_page']['dataflows']        = 'front/configdf.php';
       }
 
       if (Session::haveRight("plugin_dataflows", UPDATE)) {
@@ -91,6 +104,12 @@ function plugin_init_dataflows() {
       // Import from Data_Injection plugin
       $PLUGIN_HOOKS['migratetypes']['dataflows'] = 'plugin_datainjection_migratetypes_dataflows';
 	  
+      $PLUGIN_HOOKS['pre_item_update']['dataflows'] = ['PluginDataflowsConfigdf' => 'hook_pre_item_update_dataflows_configdf', 
+                                                   'PluginDataflowsConfigdfLink' => 'hook_pre_item_update_dataflows_configdflink'];
+      $PLUGIN_HOOKS['pre_item_add']['dataflows'] = ['PluginDataflowsConfigdf' => 'hook_pre_item_add_dataflows_configdf', 
+                                                   'PluginDataflowsConfigdfLink' => 'hook_pre_item_add_dataflows_configdflink'];
+      $PLUGIN_HOOKS['pre_item_purge']['dataflows'] = ['PluginDataflowsConfigdf' => 'hook_pre_item_purge_dataflows_configdf', 
+                                                   'PluginDataflowsConfigdfLink' => 'hook_pre_item_purge_dataflows_configdflink'];
    }
 }
 
@@ -99,7 +118,7 @@ function plugin_version_dataflows() {
 
    return array (
       'name' => _n('Dataflow', 'Dataflows', 2, 'dataflows'),
-      'version' => '2.2.18',
+      'version' => '3.0.0',
       'author'  => "Eric Feron",
       'license' => 'GPLv2+',
       'homepage'=> 'https://github.com/ericferon/glpi-dataflows',
@@ -123,13 +142,12 @@ function plugin_dataflows_check_prerequisites() {
       }
       return false;
    } else {
-		$query = "select * from glpi_plugins where directory = 'archisw' and state = 1";
+		$query = "select * from glpi_plugins where directory in ('archisw', 'statecheck') and state = 1";
 		$result_query = $DB->query($query);
-		if($DB->numRows($result_query) == 1) {
+		if($DB->numRows($result_query) == 2) {
 			return true;
 		} else {
-			echo "the plugin 'Apps structure (archisw)' must be installed before using 'Dataflows'";
-			return false;
+			echo "The 2 plugins 'archisw' (a.k.a Apps structure inventory) and 'statecheck' must be installed before using 'dataflows' (Dataflows)";
 		}
 	}
 }
@@ -144,4 +162,50 @@ function plugin_datainjection_migratetypes_dataflows($types) {
    return $types;
 }
 
+// Uninstall process for plugin : need to return true if succeeded : may display messages or add to message after redirect
+function hook_pre_item_add_dataflows_configdf(CommonDBTM $item) {
+   global $DB;
+   $fieldname = $item->fields['name'];
+   $dbfield = new PluginDataflowsConfigdfDbfieldtype;
+   if ($dbfield->getFromDB($item->fields['plugin_dataflows_configdfdbfieldtypes_id'])) {
+      $fieldtype = $dbfield->fields['name'];
+      $query = "ALTER TABLE `glpi_plugin_archisw_swcomponents` ADD COLUMN IF NOT EXISTS $fieldname $fieldtype";
+      $result = $DB->query($query);
+      return true;
+   }
+   return false;
+}
+function hook_pre_item_update_dataflows_configdf(CommonDBTM $item) {
+   global $DB;
+   $oldfieldname = $item->fields['name'];
+   $newfieldname = $item->input['name'];
+   $dbfield = new PluginDataflowsConfigdfDbfieldtype;
+   if ($dbfield->getFromDB($item->fields['plugin_dataflows_configdfdbfieldtypes_id'])) {
+      $fieldtype = $dbfield->fields['name'];
+      if ($oldfieldname != $newfieldname) {
+         $query = "ALTER TABLE `glpi_plugin_archisw_swcomponents` RENAME COLUMN $oldfieldname TO $newfieldname ";
+         $result = $DB->query($query);
+      }
+      $query = "ALTER TABLE `glpi_plugin_archisw_swcomponents` MODIFY $newfieldname $fieldtype";
+      $result = $DB->query($query);
+      return true;
+   }
+   return false;
+}
+function hook_pre_item_purge_dataflows_configdf(CommonDBTM $item) {
+   global $DB;
+   $fieldname = $item->fields['name'];
+   $query = "ALTER TABLE `glpi_plugin_archisw_swcomponents` DROP COLUMN $fieldname";
+   $result = $DB->query($query);
+   $rowcount = $DB->numrows($fieldresult);
+   $tablename = 'glpi_'.substr($fieldname, 0, -3);
+   if ($item->fields['plugin_dataflows_configdfdatatypes_id'] == 6 && substr($tablename, 0, 20) == 'glpi_plugin_archisw_') { //dropdown->drop table
+         $query = "DROP TABLE IF EXISTS `".$tablename."`";
+         $result = $DB->query($query);
+         $classname = 'PluginDataflows'.ucfirst(DbUtils::getSingular(substr($fieldname, 15, -3))); //cut ending '_id' and get singular form of word
+         $query = "DELETE FROM `glpi_plugin_dataflows_configdflinks` WHERE `name` = '".$classname."'";
+         $result = $DB->query($query);
+   }
+   return true;
+}
 ?>

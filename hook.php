@@ -32,7 +32,7 @@ function plugin_dataflows_install() {
    $update=false;
    if (!$DB->TableExists("glpi_plugin_dataflows_dataflows")) {
 
-		$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/empty-1.2.6.sql");
+		$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/empty-3.0.0.sql");
 	}
 	else {
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && !$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_indicators_id")) {
@@ -67,10 +67,33 @@ function plugin_dataflows_install() {
 			$update=true;
 			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-1.2.6.sql");
 		}
+         if (!$DB->TableExists("glpi_plugin_dataflows_configdfs")) {
+            $DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-3.0.0.sql");
+        }
 	}
     if (class_exists('PluginAccountsAccount')) {
 			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/addon-accounts-1.2.3.sql");
     }
+
+   // regenerate configured fields
+   if ($DB->TableExists("glpi_plugin_dataflows_configdflinks") && $DB->TableExists("glpi_plugin_dataflows_configdfs")) {
+      $query = "SELECT `glpi_plugin_dataflows_configdflinks`.`name` as `classname`, `is_entity_limited`, `is_tree_dropdown`, `as_view_on`, `viewlimit`
+               FROM `glpi_plugin_dataflows_configdflinks` 
+               JOIN `glpi_plugin_dataflows_configdfs`  ON `glpi_plugin_dataflows_configdflinks`.`id` = `glpi_plugin_dataflows_configdfs`.`plugin_dataflows_configdflinks_id` 
+               WHERE `glpi_plugin_dataflows_configdflinks`.`name` like 'PluginDataflows%'";
+      $result = $DB->query($query);
+      $item = new CommonDBTM;
+      while ($data = $DB->fetchAssoc($result)) {
+         $item->input['name'] = $data['classname'];
+         $item->input['is_entity_limited'] = $data['is_entity_limited'];
+         $item->input['is_tree_dropdown'] = $data['is_tree_dropdown'];
+         $item->input['as_view_on'] = $data['as_view_on'];
+         $item->input['viewlimit'] = $data['viewlimit'];
+         hook_pre_item_add_dataflows_configdflink($item); // simulate the creation of this field
+      }
+      // refresh with new files
+      header("Refresh:0");
+   }
 
    
    if ($DB->TableExists("glpi_plugin_dataflows_profiles")) {
@@ -131,30 +154,45 @@ function plugin_dataflows_uninstall() {
    include_once (Plugin::getPhpDir("dataflows")."/inc/profile.class.php");
    include_once (Plugin::getPhpDir("dataflows")."/inc/menu.class.php");
    
+   $query = "SELECT `id` FROM `glpi_plugin_statecheck_tables` WHERE `name` = 'glpi_plugin_dataflows_configdfs'";
+   $result = $DB->query($query);
+   $rowcount = $DB->numrows($result);
+   if ($rowcount > 0) {
+      while ($data = $DB->fetchAssoc($result)) {
+         $tableid = $data['id'];
+         $rulequery = "SELECT `id` FROM `glpi_plugin_statecheck_rules` WHERE `plugin_statecheck_tables_id` = '".$tableid."'";
+         $ruleresult = $DB->query($rulequery);
+         while ($ruledata = $DB->fetchAssoc($ruleresult)) {
+            $ruleid = $ruledata['id'];
+            $query = "DELETE FROM `glpi_plugin_statecheck_ruleactions` WHERE `plugin_statecheck_rules_id` = '".$ruleid."'";
+            $DB->query($query);
+            $query = "DELETE FROM `glpi_plugin_statecheck_rulecriterias` WHERE `plugin_statecheck_rules_id` = '".$ruleid."'";
+            $DB->query($query);
+         }
+         $query = "DELETE FROM `glpi_plugin_statecheck_rules` WHERE `plugin_statecheck_tables_id` = '".$tableid."'";
+         $DB->query($query);
+      }
+      $query = "DELETE FROM `glpi_plugin_statecheck_tables` WHERE `name` like 'glpi_plugin_dataflows_%'";
+      $result = $DB->query($query);
+   }
+
 	$tables = ["glpi_plugin_dataflows_dataflows",
 					"glpi_plugin_dataflows_dataflows_items",
-					"glpi_plugin_dataflows_profiles",
-					"glpi_plugin_dataflows_states",
-					"glpi_plugin_dataflows_types",
-					"glpi_plugin_dataflows_categories",
-					"glpi_plugin_dataflows_indicators",
-					"glpi_plugin_dataflows_flowgroups",
-					"glpi_plugin_dataflows_servicelevels",
-					"glpi_plugin_dataflows_transferprotocols",
-					"glpi_plugin_dataflows_modes",
-					"glpi_plugin_dataflows_patterns",
-					"glpi_plugin_dataflows_sourceconnectors",
-					"glpi_plugin_dataflows_fromauthtypes",
-					"glpi_plugin_dataflows_triggertypes",
-					"glpi_plugin_dataflows_transferfreqs",
-					"glpi_plugin_dataflows_transfertimetables",
-					"glpi_plugin_dataflows_holidayactions",
-					"glpi_plugin_dataflows_srcuris",
-					"glpi_plugin_dataflows_srcpreprocs",
-					"glpi_plugin_dataflows_desturis",
-					"glpi_plugin_dataflows_destpostprocs",
-					"glpi_plugin_dataflows_srcstructuretypes",
-					"glpi_plugin_dataflows_errorhandlings"];
+                    "glpi_plugin_dataflows_configdfs",
+                    "glpi_plugin_dataflows_configdffieldgroups",
+                    "glpi_plugin_dataflows_configdfhaligns",
+                    "glpi_plugin_dataflows_configdfdbfieldtypes",
+                    "glpi_plugin_dataflows_configdfdatatypes",
+                    "glpi_plugin_dataflows_configdflinks",
+					"glpi_plugin_dataflows_profiles"];
+
+   $query = "SELECT `name` FROM `glpi_plugin_dataflows_configdflinks` WHERE `name` like 'PluginDataflows%' AND (`as_view_on` IS NULL OR `as_view_on` = '')";
+   $result = $DB->query($query);
+   while ($data = $DB->fetchAssoc($result)) {
+      $tablename = CommonDBTM::getTable($data['name']);
+      if (!in_array($tablename,$tables))
+         $tables[] = $tablename;
+   }
 
    foreach($tables as $table)
       $DB->query("DROP TABLE IF EXISTS `$table`;");
@@ -164,6 +202,14 @@ function plugin_dataflows_uninstall() {
 					"glpi_plugin_dataflows_deststructuretypes",
 					"glpi_plugin_dataflows_fromswcomponents",
 					"glpi_plugin_dataflows_toswcomponents"];
+				
+   $query = "SELECT `name` FROM `glpi_plugin_dataflows_configdflinks` WHERE `name` LIKE 'PluginDataflows%' AND (`as_view_on` IS NOT NULL AND `as_view_on` <> '')";
+   $result = $DB->query($query);
+   while ($data = $DB->fetchAssoc($result)) {
+      $tablename = CommonDBTM::getTable($data['name']);
+      if (!in_array($tablename,$tables))
+         $views[] = $tablename;
+   }
 				
 	foreach($views as $view)
 		$DB->query("DROP VIEW IF EXISTS `$view`;");
@@ -222,184 +268,63 @@ function plugin_dataflows_AssignToTicket($types) {
    return $types;
 }
 
-/*
-function plugin_dataflows_AssignToTicketDropdown($data) {
-   global $DB, $CFG_GLPI;
-
-   if ($data['itemtype'] == 'PluginDataflowsDataflow') {
-      $table = getTableForItemType($data["itemtype"]);
-      $rand = mt_rand();
-      $field_id = Html::cleanId("dropdown_".$data['myname'].$rand);
-
-      $p = ['itemtype'            => $data["itemtype"],
-                 'entity_restrict'     => $data['entity_restrict'],
-                 'table'               => $table,
-                 'myname'              => $data["myname"]];
-
-      if(isset($data["used"]) && !empty($data["used"])){
-         if(isset($data["used"][$data["itemtype"]])){
-            $p["used"] = $data["used"][$data["itemtype"]];
-         }
-      }
-
-      echo Html::jsAjaxDropdown($data['myname'], $field_id,
-                                 $CFG_GLPI['root_doc']."/ajax/getDropdownFindNum.php",
-                                 $p);
-      // Auto update summary of active or just solved tickets
-      $params = ['items_id' => '__VALUE__',
-                      'itemtype' => $data['itemtype']];
-
-      Ajax::updateItemOnSelectEvent($field_id,"item_ticket_selection_information",
-                                    $CFG_GLPI["root_doc"]."/ajax/ticketiteminformation.php",
-                                    $params);
-
-   } else if ($data['itemtype'] == 'PluginDataflowsDataflow_Item') {
-      $sql = "SELECT `glpi_plugin_dataflows_dataflows`.`name`, "
-              . "    `items_id`, `itemtype`, `glpi_plugin_dataflows_dataflows_items`.`id` "
-              . " FROM `glpi_plugin_dataflows_dataflows_items`"
-              . " LEFT JOIN `glpi_plugin_dataflows_dataflows`"
-              . "    ON `plugin_dataflows_dataflows_id` = `glpi_plugin_dataflows_dataflows`.`id`";
-
-      $result = $DB->query($sql);
-      $elements = [];
-      while ($res = $DB->fetch_array($result)) {
-         $itemtype = $res['itemtype'];
-         $item = new $itemtype;
-         $item->getFromDB($res['items_id']);
-         $elements[$res['name']][$res['id']] = $item->getName();
-      }
-      Dropdown::showFromArray('items_id', $elements, []);
-   }
-}
-
-
-function plugin_dataflows_AssignToTicketDisplay($data) {
-   global $DB;
-
-   if ($data['itemtype'] == 'PluginDataflowsDataflow_Item') {
-      $paDataflow = new PluginDataflowsDataflow();
-      $item = new PluginDataflowsDataflow_Item();
-      $itemtype = $data['data']['itemtype'];
-      $iteminv = new $itemtype;
-      $iteminv->getFromDB($data['data']['items_id']);
-      $paDataflow->getFromDB($data['data']['plugin_dataflows_dataflows_id']);
-
-      echo "<tr class='tab_bg_1'>";
-      if ($data['canedit']) {
-         echo "<td width='10'>";
-         Html::showMassiveActionCheckBox('Item_Ticket', $data['data']["IDD"]);
-         echo "</td>";
-      }
-      $typename = "<i>".PluginDataflowsDataflow::getTypeName()."</i><br/>".
-              $iteminv->getTypeName();
-      echo "<td class='center top' rowspan='1'>".$typename."</td>";
-      echo "<td class='center'>";
-      echo "<i>".Dropdown::getDropdownName("glpi_entities", $paDataflow->fields['entities_id'])."</i>";
-      echo "<br/>";
-      echo Dropdown::getDropdownName("glpi_entities", $iteminv->fields['entities_id']);
-      echo "</td>";
-
-      $linkDataflow     = Toolbox::getItemTypeFormURL('PluginDataflowsDataflow');
-      $namelinkDataflow = "<a href=\"".$linkDataflow."?id=".
-              $paDataflow->fields['id']."\">".$paDataflow->getName()."</a>";
-      $link     = Toolbox::getItemTypeFormURL($data['data']['itemtype']);
-      $namelink = "<a href=\"".$link."?id=".$data['data']['items_id']."\">".$iteminv->getName()."</a>";
-      echo "<td class='center".
-               (isset($iteminv->fields['is_deleted']) && $iteminv->fields['is_deleted'] ? " tab_bg_2_2'" : "'");
-      echo "><i>".$namelinkDataflow."</i><br/>".$namelink;
-      echo "</td>";
-      echo "<td class='center'><i>".(isset($paDataflow->fields["serial"])? "".$paDataflow->fields["serial"]."" :"-").
-              "</i><br/>".(isset($iteminv->fields["serial"])? "".$iteminv->fields["serial"]."" :"-").
-           "</td>";
-      echo "<td class='center'>".
-             "<i>".(isset($iteminv->fields["otherserial"])? "".$iteminv->fields["otherserial"]."" :"-")."</i><br/>".
-             (isset($iteminv->fields["otherserial"])? "".$iteminv->fields["otherserial"]."" :"-")."</td>";
-      echo "</tr>";
-      return false;
-   }
-   return true;
-}
-
-
-function plugin_dataflows_AssignToTicketGiveItem($data) {
-   if ($data['itemtype'] == 'PluginDataflowsDataflow_Item') {
-      $paDataflow = new PluginDataflowsDataflow();
-      $paDataflow_item = new PluginDataflowsDataflow_Item();
-
-      $paDataflow_item->getFromDB($data['name']);
-      $itemtype = $paDataflow_item->fields['itemtype'];
-      $paDataflow->getFromDB($paDataflow_item->fields['plugin_dataflows_dataflows_id']);
-      $item = new $itemtype;
-      $item->getFromDB($paDataflow_item->fields['items_id']);
-      return $item->getLink(['comments' => true])." (".
-              $paDataflow->getLink(['comments' => true]).")";
-   }
-}
-*/
 
 // Define dropdown relations
 function plugin_dataflows_getDataflowRelations() {
+   global $DB;
 
    $plugin = new Plugin();
-   if ($plugin->isActivated("dataflows"))
-		return ["glpi_plugin_dataflows_fromswcomponents"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_fromswcomponents_id"],
-					 "glpi_plugin_dataflows_toswcomponents"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_toswcomponents_id"],
-					 "glpi_plugin_dataflows_dataflows"=>["glpi_plugin_dataflows_dataflows_items"=>"plugin_dataflows_dataflows_id"],
-					 "glpi_plugin_dataflows_flowgroups"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_flowgroups_id"],
-					 "glpi_plugin_dataflows_types"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_types_id"],
-					 "glpi_plugin_dataflows_indicators"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_indicators_id"],
-					 "glpi_plugin_dataflows_states"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_states_id"],
-					 "glpi_plugin_dataflows_modes"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_modes_id"],
-					 "glpi_plugin_dataflows_patterns"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_patterns_id"],
-					 "glpi_plugin_dataflows_servicelevels"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_servicelevels_id"],
-					 "glpi_plugin_dataflows_transferprotocols"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_transferprotocols_id"],
-					 "glpi_plugin_dataflows_sourceconnectors"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_sourceconnectors_id"],
-					 "glpi_plugin_dataflows_triggertypes"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_triggertypes_id"],
-					 "glpi_plugin_dataflows_fromauthtypes"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_fromauthtypes_id"],
-					 "glpi_plugin_dataflows_srcstructuretypes"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_srcstructuretypes_id"],
-					 "glpi_plugin_dataflows_transferfreqs"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_transferfreqs_id"],
-					 "glpi_plugin_dataflows_transfertimetables"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_transfertimetables_id"],
-					 "glpi_plugin_dataflows_holidayactions"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_holidayactions_id"],
-					 "glpi_plugin_dataflows_srcuris"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_srcuris_id"],
-					 "glpi_plugin_dataflows_srcpreprocs"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_srcpreprocs_id"],
-					 "glpi_plugin_dataflows_desturis"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_desturis_id"],
-					 "glpi_plugin_dataflows_destpostprocs"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_destpostprocs_id"],
-					 "glpi_plugin_dataflows_errorhandlings"=>["glpi_plugin_dataflows_dataflows"=>"plugin_dataflows_errorhandlings_id"],
+   if ($plugin->isActivated("dataflows")) {
+		$tables =  ["glpi_plugin_dataflows_dataflows"=>["glpi_plugin_dataflows_dataflows_items"=>"plugin_dataflows_dataflows_id"],
 					 "glpi_entities"=>["glpi_plugin_dataflows_dataflows"=>"entities_id"],
 					 "glpi_groups"=>["glpi_plugin_dataflows_dataflows"=>"dataowner"],
 					 "glpi_users"=>["glpi_plugin_dataflows_dataflows"=>"technicalmaintainer"]
 					 ];
+
+      $query = "SELECT `name` FROM `glpi_plugin_dataflows_configdflinks` WHERE `name` like 'PluginDataflows%'";
+      $result = $DB->query($query);
+      while ($data = $DB->fetchAssoc($result)) {
+         $tablename = CommonDBTM::getTable($data['name']);
+         if (!in_array($tablename,$tables)) {
+            $fieldname = substr($tablename, 5)."_id";
+            $tables[$tablename] = ["glpi_plugin_dataflows_dataflows"=>$fieldname];
+         }
+      }
+      return $tables;
+   }
    else
       return [];
 }
 
 // Define Dropdown tables to be manage in GLPI :
 function plugin_dataflows_getDropdown() {
+   global $DB;
 
    $plugin = new Plugin();
-   if ($plugin->isActivated("dataflows"))
-		return ['PluginDataflowsFlowgroup'=>PluginDataflowsFlowgroup::getTypeName(2),
-                'PluginDataflowsState'=>PluginDataflowsState::getTypeName(2),
-                'PluginDataflowsType'=>PluginDataflowsType::getTypeName(2),
-                'PluginDataflowsIndicator'=>PluginDataflowsIndicator::getTypeName(2),
-                'PluginDataflowsServicelevel'=>PluginDataflowsServicelevel::getTypeName(2),
-                'PluginDataflowsTransferprotocol'=>PluginDataflowsTransferprotocol::getTypeName(2),
-                'PluginDataflowsSourceConnector'=>PluginDataflowsSourceConnector::getTypeName(2),
-                'PluginDataflowsDestinationConnector'=>PluginDataflowsDestinationConnector::getTypeName(2),
-                'PluginDataflowsTriggerType'=>PluginDataflowsTriggerType::getTypeName(2),
-                'PluginDataflowsTransferFreq'=>PluginDataflowsTransferFreq::getTypeName(2),
-                'PluginDataflowsTransferTimetable'=>PluginDataflowsTransferTimetable::getTypeName(2),
-                'PluginDataflowsHolidayAction'=>PluginDataflowsHolidayAction::getTypeName(2),
-                'PluginDataflowsSrcUri'=>PluginDataflowsSrcUri::getTypeName(2),
-                'PluginDataflowsSrcPreproc'=>PluginDataflowsSrcPreproc::getTypeName(2),
-                'PluginDataflowsDestUri'=>PluginDataflowsDestUri::getTypeName(2),
-                'PluginDataflowsDestPostproc'=>PluginDataflowsDestPostproc::getTypeName(2),
-                'PluginDataflowsMode'=>PluginDataflowsMode::getTypeName(2),
-                'PluginDataflowsPattern'=>PluginDataflowsPattern::getTypeName(2),
-                'PluginDataflowsFromAuthType'=>PluginDataflowsFromAuthType::getTypeName(2),
-                'PluginDataflowsSrcStructureType'=>PluginDataflowsSrcStructureType::getTypeName(2),
-                'PluginDataflowsErrorHandling'=>PluginDataflowsErrorHandling::getTypeName(2)
-                ];
+   if ($plugin->isActivated("dataflows")) {
+      $classes = [//'PluginDataflowsDataflowsType'=>PluginDataflowsDataflowsType::getTypeName(2),
+					 'PluginDataflowsConfigdf'=>PluginDataflowsConfigdf::getTypeName(2),
+					 'PluginDataflowsConfigdfFieldgroup'=>PluginDataflowsConfigdfFieldgroup::getTypeName(2),
+					 'PluginDataflowsConfigdfHalign'=>PluginDataflowsConfigdfHalign::getTypeName(2),
+					 'PluginDataflowsConfigdfDbfieldtype'=>PluginDataflowsConfigdfDbfieldtype::getTypeName(2),
+					 'PluginDataflowsConfigdfDatatype'=>PluginDataflowsConfigdfDatatype::getTypeName(2),
+					 'PluginDataflowsConfigdfLink'=>PluginDataflowsConfigdfLink::getTypeName(2)
+		];
+
+      if ($DB->TableExists("glpi_plugin_dataflows_configdflinks") && $DB->TableExists("glpi_plugin_dataflows_configdfs")) {
+         $query = "SELECT `glpi_plugin_dataflows_configdflinks`.`name` as `classname`, `glpi_plugin_dataflows_configdfs`.`description` as `typename` 
+               FROM `glpi_plugin_dataflows_configdflinks` 
+               JOIN `glpi_plugin_dataflows_configdfs`  ON `glpi_plugin_dataflows_configdflinks`.`id` = `glpi_plugin_dataflows_configdfs`.`plugin_dataflows_configdflinks_id` 
+               WHERE `glpi_plugin_dataflows_configdflinks`.`name` like 'PluginDataflows%' AND (`glpi_plugin_dataflows_configdflinks`.`as_view_on` IS NULL OR `glpi_plugin_dataflows_configdflinks`.`as_view_on` = '')";
+         $result = $DB->query($query);
+         while ($data = $DB->fetchAssoc($result)) {
+            $classname = $data['classname'];
+            if (!in_array($classname,$classes))
+               $classes[$classname] = $data['typename'];
+         }
+      }
+      return $classes;
+   }
    else
       return [];
 }
@@ -567,168 +492,330 @@ function plugin_dataflows_MassiveActions($type) {
     return [];
 }
 
-/*
-function plugin_dataflows_MassiveActionsDisplay($options=[]) {
-
-   $dataflow=new PluginDataflowsDataflow;
-
-   if (in_array($options['itemtype'], PluginDataflowsDataflow::getTypes(true))) {
-
-      $dataflow->dropdownDataflows("plugin_dataflows_dataflows_id");
-      echo "<input type=\"submit\" name=\"massiveaction\" class=\"submit\" value=\""._sx('button', 'Post')."\" >";
-   }
-   return "";
-}
-
-function plugin_dataflows_MassiveActionsProcess($data) {
-
-   $res = ['ok' => 0,
-            'ko' => 0,
-            'noright' => 0];
-
-   $dataflow_item = new PluginDataflowsDataflow_Item();
-
-   switch ($data['action']) {
-
-      case "plugin_dataflows_add_item":
-         foreach ($data["item"] as $key => $val) {
-            if ($val == 1) {
-               $input = ['plugin_dataflows_dataflows_id' => $data['plugin_dataflows_dataflows_id'],
-                              'items_id'      => $key,
-                              'itemtype'      => $data['itemtype']];
-               if ($dataflow_item->can(-1,'w',$input)) {
-                  if ($dataflow_item->can(-1,'w',$input)) {
-                     $dataflow_item->add($input);
-                     $res['ok']++;
-                  } else {
-                     $res['ko']++;
-                  }
-               } else {
-                  $res['noright']++;
-               }
-            }
-         }
-         break;
-   }
-   return $res;
-}
-*/
 function plugin_datainjection_populate_dataflows() {
    global $INJECTABLE_TYPES;
    $INJECTABLE_TYPES['PluginDataflowsDataflowInjection'] = 'datainjection';
 }
 
+function hook_pre_item_add_dataflows_configdflink(CommonDBTM $item) {
+   global $DB;
+   $dir = Plugin::getPhpDir("dataflows", true);
+   $newclassname = $item->input['name'];
+   $newistreedropdown = $item->input['is_tree_dropdown'];
+   $newisentitylimited = $item->input['is_entity_limited'];
+   $newasviewon = $item->input['as_view_on'];
+   $newviewlimit = $item->input['viewlimit'];
+  if (substr($newclassname, 0, 13) == 'PluginDataflows') {
+      $rootname = strtolower(substr($newclassname, 13));
+      $tablename = 'glpi_plugin_dataflows_'.getPlural($rootname);
+      $fieldname = 'plugin_dataflows_'.getPlural($rootname).'_id';
+      if (!empty($newasviewon)) {
+         $entities = ($newisentitylimited?" `entities_id`,":"");
+         $name = ($newistreedropdown?" `completename`,":" `name`,");
+         $query = "CREATE VIEW `$tablename` (`id`,$entities `name`, `comment`) AS 
+                  SELECT `id`,$entities `name`, `comment` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
+         $result = $DB->query($query);
+      }
+      else {
+         $entities = ($newisentitylimited?"`entities_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,":"");
+         if (!$newistreedropdown) { //dropdown->create table
+            $query = "CREATE TABLE IF NOT EXISTS `".$tablename."` (
+                  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,".
+                  $entities.
+                  "`name` VARCHAR(45) NOT NULL,
+                  `comment` VARCHAR(255) NULL,
+                  `completename` MEDIUMTEXT NULL,
+                  PRIMARY KEY (`id`) ,
+                  UNIQUE INDEX `".$tablename."_name` (`name`) )
+                  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+            $result = $DB->query($query);
+         }
+         else { //treedropdown->create table
+            $query = "CREATE TABLE IF NOT EXISTS `".$tablename."` (
+                        `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,".
+                        $entities.
+                        "`is_recursive` BIT NOT NULL DEFAULT 0,
+                        `name` VARCHAR(45) NOT NULL,
+                        $fieldname INT(11) UNSIGNED NOT NULL DEFAULT 0,
+                        `completename` MEDIUMTEXT NULL,
+                        `comment` VARCHAR(255) NULL,
+                        `level` INT NOT NULL DEFAULT 0,
+                        `sons_cache` LONGTEXT NULL,
+                        `ancestors_cache` LONGTEXT NULL,
+                        PRIMARY KEY (`id`) ,
+                        UNIQUE INDEX `".$tablename."_name` (`name`) )
+                        DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+            $result = $DB->query($query);
+         }
+      }
+      create_plugin_dataflows_classfiles($dir, $newclassname, $newistreedropdown);
+   }
+}
+function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
+   global $DB;
+   $dir = Plugin::getPhpDir("dataflows", true);
+   $newclassname = $item->input['name'];
+   $newistreedropdown = $item->input['is_tree_dropdown'];
+   $newasviewon = $item->input['as_view_on'];
+   $newviewlimit = $item->input['viewlimit'];
+   $oldclassname = $item->fields['name'];
+   $oldistreedropdown = $item->fields['is_tree_dropdown'];
+   $oldasviewon = $item->fields['as_view_on'];
+   if (substr($newclassname, 0, 13) == 'PluginDataflows') {
+      // class is owned by this plugin
+      $newrootname = strtolower(substr($newclassname, 13));
+      $newfilename = $newrootname;
+      $newtablename = 'glpi_plugin_dataflows_'.getPlural($newrootname);
+      $newfieldname = 'plugin_dataflows_'.getPlural($newrootname).'_id';
+      if (substr($oldclassname, 0, 13) == 'PluginDataflows') { 
+         //old and new types are owned by this plugin
+         if ($oldclassname != $newclassname) { 
+            //dropdown name modified->rename table
+            $oldrootname = strtolower(substr($oldclassname, 13));
+            $oldfilename = $oldrootname;
+            $oldtablename = 'glpi_plugin_dataflows_'.getPlural($oldrootname);
+            $oldfieldname = 'plugin_dataflows_'.getPlural($oldrootname).'_id';
+            $query = "RENAME TABLE `".$oldtablename."` TO `".$newtablename."`";
+            $result = $DB->query($query);
+            $query = "UPDATE `glpi_plugin_dataflows_configdflinks` SET `name` = '".$newclassname."' WHERE `name` = '".$oldclassname."'";
+            $result = $DB->query($query);
+         }
+         else {// no change dropdown name
+            // if dropdown table is a view, replace the old view
+            if (!empty($newasviewon)) {
+               $entities = ($newisentitylimited?" `entities_id`,":"");
+               $name = ($newistreedropdown?" `completename`,":" `name`,");
+               $query = "CREATE OR REPLACE VIEW `$newtablename` (`id`,$entities `name`, `comment`) AS 
+                        SELECT `id`,$entities `name`, `comment` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
+               $result = $DB->query($query);
+            }
+            else {
+               // if dropdown table is really a table ...
+               if (!$oldistreedropdown && $newistreedropdown) {
+               // 'is_tree_dropdown' has changed
+               // old type was dropdown and new one is treedropdown=>add the needed fields
+                  $query = "ALTER TABLE $newtablename
+                     ADD COLUMN `is_recursive` BIT NOT NULL DEFAULT 0 AFTER `id`,
+                     ADD COLUMN $newfieldname INT(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `name`,
+                     ADD COLUMN `level` INT NOT NULL DEFAULT 0 AFTER `completename`,
+                     ADD COLUMN `sons_cache` LONGTEXT NULL AFTER `level`,
+                     ADD COLUMN `ancestors_cache` LONGTEXT NULL AFTER `sons_cache`";
+                  $result = $DB->query($query);
+               }
+               else if ($oldistreedropdown && !$newistreedropdown) {
+               // old type was treedropdown and new one is dropdown=>drop the unneeded fields
+                  $query = "ALTER TABLE $newtablename
+                     DROP COLUMN `is_recursive`,
+                     DROP COLUMN $newfieldname,
+                     DROP COLUMN `level`,
+                     DROP COLUMN `sons_cache`,
+                     DROP COLUMN `ancestors_cache`";
+                  $result = $DB->query($query);
+               }
+               // 'is_entity_limited' has changed
+               if (!$item->fields['is_entity_limited'] && $item->input['is_entity_limited']) { // 'is_entity_limited' changed from no to yes
+               // => add 'entities_id' column to dropdown table
+                  $query = "ALTER TABLE $newtablename ADD COLUMN IF NOT EXISTS `entities_id` INT(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `id`";
+                  $result = $DB->query($query);
+               }
+               else if ($item->fields['is_entity_limited'] && !$item->input['is_entity_limited']) { // 'is_entity_limited' changed from yes to no
+               // => drop 'entities_id' column from dropdown table
+                  $query = "ALTER TABLE $newtablename DROP COLUMN `entities_id`";
+                  $result = $DB->query($query);
+               }
+            }
+         }
+      }
+      else {// old type wasn't owned by this plugin, but the new one is well owned
+         //dropdown new->create table or view
+         if (!empty($newasviewon)) {
+            $entities = ($newisentitylimited?" `entities_id`,":"");
+            $name = ($newistreedropdown?" `completename`,":" `name`,");
+            $query = "CREATE VIEW `$tablename` (`id`,$entities `name`, `comment`) AS 
+                  SELECT `id`,$entities `name`, `comment` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
+            $result = $DB->query($query);
+         }
+         else {
+            $entities = ($item->input['is_entity_limited']?"`entities_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,":""); // with or without 'entities_id' column
+            if (!$newistreedropdown) {
+               // new simple dropdown table
+               $query = "CREATE TABLE IF NOT EXISTS `".$newtablename."` (
+                  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,".
+                  $entities.
+                  "`name` VARCHAR(45) NOT NULL,
+                  `comment` VARCHAR(255) NULL,
+                  `completename` MEDIUMTEXT NULL,
+                  PRIMARY KEY (`id`) ,
+                  UNIQUE INDEX `".$newtablename."_name` (`name`) )
+                  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+            } 
+            else { // new treedropdon table
+               $query = "CREATE TABLE IF NOT EXISTS `".$newtablename."` (
+                  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,".
+                  $entities.
+                  "`is_recursive` BIT NOT NULL DEFAULT 0,
+                  `name` VARCHAR(45) NOT NULL,
+                  $newfieldname INT(11) UNSIGNED NOT NULL DEFAULT 0,
+                  `completename` MEDIUMTEXT NULL,
+                  `comment` VARCHAR(255) NULL,
+                  `level` INT NOT NULL DEFAULT 0,
+                  `sons_cache` LONGTEXT NULL,
+                  `ancestors_cache` LONGTEXT NULL,
+                  PRIMARY KEY (`id`) ,
+                  UNIQUE INDEX `".$newtablename."_name` (`name`) )
+                  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+            }
+            $result = $DB->query($query);
+         }
+      }
+      create_plugin_dataflows_classfiles($dir, $newclassname, $newistreedropdown);
+   }
+   if (substr($oldclassname, 0, 13) == 'PluginDataflows'
+   && $oldclassname != $newclassname) {
+      //old dropdown was owned by this plugin -> drop table if it hasn't been renamed
+      $oldrootname = strtolower(substr($oldclassname, 13));
+      $oldfilename = $oldrootname;
+      $oldtablename = 'glpi_plugin_dataflows_'.getPlural($oldrootname);
+      $oldfieldname = 'plugin_dataflows_'.getPlural($oldrootname).'_id';
+      $tableorview = empty($oldasviewon)?"TABLE":"VIEW";
+      $query = "DROP $tableorview IF EXISTS `".$oldtablename."`";
+      $result = $DB->query($query);
+      $query = "DELETE FROM `glpi_plugin_dataflows_configdflinks` WHERE `name` = '".$oldclassname."'";
+      $result = $DB->query($query);
+      // delete files in inc and front directories
+      if (file_exists($dir.'/inc/'.$oldfilename.'.class.php')) 
+         unlink($dir.'/inc/'.$oldfilename.'.class.php');
+      if (file_exists($dir.'/front/'.$oldfilename.'.form.php')) 
+         unlink($dir.'/front/'.$oldfilename.'.form.php');
+      if (file_exists($dir.'/front/'.$oldfilename.'.php')) 
+         unlink($dir.'/front/'.$oldfilename.'.php');
+   }
+}
+function hook_pre_item_purge_dataflows_configdflink(CommonDBTM $item) {
+   global $DB;
+   $dir = Plugin::getPhpDir("dataflows", true);
+   $oldclassname = $item->fields['name'];
+   $oldfilename = strtolower(substr($oldclassname, 13));
+   $oldid = $item->fields['id'];
+   // suppress in glpi_plugin_dataflows_configdfs
+   $query = "UPDATE `glpi_plugin_dataflows_configdfs` SET `plugin_dataflows_configdflinks_id` = 0 WHERE `plugin_dataflows_configdflinks_id` = '".$oldid."'";
+   $result = $DB->query($query);
+   if (substr($oldclassname, 0, 13) == 'PluginDataflows') {
+      // delete files in inc and front directories
+      if (file_exists($dir.'/inc/'.$oldfilename.'.class.php')) 
+         unlink($dir.'/inc/'.$oldfilename.'.class.php');
+      if (file_exists($dir.'/front/'.$oldfilename.'.form.php')) 
+         unlink($dir.'/front/'.$oldfilename.'.form.php');
+      if (file_exists($dir.'/front/'.$oldfilename.'.php')) 
+         unlink($dir.'/front/'.$oldfilename.'.php');
+   }
+   return true;
+}
+function create_plugin_dataflows_classfiles($dir, $newclassname, $istreedropdown = false) {
+   if (substr($newclassname, 0, 13) == 'PluginDataflows') {
+      $newfilename = strtolower(substr($newclassname, 13));
+      $dropdowntype = 'CommonDropdown';
+      if ($istreedropdown) $dropdowntype = 'CommonTreeDropdown';
+      // create files in inc and front directories, with read/write access
+      file_put_contents($dir.'/inc/'.$newfilename.'.class.php', 
+      "<?php
 /*
-function plugin_dataflows_addSelect($type,$id,$num) {
+ -------------------------------------------------------------------------
+ Dataflows plugin for GLPI
+ Copyright (C) 2009-2023 by Eric Feron.
+ -------------------------------------------------------------------------
 
-   $searchopt = &Search::getOptions($type);
-   $table = $searchopt[$id]["table"];
-   $field = $searchopt[$id]["field"];
-//echo "add select : ".$table.".".$field."<br/>";
-   switch ($type) {
+ LICENSE
+      
+ This file is part of Dataflows.
 
-      case 'Ticket':
+ Dataflows is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ at your option any later version.
 
-         if ($table.".".$field == "glpi_plugin_dataflows_dataflows.name") {
-            return " GROUP_CONCAT(DISTINCT `glpi_plugin_dataflows_dataflows`.`id` SEPARATOR '$$$$') AS ITEM_$num, "
-                    . " GROUP_CONCAT(DISTINCT `glpi_plugin_dataflows_dataflows_bis`.`id` SEPARATOR '$$$$') AS ITEM_".$num."_2,";
-         }
-         break;
+ Dataflows is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Dataflows. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ */
+      if (!defined('GLPI_ROOT')) {
+         die('Sorry. You cannott access directly to this file');
+      }
+      class $newclassname extends $dropdowntype {
+      }
+      ?>");
+      file_put_contents($dir.'/front/'.$newfilename.'.form.php', 
+      "<?php
+/*
+ -------------------------------------------------------------------------
+ Dataflows plugin for GLPI
+ Copyright (C) 2009-2023 by Eric Feron.
+ -------------------------------------------------------------------------
+
+ LICENSE
+      
+ This file is part of Dataflows.
+
+ Dataflows is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ at your option any later version.
+
+ Dataflows is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Dataflows. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ */
+      include ('../../../inc/includes.php');
+      \$dropdown = new $newclassname();
+      include (GLPI_ROOT . '/front/dropdown.common.form.php');
+      ?>");
+      file_put_contents($dir.'/front/'.$newfilename.'.php', 
+      "<?php
+/*
+ -------------------------------------------------------------------------
+ Dataflows plugin for GLPI
+ Copyright (C) 2009-2023 by Eric Feron.
+ -------------------------------------------------------------------------
+
+ LICENSE
+      
+ This file is part of Dataflows.
+
+ Dataflows is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ at your option any later version.
+
+ Dataflows is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Dataflows. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ */
+      include ('../../../inc/includes.php');
+      \$dropdown = new $newclassname();
+      include (GLPI_ROOT . '/front/dropdown.common.php');
+      ?>");
+      chmod($dir.'/inc/'.$newfilename.'.class.php', 0660);
+      chmod($dir.'/front/'.$newfilename.'.form.php', 0660);
+      chmod($dir.'/front/'.$newfilename.'.php', 0660);
+      // refresh with new files
+//      header("Refresh:0");
+//   Session::addMessageAfterRedirect(__('Please, refresh the display', 'dataflows'));
    }
+   return true;
 }
-
-
-
-function plugin_dataflows_addLeftJoin($itemtype,$ref_table,$new_table,$linkfield,&$already_link_tables) {
-
-   switch ($itemtype) {
-
-      case 'Ticket':
-         return " LEFT JOIN `glpi_plugin_dataflows_dataflows` AS glpi_plugin_dataflows_dataflows
-            ON (`glpi_items_tickets`.`items_id` = `glpi_plugin_dataflows_dataflows`.`id`
-                  AND `glpi_items_tickets`.`itemtype`='PluginDataflowsDataflow')
-
-         LEFT JOIN `glpi_plugin_dataflows_dataflows_items`
-            ON (`glpi_items_tickets`.`items_id` = `glpi_plugin_dataflows_dataflows_items`.`id`
-                  AND `glpi_items_tickets`.`itemtype`='PluginDataflowsDataflow_Item')
-         LEFT JOIN `glpi_plugin_dataflows_dataflows` AS glpi_plugin_dataflows_dataflows_bis
-            ON (`glpi_plugin_dataflows_dataflows_items`.`plugin_dataflows_dataflows_id` = `glpi_plugin_dataflows_dataflows_bis`.`id`)";
-         break;
-
-   }
-   return "";
-}
-
-
-
-function plugin_dataflows_addWhere($link,$nott,$type,$id,$val,$searchtype) {
-
-   $searchopt = &Search::getOptions($type);
-   $table = $searchopt[$id]["table"];
-   $field = $searchopt[$id]["field"];
-
-   switch ($type) {
-
-      case 'Ticket':
-         if ($table.".".$field == "glpi_plugin_dataflows_dataflows.name") {
-            $out = '';
-            switch ($searchtype) {
-               case "contains" :
-                  $SEARCH = Search::makeTextSearch($val, $nott);
-                  break;
-
-               case "equals" :
-                  if ($nott) {
-                     $SEARCH = " <> '$val'";
-                  } else {
-                     $SEARCH = " = '$val'";
-                  }
-                  break;
-
-               case "notequals" :
-                  if ($nott) {
-                     $SEARCH = " = '$val'";
-                  } else {
-                     $SEARCH = " <> '$val'";
-                  }
-                  break;
-
-            }
-            if (in_array($searchtype, ['equals', 'notequals'])) {
-               if ($table != getTableForItemType($type) || $type == 'States') {
-                  $out = " $link (`glpi_plugin_dataflows_dataflows`.`id`".$SEARCH;
-               } else {
-                  $out = " $link (`glpi_plugin_dataflows_dataflows`.`$field`".$SEARCH;
-               }
-               if ($searchtype=='notequals') {
-                  $nott = !$nott;
-               }
-               // Add NULL if $val = 0 and not negative search
-               // Or negative search on real value
-               if ((!$nott && $val==0) || ($nott && $val != 0)) {
-                  $out .= " OR `glpi_plugin_dataflows_dataflows`.`id` IS NULL";
-               }
-//               $out .= ')';
-               $out1 = $out;
-               $out = str_replace(" ".$link." (", " ".$link." ", $out);
-            } else {
-               $out = Search::makeTextCriteria("`glpi_plugin_dataflows_dataflows`.".$field,$val,$nott,$link);
-               $out1 = $out;
-               $out = preg_replace("/^ $link/", $link.' (', $out);
-            }
-            $out2 = $out." OR ";
-            $out2 .= str_replace("`glpi_plugin_dataflows_dataflows`",
-                                 "`glpi_plugin_dataflows_dataflows_bis`", $out1)." ";
-            $out2 = str_replace("OR   AND", "OR", $out2);
-            $out2 = str_replace("OR   OR", "OR", $out2);
-            $out2 = str_replace("AND   OR", "OR", $out2);
-            $out2 = str_replace("OR  AND", "OR", $out2);
-            $out2 = str_replace("OR  OR", "OR", $out2);
-            $out2 = str_replace("AND  OR", "OR", $out2);
-            return $out2.")";
-         }
-         break;
-   }
-}
-*/
 ?>

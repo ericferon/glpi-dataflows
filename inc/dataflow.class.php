@@ -34,7 +34,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
    static $rightname = "plugin_dataflows";
    protected $usenotepad         = true;
    
-   static $types = ['Computer','Software', 'SoftwareLicense', 'Contract', 'Project', 'ProjectTask', 'PluginAccountsAccount', "PluginArchiswSwcomponent", "Certificate", "Appliance"];
+   static $types = ['Computer','Software', 'SoftwareLicense', 'Contract', 'Project', 'ProjectTask', 'PluginAccountsAccount', "PluginDataflowsSwcomponent", "Certificate", "Appliance"];
 
    static function getTypeName($nb=0) {
 
@@ -86,6 +86,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
    // search fields from GLPI 9.3 on
    function rawSearchOptions() {
+   global $DB;
 
       $tab = [];
       if (version_compare(GLPI_VERSION,'9.2','le')) return $tab;
@@ -104,338 +105,70 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'itemlink_type' => $this->getType()
       ];
 
-      $tab[] = [
-         'id'       => '2',
-         'table'    => 'glpi_plugin_dataflows_flowgroups',
-         'field'    => 'name',
-         'name'     => PluginDataflowsFlowgroup::getTypeName(1),
-         'datatype' => 'dropdown'
-      ];
+      $linktable = [];
+      $tablequery = "SELECT * FROM `glpi_plugin_dataflows_configdflinks`";
+      $tableresult = $DB->query($tablequery);
+      while ($tabledata = $DB->fetchAssoc($tableresult)) {
+         $linktable[$tabledata['id']]['name'] = $tabledata['name'];
+         $linktable[$tabledata['id']]['has_dropdown'] = $tabledata['has_dropdown'];
+         $linktable[$tabledata['id']]['is_entity_limited'] = $tabledata['is_entity_limited'];
+      }
 
-      $tab[] = [
-         'id'       => '3',
-         'table'    => 'glpi_plugin_dataflows_transferprotocols',
-         'field'    => 'name',
-         'name'     => PluginDataflowsTransferProtocol::getTypeName(1),
-         'datatype' => 'dropdown'
-      ];
+      $datatypetable = [];
+      $datatypequery = "SELECT * FROM `glpi_plugin_dataflows_configdfdatatypes`";
+      $datatyperesult = $DB->query($datatypequery);
+      while ($datatypedata = $DB->fetchAssoc($datatyperesult)) {
+         $datatypetable[$datatypedata['id']]['name'] = $datatypedata['name'];
+      }
 
-      $tab[] = [
-         'id'       => '4',
-         'table'    => 'glpi_plugin_dataflows_states',
-         'field'    => 'name',
-         'name'     => PluginDataflowsState::getTypeName(1),
-         'datatype' => 'dropdown'
-      ];
+      $fieldquery = "SELECT * 
+                FROM `glpi_plugin_dataflows_configdfs` 
+                WHERE `is_deleted` = 0 
+                ORDER BY `id`";
+      $fieldresult = $DB->query($fieldquery);
+      $rowcount = $DB->numrows($fieldresult);
+      $tabid = 1; // tabid 1 is used for name
+      $tabtable = $this->getTable();
+      while ($fielddata = $DB->fetchAssoc($fieldresult)) {
+         $tabid = 1 + $fielddata['id'];
+         $datatypeid = $fielddata['plugin_dataflows_configdfdatatypes_id'];
+         switch($datatypeid) {
+            case 1: //Text
+            case 2: //Boolean
+            case 3: //Date
+            case 4: //Date and time
+            case 5: //Number
+            case 8: //Textarea
+               $tab[] = [
+                  'id'       => $tabid,
+                  'table'    => $tabtable,
+                  'field'    => $fielddata['name'],
+                  'name'     => __($fielddata['description'],'archisw'),
+                  'datatype' => $datatypetable[$datatypeid]['name'],
+                  'massiveaction' => $fielddata['massiveaction'],
+                  'nosearch' => $fielddata['nosearch']
+               ];
+               break;
+            case 6: //Dropdown
+               $linktableid = $fielddata['plugin_dataflows_configdflinks_id'];
+               $itemtype = $linktable[$linktableid]['name'];
+               $tablename = $this->getTable($itemtype);
+               $tab[] = [
+                  'id'       => $tabid,
+                  'table'    => $tablename,
+                  'field'    => 'name',
+                  'name'     => __($fielddata['description'],'archisw'),
+                  'datatype' => $datatypetable[$datatypeid]['name']
+               ];
+               break;
+            case 7: //Itemlink
+               break;
+         }
+      }
 
+      $tabid++;
       $tab[] = [
-         'id'       => '5',
-         'table'    => 'glpi_plugin_dataflows_fromswcomponents',
-         'field'    => 'name',
-         'name'     => PluginDataflowsFromSwcomponent::getTypeName(1),
-         'datatype' => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'       => '6',
-         'table'    => 'glpi_plugin_dataflows_toswcomponents',
-         'field'    => 'name',
-         'name'     => PluginDataflowsToSwcomponent::getTypeName(1),
-         'datatype' => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'       => '7',
-         'table'    => 'glpi_plugin_dataflows_sourceconnectors',
-         'field'    => 'name',
-         'name'     => PluginDataflowsSourceConnector::getTypeName(1),
-         'datatype' => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'       => '8',
-         'table'    => 'glpi_plugin_dataflows_destinationconnectors',
-         'field'    => 'name',
-         'name'     => PluginDataflowsDestinationConnector::getTypeName(1),
-         'datatype' => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'       => '9',
-         'table'    => 'glpi_plugin_dataflows_types',
-         'field'    => 'name',
-         'name'     => PluginDataflowsType::getTypeName(1),
-         'datatype' => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'        => '11',
-         'table'     => 'glpi_users',
-         'field'     => 'name',
-         'linkfield' => 'users_id',
-         'name'      => __('Dataflow Expert', 'dataflows'),
-         'datatype'  => 'dropdown'/*,
-         'right'     => 'interface'*/
-      ];
-
-      $tab[] = [
-         'id'        => '13',
-         'table'     => 'glpi_groups',
-         'field'     => 'name',
-         'linkfield' => 'groups_id',
-         'name'      => __('Dataflow Follow-up', 'dataflows'),
-//         'condition' => '`is_assign`',
-         'datatype'  => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'        => '15',
-         'table'     => $this->getTable(),
-         'field'     => 'extractmethod',
-         'name'      => __('Extract Method (Bapi, Stored Proc, ...)', 'dataflows'),
-         'datatype'  => 'text'
-      ];
-
-      $tab[] = [
-         'id'        => '16',
-         'table'     => $this->getTable(),
-         'field'     => 'loadmethod',
-         'name'      => __('Load Method (Bapi, Stored Proc, ...)', 'dataflows'),
-         'datatype'  => 'text'
-      ];
-
-      $tab[] = [
-         'id'        => '17',
-         'table'     => 'glpi_plugin_dataflows_indicators',
-         'field'     => 'name',
-         'name'      => __('Indicator', 'dataflows'),
-         'datatype'  => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'            => '18',
-         'table'         => $this->getTable(),
-         'field'         => 'date_mod',
-         'massiveaction' => false,
-         'name'          => __('Last update'),
-         'datatype'      => 'datetime'
-      ];
-
-      $tab[] = [
-         'id'            => '19',
-         'table'         => $this->getTable(),
-         'field'         => 'statedate',
-         'massiveaction' => false,
-         'name'          => __('Status StartDate', 'dataflows'),
-         'datatype'      => 'datetime'
-      ];
-
-      $tab[] = [
-         'id'        => '20',
-         'table'     => 'glpi_plugin_dataflows_transferfreqs',
-         'field'     => 'name',
-         'name'      => __('Transfer frequency (def : per day)', 'dataflows'),
-         'datatype'  => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'        => '21',
-         'table'     => 'glpi_plugin_dataflows_transfertimetables',
-         'field'     => 'name',
-         'name'      => __('Transfer Timetable', 'dataflows'),
-         'datatype'  => 'dropdown'
-      ];
-           
-      $tab[] = [
-         'id'        => '22',
-         'table'     => 'glpi_plugin_dataflows_srcpreprocs',
-         'field'     => 'name',
-         'name'      => __('Transfer Preprocessing', 'dataflows'),
-         'datatype'  => 'dropdown'
-      ];
-           
-      $tab[] = [
-         'id'        => '23',
-         'table'     => 'glpi_plugin_dataflows_destpostprocs',
-         'field'     => 'name',
-         'name'      => __('Transfer Postprocessing', 'dataflows'),
-         'datatype'  => 'dropdown'
-      ];
-            
-      $tab[] = [
-         'id'        => '24',
-         'table'     => $this->getTable(),
-         'field'     => 'transferpriority',
-         'name'      => __('Priority', 'dataflows'),
-         'datatype'  => 'text'
-      ];
-      
-      $tab[] = [
-         'id'        => '26',
-         'table'     => $this->getTable(),
-         'field'     => 'srcformat',
-         'name'      => __('Source format (Idoc, table, file pattern, ...)', 'dataflows'),
-         'datatype'  => 'text'
-      ];
-      
-      $tab[] = [
-         'id'        => '27',
-         'table'     => $this->getTable(),
-         'field'     => 'destformat',
-         'name'      => __('Destination format (Idoc, table, file pattern, ...)', 'dataflows'),
-         'datatype'  => 'text'
-      ];
-     
-      $tab[] = [
-         'id'        => '28',
-         'table'     => 'glpi_plugin_dataflows_servicelevels',
-         'field'     => 'name',
-         'name'      => __('Service Level', 'dataflows'),
-         'datatype'  => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'        => '29',
-         'table'     => 'glpi_plugin_dataflows_modes',
-         'field'     => 'name',
-         'name'      => __('Mode', 'dataflows'),
-         'datatype'  => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'        => '30',
-         'table'     => 'glpi_plugin_dataflows_patterns',
-         'field'     => 'name',
-         'name'      => __('Pattern', 'dataflows'),
-         'datatype'  => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'        => '31',
-         'table'     => $this->getTable(),
-         'field'     => 'plugin_dataflows_srcuri',
-         'name'      => __('Source directory/ ProgramId/ port', 'dataflows'),
-         'datatype'  => 'text'
-      ];
-
-      $tab[] = [
-         'id'        => '32',
-         'table'     => $this->getTable(),
-         'field'     => 'plugin_dataflows_desturi',
-         'name'      => __('Destination directory/ ProgramId/ port', 'dataflows'),
-         'datatype'  => 'text'
-      ];
-
-      $tab[] = [
-         'id'        => '33',
-         'table'     => $this->getTable(),
-         'field'     => 'srcstructure',
-         'name'      => __('Source data structure', 'dataflows'),
-         'nosearch'      => true,
-         'datatype'  => 'text'
-      ];
-
-      $tab[] = [
-         'id'        => '34',
-         'table'     => $this->getTable(),
-         'field'     => 'deststructure',
-         'name'      => __('Destination data structure', 'dataflows'),
-         'nosearch'      => true,
-         'datatype'  => 'text'
-      ];
-
-      $tab[] = [
-         'id'        => '35',
-         'table'     => 'glpi_plugin_dataflows_errorhandlings',
-         'field'     => 'name',
-         'name'      => __('Transfer Error handling', 'dataflows'),
-         'datatype'  => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'        => '36',
-         'table'     => 'glpi_plugin_dataflows_fromauthtypes',
-         'field'     => 'name',
-         'name'      => __('Source authentication type', 'dataflows'),
-         'datatype'  => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'        => '37',
-         'table'     => 'glpi_plugin_dataflows_toauthtypes',
-         'field'     => 'name',
-         'name'      => __('Destination authentication type', 'dataflows'),
-         'datatype'  => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'        => '38',
-         'table'     => 'glpi_plugin_dataflows_srcstructuretypes',
-         'field'     => 'name',
-         'name'      => __('Source structure type', 'dataflows'),
-         'datatype'  => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'        => '39',
-         'table'     => 'glpi_plugin_dataflows_deststructuretypes',
-         'field'     => 'name',
-         'name'      => __('Destination structure type', 'dataflows'),
-         'datatype'  => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'        => '40',
-         'table'     => 'glpi_users',
-         'field'     => 'name',
-         'linkfield' => 'plugin_dataflows_otherusers_id',
-         'name'      => __('Other Expert', 'dataflows'),
-         'datatype'  => 'dropdown'/*,
-         'right'     => 'interface'*/
-      ];
-      
-      $tab[] = [
-         'id'        => '41',
-         'table'     => 'glpi_groups',
-         'field'     => 'name',
-         'linkfield' => 'plugin_dataflows_othergroups_id',
-         'name'      => __('Other group', 'dataflows'),
-//         'condition' => '`is_assign`',
-         'datatype'  => 'dropdown'/*,
-         'right'     => 'interface'*/
-      ];
-
-      $tab[] = [
-         'id'        => '42',
-         'table'     => 'glpi_groups',
-         'field'     => 'name',
-         'linkfield' => 'plugin_dataflows_supportgroups_id',
-         'name'      => __('Dataflow Support', 'dataflows'),
-//         'condition' => '`is_assign`',
-         'datatype'  => 'dropdown'/*,
-         'right'     => 'interface'*/
-      ];
-
-      $tab[] = [
-         'id'        => '43',
-         'table'     => $this->getTable(),
-         'field'     => 'mappingdocurl',
-         'name'      => __('URL to functional doc (mapping, ...)', 'dataflows'),
-         'nosearch'  => true,
-         'datatype'  => 'text'
-      ];
-
-      $tab[] = [
-         'id'        => '44',
-         'table'     => $this->getTable(),
-         'field'     => 'technicaldocurl',
-         'name'      => __('URL to technical doc (design, ...)', 'dataflows'),
-         'nosearch'  => true,
-         'datatype'  => 'text'
-      ];
-
-      $tab[] = [
-         'id'       => '60',
+         'id'       => $tabid++,
          'table'    => $this->getTable(),
          'field'    => 'id',
          'name'     => __('ID'),
@@ -443,15 +176,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
 
       $tab[] = [
-         'id'       => '61',
-         'table'    => $this->getTable(),
-         'field'    => 'is_helpdesk_visible',
-         'name'     => __('Associable to a ticket'),
-         'datatype' => 'bool'
-      ];
-
-      $tab[] = [
-         'id'       => '62',
+         'id'       => $tabid++,
          'table'    => $this->getTable(),
          'field'    => 'is_recursive',
          'name'     => __('Child entities'),
@@ -459,23 +184,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
 
       $tab[] = [
-         'id'        => '63',
-         'table'     => $this->getTable(),
-         'field'     => 'shortdescription',
-         'name'      => __('Short description', 'dataflows'),
-         'datatype'  => 'text'
-      ];
-      
-      $tab[] = [
-         'id'        => '64',
-         'table'     => $this->getTable(),
-         'field'     => 'longdescription',
-         'name'      => __('Long description', 'dataflows'),
-         'datatype'  => 'text'
-      ];
-      
-      $tab[] = [
-         'id'            => '71',
+         'id'            => $tabid++,
          'table'         => 'glpi_plugin_dataflows_dataflows_items',
          'field'         => 'items_id',
          'nosearch'      => true,
@@ -488,7 +197,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
 
       $tab[] = [
-         'id'       => '80',
+         'id'       => $tabid++,
          'table'    => 'glpi_entities',
          'field'    => 'completename',
          'name'     => __('Entity'),
@@ -496,14 +205,14 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
 
       $tab[] = [
-         'id'    => '81',
+         'id'    => $tabid++,
          'table' => 'glpi_entities',
          'field' => 'entities_id',
          'name'  => __('Entity') . "-" . __('ID'),
       ];
 
       $tab[] = [
-         'id'                 => '100',
+         'id'                 => $tabid++,
          'table'        	  => 'glpi_projects',
          'field'              => 'name',
          'name'               => Project::getTypeName(2)." - ".__('Name'),
@@ -522,7 +231,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       ];
 
       $tab[] = [
-         'id'                 => '101',
+         'id'                 => $tabid++,
          'table'        	  => 'glpi_projecttasks',
          'field'              => 'name',
          'name'               => ProjectTask::getTypeName(2)." - ".__('Name'),
@@ -570,351 +279,361 @@ class PluginDataflowsDataflow extends CommonDBTM {
    }
 */
    function showForm ($ID, $options=[]) {
+   global $DB;
 
+      // check whether there are "center" columns
+      $columnquery = "SELECT * 
+                FROM `glpi_plugin_dataflows_configdfs` 
+                WHERE `is_deleted` = 0 AND `plugin_dataflows_configdfhaligns_id` in (3,4,5)";
+      $columnresult = $DB->query($columnquery);
+      $rowcount = $DB->numrows($columnresult);
+      if ($rowcount == 0) {
+         $columncount = 4;
+         $colwidth = "25%";
+      } else {
+         $columncount = 6;
+         $colwidth = "16%";
+      }
+
+      $options['colspan'] = $columncount;
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
+      // define class for right alignment
+      echo "<style>.alignright { text-align: right; }</style>";
+      
+      // Line: 1
+      $curline = 1;
       echo "<tr class='tab_bg_1'>";
       //name of dataflows
       echo "<td>".__('Name')."</td>";
       echo "<td>";
       echo Html::input('name',['value' => $this->fields['name'], 'id' => "name"]);
       echo "</td>";
-      //flowgroup of dataflows
-      echo "<td>".PluginDataflowsFlowgroup::getTypeName(1)."</td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsFlowgroup', ['name' => "plugin_dataflows_flowgroups_id", 'value' => $this->fields["plugin_dataflows_flowgroups_id"], 'entity' => $this->fields["entities_id"]]);
-      echo "</td>";
-      echo "</tr>";
+      $halign = 3;
 
-      echo "<tr class='tab_bg_1'>";
-      //short description of dataflows
-      echo "<td>".__('Short description', 'dataflows')."</td>";
-      echo "<td class='top center' colspan='4'>";
-//      echo "<textarea cols='100' rows='1' name='shortdescription'>".$this->fields["shortdescription"]."</textarea>";
-      echo Html::input('shortdescription',['value' => $this->fields['shortdescription'], 'id' => "shortdescription", 'width' => "98%"]);
-      echo "</td>";
-      echo "</tr>";
+      $linktable = [];
+      $tablequery = "SELECT * FROM `glpi_plugin_dataflows_configdflinks`";
+      $tableresult = $DB->query($tablequery);
+      while ($tabledata = $DB->fetchAssoc($tableresult)) {
+         $linktable[$tabledata['id']]['name'] = $tabledata['name'];
+         $linktable[$tabledata['id']]['has_dropdown'] = $tabledata['has_dropdown'];
+         $linktable[$tabledata['id']]['is_entity_limited'] = $tabledata['is_entity_limited'];
+      }
 
-      echo "<tr class='tab_bg_1'>";
-      //long description of dataflows
-      echo "<td>".__('Long description', 'dataflows')."</td>";
-      echo "<td class='top center' colspan='4'>";
-      echo "<textarea cols='100' rows='3' name='longdescription'>".$this->fields["longdescription"]."</textarea>";
-      echo "</td>";
-      echo "</tr>";
+      $fieldquery = "SELECT * 
+                FROM `glpi_plugin_dataflows_configdfs` 
+                WHERE `is_deleted` = 0 AND `plugin_dataflows_configdffieldgroups_id` = 0 
+                ORDER BY `row`, `plugin_dataflows_configdfhaligns_id`";
+      $fieldresult = $DB->query($fieldquery);
+      $rowcount = $DB->numrows($fieldresult);
+      if ($rowcount > 0) {
+         $fgroupname = '';
+         $rownbr = $curline;
+//         $halign = 5;
+         $tonextrow = false;
+         while ($fielddata = $DB->fetchAssoc($fieldresult)) {
+            $fieldtype = $fielddata['plugin_dataflows_configdfhaligns_id'];
+            if ($fielddata['row'] != $rownbr) {
+               if ($rownbr != $curline) {
+                  // If not the first row, end preceding table row
+                  echo "</tr>";
+               }
+               // Set current rownbr
+               $rownbr = $fielddata['row'];
+               // Start new table row
+               echo "<tr class='tab_bg_1'>";
+               $halign = 1;
+               $tonextrow = false;
+            } else if ($tonextrow) {
+               continue; // skip this field which is located on the same row (and should not)
+            }
+            
+            //Display field
+               switch($fieldtype) {
+               case 1: // Full row
+                  if ($halign == 1) {
+                     $colspan = $columncount - 1;
+                     $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = true;
+                  }
+                  break;
+               case 2: // Left column
+                  if ($halign == 1) {
+                     $colspan = 1;
+                     $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = false;
+                  }
+                  break;
+               case 3: // Left+Center columns
+                  if ($halign == 1) {
+                     $colspan = 3;
+                    $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = true;
+                  }
+                  break;
+               case 4: // Center column
+                  if ($halign <= 3) {
+                     $colspan = 1;
+                     while ($halign < 3) { // fill empty columns
+                        echo "<td/>";
+                        $halign++;
+                     }
+                     $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = false;
+                  }
+                  break;
+               case 5: // Center+Right columns
+                  if ($halign <= 3) {
+                     $colspan = 3;
+                     while ($halign < 3) { // fill empty columns
+                        echo "<td/>";
+                        $halign++;
+                     }
+                     $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = true;
+                  }
+                  break;
+               case 6: // Right column
+                  if ($halign <= $columncount - 1) {
+                     $colspan = 1;
+                     while ($halign < $columncount - 1) { // fill empty columns
+                        echo "<td/>";
+                        $halign++;
+                     }
+                     $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = false;
+                  }
+                  break;
+               case 7: // Straddling 2 columns
+                  if ($halign < 2) {
+                     $colspan = 1;
+                     while ($halign < 2) { // fill empty columns
+                        echo "<td/>";
+                        $halign++;
+                     }
+                     $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = false;
+                  }
+                  break;
+               }
+            }
+            // End last table row
+            echo "</tr>";
+      }
 
-      echo "<tr class='tab_bg_1'>";
-      //status of dataflows
-      echo "<td>".__('Status')."</td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsState', ['name' => "plugin_dataflows_states_id", 'value' => $this->fields["plugin_dataflows_states_id"], 'entity' => $this->fields["entities_id"]]);
-      echo "</td>";
-      //status date of dataflows
-      echo "<td>".__('Status StartDate', 'dataflows')."</td>";
-      echo "<td>";
-      Html::showDateField("statedate", ['value' => $this->fields["statedate"]]);
-      echo "</td>";
-      echo "</tr>";
+      // Generate accordions according to groups named in configbpfieldgroups
 
-      echo "<tr class='tab_bg_1'>";
-      //source connector
-      echo "<td>".__('Mode Full/Delta', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsMode', ['name' => "plugin_dataflows_modes_id", 'value' => $this->fields["plugin_dataflows_modes_id"]]);
-      echo "</td>";
-      //destination connector
-      echo "<td>".__('Pattern', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsPattern', ['name' => "plugin_dataflows_patterns_id", 'value' => $this->fields["plugin_dataflows_patterns_id"]]);
-      echo "</td>";
-	  echo "</tr>";
-	  
-      echo "<tr class='tab_bg_1'>";
-      //transfer protocol
-      echo "<td class='top center' colspan='4'>". __('Transfer Protocol', 'dataflows').": ";
-      Dropdown::show('PluginDataflowsTransferProtocol', ['name' => "plugin_dataflows_transferprotocols_id", 'value' => $this->fields["plugin_dataflows_transferprotocols_id"]]);
-      echo "</td>";
-      echo "</tr>";
+      $fgroupquery = "SELECT * 
+                FROM `glpi_plugin_dataflows_configdffieldgroups` 
+                ORDER BY `sortorder`";
+      $fgroupresult = $DB->query($fgroupquery);
 
-      echo "<tr class='tab_bg_1'>";
-      //from application
-      echo "<td>".__('From application', 'dataflows').": </td><td>";
-      Dropdown::show('PluginDataflowsFromSwcomponent', ['name' => "plugin_dataflows_fromswcomponents_id", 'value' => $this->fields["plugin_dataflows_fromswcomponents_id"],'entity' => $this->fields["entities_id"]]);
-      echo "</td>";
-      //to application
-      echo "<td>".__('To application', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsToSwcomponent', ['name' => "plugin_dataflows_toswcomponents_id", 'value' => $this->fields["plugin_dataflows_toswcomponents_id"],'entity' => $this->fields["entities_id"]]);
-      echo "</td>";
-      echo "</tr>";
+      while ($fgroupdata = $DB->fetchAssoc($fgroupresult)) {
+         $fgroupid = $fgroupdata['id'];
+         $fgroupname = $fgroupdata['name']."tbl"; //name of the grouping table
+         $fgroupcomment = $fgroupdata['comment'];
+         $fgroupexpanded = ($fgroupdata['is_visible'] != 0)?'collapse show':'collapse';
 
-      echo "<tr class='tab_bg_1'>";
-      //source connector
-      echo "<td>".__('Source Connector', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsSourceConnector', ['name' => "plugin_dataflows_sourceconnectors_id", 'value' => $this->fields["plugin_dataflows_sourceconnectors_id"]]);
-      echo "</td>";
-      //destination connector
-      echo "<td>".__('Destination Connector', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsDestinationConnector', ['name' => "plugin_dataflows_destinationconnectors_id", 'value' => $this->fields["plugin_dataflows_destinationconnectors_id"]]);
-      echo "</td>";
-	  echo "</tr>";
-	  
-      echo "<tr class='tab_bg_1'>";
-      //from application
-      echo "<td>".__('Source authentication type', 'dataflows').": </td><td>";
-      Dropdown::show('PluginDataflowsFromAuthType', ['name' => "plugin_dataflows_fromauthtypes_id", 'value' => $this->fields["plugin_dataflows_fromauthtypes_id"]]);
-      echo "</td>";
-      //to application
-      echo "<td>".__('Destination authentication type', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsToAuthType', ['name' => "plugin_dataflows_toauthtypes_id", 'value' => $this->fields["plugin_dataflows_toauthtypes_id"]]);
-      echo "</td>";
-      echo "</tr>";
+         $fieldquery = "SELECT * 
+                FROM `glpi_plugin_dataflows_configdfs` 
+                WHERE `is_deleted` = 0 AND `plugin_dataflows_configdffieldgroups_id` = $fgroupid 
+                ORDER BY `row`, `plugin_dataflows_configdfhaligns_id`";
+         $fieldresult = $DB->query($fieldquery);
+         $rowcount = $DB->numrows($fieldresult);
+         if ($rowcount > 0) {
+            // Accordion separator
+            echo "<tr class='badge accordion-header'><td><button class='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='.".$fgroupname."'>".$fgroupcomment."</button></td></tr>";
 
-	if (class_exists('PluginAccountsAccount')) {
-      echo "<tr class='tab_bg_1'>";
-      //from credential
-      echo "<td>".__('Source User', 'dataflows').": </td><td>";
-      Dropdown::show('PluginDataflowsFromCredential', ['name' => "plugin_dataflows_fromcredentials_id", 'value' => $this->fields["plugin_dataflows_fromcredentials_id"],'entity' => $this->fields["entities_id"]]);
-      echo "</td>";
-      //to credential
-      echo "<td>".__('Destination User', 'dataflows').": </td><td>";
-      Dropdown::show('PluginDataflowsToCredential', ['name' => "plugin_dataflows_tocredentials_id", 'value' => $this->fields["plugin_dataflows_tocredentials_id"],'entity' => $this->fields["entities_id"]]);
-//      Dropdown::show('PluginAccountsAccount', ['value' => $this->fields["plugin_dataflows_tocredentials_id"],'entity' => $this->fields["entities_id"]]);
-      echo "</td>";
-	  echo "</tr>";
-	}
+            $rownbr = '';
+            while ($fielddata = $DB->fetchAssoc($fieldresult)) {
+               if ($fielddata['row'] != $rownbr) {
+                  if ($rownbr != '') {
+                     // If not the first row, end preceding table row
+                     echo "</tr>";
+                  }
+                  // Set current rownbr
+                  $rownbr = $fielddata['row'];
+                  // Start new table row
+                  echo "<tr class='tab_bg_1 ".$fgroupname." accordion-collapse  ".$fgroupexpanded."'>";
+                  $halign = 1;
+                  $tonextrow = false;
+               } else if ($tonextrow) {
+                  continue; // skip this field which is located on the same row (and should not)
+               }
+            
+               //Display field
+               $fieldtype = $fielddata['plugin_dataflows_configdfhaligns_id'];
+               switch($fieldtype) {
+               case 1: // Full row
+                  if ($halign == 1) {
+                     $colspan = $columncount - 1;
+                     $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = true;
+                  }
+                  break;
+               case 2: // Left column
+                  if ($halign == 1) {
+                     $colspan = 1;
+                     $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = false;
+                  }
+                  break;
+               case 3: // Left+Center columns
+                  if ($halign == 1) {
+                     $colspan = 3;
+                     $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = true;
+                  }
+                  break;
+               case 4: // Center column
+                  if ($halign <= 3) {
+                     $colspan = 1;
+                     while ($halign < 3) { // fill empty columns
+                        echo "<td/>";
+                        $halign++;
+                     }
+                     $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = false;
+                  }
+                  break;
+               case 5: // Center+Right columns
+                  if ($halign <= 3) {
+                     $colspan = 3;
+                     while ($halign < 3) { // fill empty columns
+                        echo "<td/>";
+                        $halign++;
+                     }
+                     $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = true;
+                  }
+                  break;
+               case 6: // Right column
+                  if ($halign <= $columncount - 1) {
+                     $colspan = 1;
+                     while ($halign < $columncount - 1) { // fill empty columns
+                        echo "<td/>";
+                        $halign++;
+                     }
+                     $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = false;
+                  }
+                  break;
+               case 7: // Straddling 2 columns
+                  if ($halign < 2) {
+                     $colspan = 1;
+                     while ($halign < 2) { // fill empty columns
+                        echo "<td/>";
+                        $halign++;
+                     }
+                     $this->displayField($fielddata, $colspan, $linktable);
+                     $halign += 1 + $colspan; // move halign to next column to write into
+                     $tonextrow = false;
+                  }
+                  break;
+                }
+            }
+            // End last table row
+            echo "</tr>";
+         }
+      }
 
-      echo "<tr class='tab_bg_1'>";
-      //from external server
-      echo "<td>".__('From external server', 'dataflows').": </td>";
-      echo "<td>";
-      echo Html::input('plugin_dataflows_fromexternal',['value' => $this->fields['plugin_dataflows_fromexternal'], 'id' => "plugin_dataflows_fromexternal", 'size' => 55]);
-      echo "</td>";
-      //to external server
-      echo "<td>".__('To external server', 'dataflows').": </td>";
-      echo "<td>";
-      echo Html::input('plugin_dataflows_toexternal',['value' => $this->fields['plugin_dataflows_toexternal'], 'id' => "plugin_dataflows_toexternal", 'size' => 55]);
-      echo "</td>";
-	  echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      //source path
-      echo "<td>".__('Source directory/ ProgramId/ port', 'dataflows').": </td>";
-      echo "<td>";
-      echo Html::input('plugin_dataflows_srcuri',['value' => $this->fields['plugin_dataflows_srcuri'], 'id' => "plugin_dataflows_srcuri", 'size' => 55]);
-      echo "</td>";
-      //destination path
-      echo "<td>".__('Destination directory/ ProgramId/ port', 'dataflows').": </td>";
-      echo "<td>";
-      echo Html::input('plugin_dataflows_desturi',['value' => $this->fields['plugin_dataflows_desturi'], 'id' => "plugin_dataflows_desturi", 'size' => 55]);
-      echo "</td>";
-	  echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      //source format
-      echo "<td>".__('Source format (Idoc, table, file pattern, ...)', 'dataflows').": </td>";
-      echo "<td>";
-      echo Html::input('srcformat',['value' => $this->fields['srcformat'], 'id' => "srcformat", 'size' => 45]);
-      echo "</td>";
-      //destination format
-      echo "<td>".__('Destination format (Idoc, table, file pattern, ...)', 'dataflows').": </td>";
-      echo "<td>";
-      echo Html::input('destformat',['value' => $this->fields['destformat'], 'id' => "destformat", 'size' => 45]);
-      echo "</td>";
-	  echo "</tr>";
-	  
-      echo "<tr class='tab_bg_1'>";
-      //source structure type
-      echo "<td>".__('Source structure type', 'dataflows').": </td><td>";
-      Dropdown::show('PluginDataflowsSrcStructureType', ['name' => "plugin_dataflows_srcstructuretypes_id", 'value' => $this->fields["plugin_dataflows_srcstructuretypes_id"]]);
-      echo "</td>";
-      //destination structure type
-      echo "<td>".__('Destination structure type', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsDestStructureType', ['name' => "plugin_dataflows_deststructuretypes_id", 'value' => $this->fields["plugin_dataflows_deststructuretypes_id"]]);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      //source data structure
-      echo "<td>".__('Source data structure', 'dataflows').": </td>";
-      echo "<td>";
-      echo "<textarea cols='40' rows='3' name='srcstructure'>".$this->fields["srcstructure"]."</textarea>";
-      echo "</td>";
-      //destination data structure
-      echo "<td>".__('Destination data structure', 'dataflows').": </td>";
-      echo "<td>";
-      echo "<textarea cols='40' rows='3' name='deststructure'>".$this->fields["deststructure"]."</textarea>";
-      echo "</td>";
-	  echo "</tr>";
-	  
-      echo "<tr class='tab_bg_1'>";
-      //extract method
-      echo "<td>".__('Extract Method (Bapi, Stored Proc, ...)', 'dataflows').": </td>";
-      echo "<td>";
-      echo Html::input('extractmethod',['value' => $this->fields['extractmethod'], 'id' => "extractmethod", 'size' => 45]);
-      echo "</td>";
-      //load method
-      echo "<td>".__('Load Method (Bapi, Stored Proc, ...)', 'dataflows').": </td>";
-      echo "<td>";
-      echo Html::input('loadmethod',['value' => $this->fields['loadmethod'], 'id' => "loadmethod", 'size' => 45]);
-      echo "</td>";
-      
-      echo "<tr class='tab_bg_1'>";
-      //source preprocessing
-      echo "<td>".__('Transfer Preprocessing', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsSrcPreproc', ['name' => "plugin_dataflows_srcpreprocs_id", 'value' => $this->fields["plugin_dataflows_srcpreprocs_id"]]);
-      echo "</td>";
-      //destination postprocessing
-      echo "<td>".__('Transfer Postprocessing', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsDestPostproc', ['name' => "plugin_dataflows_destpostprocs_id", 'value' => $this->fields["plugin_dataflows_destpostprocs_id"]]);
-      echo "</td>";
-	  echo "</tr>";
-	  
-      echo "<tr class='tab_bg_1'>";
-      //transfer trigger
-      echo "<td>".__('Transfer trigger', 'dataflows').": ";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsTriggerType', ['name' => "plugin_dataflows_triggertypes_id", 'value' => $this->fields["plugin_dataflows_triggertypes_id"]]);
-      echo "</td>";
-      //trigger format
-      echo "<td>".__('Trigger name', 'dataflows').": ";
-      echo "</td><td>";
-      echo Html::input('triggerformat',['value' => $this->fields['triggerformat'], 'id' => "triggerformat", 'size' => 45]);
-      echo "</td>";
-      echo "</tr>";
-      
-      echo "<tr class='tab_bg_1'>";
-      //transfer frequency
-      echo "<td>".__('Transfer frequency (def : per day)', 'dataflows').": </td><td>";
-      Dropdown::show('PluginDataflowsTransferFreq', ['name' => "plugin_dataflows_transferfreqs_id", 'value' => $this->fields["plugin_dataflows_transferfreqs_id"]]);
-      echo "</td>";
-      
-      //transfer timetable
-      echo "<td>".__('Transfer Timetable', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsTransferTimetable', ['name' => "plugin_dataflows_transfertimetables_id", 'value' => $this->fields["plugin_dataflows_transfertimetables_id"]]);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      //error handling
-      echo "<td>".__('Transfer Error handling', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsErrorHandling', ['name' => "plugin_dataflows_errorhandlings_id", 'value' => $this->fields["plugin_dataflows_errorhandlings_id"]]);
-      echo "</td>";
-      
-      //transfer on holiday
-      echo "<td>".__('Transfer On holiday', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsHolidayAction', ['name' => "plugin_dataflows_holidayactions_id", 'value' => $this->fields["plugin_dataflows_holidayactions_id"]]);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      //url of functional documentation
-      echo "<td>";
-	  echo Html::link(__('URL to functional doc (mapping, ...)', 'dataflows'), $this->fields["mappingdocurl"]);
-      echo "</td>";
-      echo "<td>";
-      echo Html::input('mappingdocurl',['value' => $this->fields['mappingdocurl'], 'id' => "mappingdocurl", 'size' => 65]);
-      echo "</td>";
-      //url of technical documentation
-      echo "<td>";
-	  echo Html::link(__('URL to technical doc (design, ...)', 'dataflows'), $this->fields["technicaldocurl"]);
-      echo "<td>";
-      echo Html::input('technicaldocurl',['value' => $this->fields['technicaldocurl'], 'id' => "technicaldocurl", 'size' => 65]);
-      echo "</td>";
-	  echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      //transfer volume
-      echo "<td>".__('Transfer Volume (MB)', 'dataflows').": </td>";
-      echo "<td>";
-      echo Html::input('transfervolume',['value' => $this->fields['transfervolume'], 'id' => "transfervolume", 'size' => 45]);
-      echo "</td>";
-      //transfer priority
-      echo "<td>".__('Priority', 'dataflows').": </td>";
-      echo "<td>";
-      echo Html::input('transferpriority',['value' => $this->fields['transferpriority'], 'id' => "transferpriority", 'size' => 45]);
-      echo "</td>";
-      echo "</tr>";
-	  
-      echo "<tr class='tab_bg_1'>";
-      //type
-      echo "<td>".__('Type').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsType', ['name' => "plugin_dataflows_types_id", 'value' => $this->fields["plugin_dataflows_types_id"]]);
-      echo "</td>";
-      //indicator
-      echo "<td>".__('Indicator', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsIndicator', ['name' => "plugin_dataflows_indicators_id", 'value' => $this->fields["plugin_dataflows_indicators_id"]]);
-      echo "</td>";
-      echo "</tr>";
-	  
-      echo "<tr class='tab_bg_1'>";
-      //service level of dataflows
-      echo "<td>".__('Service Level', 'dataflows').": </td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsServicelevel', ['name' => "plugin_dataflows_servicelevels_id", 'value' => $this->fields["plugin_dataflows_servicelevels_id"]]);
-      echo "</td>";
-      //is_helpdesk_visible
-      echo "<td>" . __('Associable to a ticket') . "</td><td>";
-      Dropdown::showYesNo('is_helpdesk_visible',$this->fields['is_helpdesk_visible']);
-      echo "</td>";
-
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      //data owner
-      echo "<td>".__('Dataflow Follow-up', 'dataflows')."</td><td>";
-      Group::dropdown(['name'      => 'groups_id', 
-                        'value'     => $this->fields['groups_id'], 
-                        'entity'    => $this->fields['entities_id'], 
-                        'condition' => ['is_assign' => 1]]);
-      echo "</td>";
-      //technical maintainer
-      echo "<td>".__('Dataflow Expert', 'dataflows')."</td><td>";
-      User::dropdown(['name' => "users_id", 'value' => $this->fields["users_id"], 'entity' => $this->fields["entities_id"], 'right' => 'interface']);
-      echo "</td>";
-      echo "</tr>";
-
-
-      echo "<tr class='tab_bg_1'>";
-      //other group
-      echo "<td>".__('Other group', 'dataflows')."</td>";
-      echo "<td>";
-      Dropdown::show('PluginDataflowsOtherGroup', ['name' => "plugin_dataflows_othergroups_id", 'value' => $this->fields["plugin_dataflows_othergroups_id"], 'entity' => $this->fields["entities_id"]]);
-      echo "</td>";
-      //other expert
-      echo "<td>".__('Other expert', 'dataflows').": </td>";
-      echo "<td>";
-      User::dropdown(['name' => "plugin_dataflows_otherusers_id", 'value' => $this->fields["plugin_dataflows_otherusers_id"], 'entity' => $this->fields["entities_id"], 'right' => 'interface']);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      //support group
-      echo "<td>".__('Dataflow Support', 'dataflows').": </td><td>";
-      Dropdown::show('PluginDataflowsSupportGroup', ['value' => $this->fields["plugin_dataflows_supportgroups_id"],'entity' => $this->fields["entities_id"]]);
-      echo "</td>";
-      //modification date
-/*      echo "<td class='center' colspan = '4'>";
-      printf(__('Last update on %s'), Html::convDateTime($this->fields["date_mod"]));
-      echo "</td>";
-*/
-      echo "</tr>";
 
       $this->showFormButtons($options);
 
       return true;
+   }
+   
+   function displayField($fielddata, $colspan = 1, $linktable=[]) {
+      $fieldname = $fielddata['name'];
+      $fielddescription = $fielddata['description'];
+      $fieldreadonly = $fielddata['is_readonly']?'true':'false';
+      $fieldtype = $fielddata['plugin_dataflows_configdfhaligns_id'];
+      $fieldhalign = ($fieldtype == '7') ? "class='alignright'":"";
+      $params = [];
+      $params['value'] = $this->fields[$fieldname];
+      if ($fielddata['is_readonly']) {
+         $params['readonly'] = 'true';
+      }
+      switch($fielddata['plugin_dataflows_configdfdatatypes_id']) {
+         case 1: //Text
+            echo "<td $fieldhalign>".__($fielddescription, 'archibp')."</td>";
+            echo "<td colspan='".$colspan."'>";
+            $params['id'] = $fieldname;
+            $params['width'] = '100%';
+            echo Html::input($fieldname,$params);
+            echo "</td>";
+            break;
+         case 2: //Boolean
+            echo "<td $fieldhalign>".__($fielddescription, 'archibp')."</td>";
+            echo "<td colspan='".$colspan."'>";
+            Dropdown::showYesNo($fieldname,$this->fields[$fieldname], -1);
+            echo "</td>";
+            break;
+         case 3: //Date
+            echo "<td $fieldhalign>".__($fielddescription, 'archibp')."</td>";
+            echo "<td colspan='".$colspan."'>";
+            Html::showDateField($fieldname, ['value' => empty($this->fields[$fieldname])?date("Y-m-d"):$this->fields[$fieldname], 'readonly' => $fieldreadonly]);
+            echo "</td>";
+            break;
+         case 4: //Date and time
+            echo "<td $fieldhalign>".__($fielddescription, 'archibp')."</td>";
+            echo "<td colspan='".$colspan."'>";
+            Html::showDateTimeField($fieldname, ['value' => empty($this->fields[$fieldname])?date("Y-m-d H:i:s"):$this->fields[$fieldname], 'readonly' => $fieldreadonly]);
+            echo "</td>";
+            break;
+         case 5: //Number
+            echo "<td $fieldhalign>".__($fielddescription, 'archibp')."</td>";
+            echo "<td colspan='".$colspan."'>";
+            Dropdown::showNumber($fieldname, $params);
+            echo "</td>";
+            break;
+         case 6: //Dropdown
+         case 9: //Dropdown
+            if ($linktable[$fielddata['plugin_dataflows_configdflinks_id']]['is_entity_limited']) {
+               $params['entity'] = $this->fields["entities_id"];
+            }
+            echo "<td $fieldhalign>".__($fielddescription, 'archibp')."</td>";
+            echo "<td colspan='".$colspan."'>";
+            if ($linktable[$fielddata['plugin_dataflows_configdflinks_id']]['has_dropdown']) {
+               $linktable[$fielddata['plugin_dataflows_configdflinks_id']]['name']::dropdown($params);
+            }
+            else {
+               Dropdown::show($linktable[$fielddata['plugin_dataflows_configdflinks_id']]['name'], $params);
+            }
+            echo "</td>";
+            break;
+         case 7: //Itemlink
+            echo "<td $fieldhalign>";
+            echo Html::link(__($fielddescription, 'archibp'), $this->fields[$fieldname]);
+            echo "</td>";
+            echo "<td colspan='".$colspan."'>";
+            $params['id'] = $fieldname;
+            $params['width'] = '100%';
+            echo Html::input($fieldname,$params);
+            echo "</td>";
+            break;
+         case 8: //Textarea
+            echo "<td $fieldhalign>".__($fielddescription, 'archibp')."</td>";
+            echo "<td colspan='".$colspan."'>";
+            echo Html::textarea(['name' => $fieldname, 'value' => $this->fields[$fieldname], 'editor_id' => $fieldname, 
+                                'enable_richtext' => true, 'display' => false, 'rows' => 3, 'readonly' => $fieldreadonly]);
+            echo "</td>";
+            break;      
+      }
    }
    
    /**
