@@ -505,8 +505,8 @@ function hook_pre_item_add_dataflows_configdflink(CommonDBTM $item) {
    $newisentitylimited = $item->input['is_entity_limited'];
    $newasviewon = $item->input['as_view_on'];
    $newviewlimit = $item->input['viewlimit'];
-  if (substr($newclassname, 0, 13) == 'PluginDataflows') {
-      $rootname = strtolower(substr($newclassname, 13));
+  if (substr($newclassname, 0, 15) == 'PluginDataflows') {
+      $rootname = strtolower(substr($newclassname, 15));
       $tablename = 'glpi_plugin_dataflows_'.getPlural($rootname);
       $fieldname = 'plugin_dataflows_'.getPlural($rootname).'_id';
       if (!empty($newasviewon)) {
@@ -561,17 +561,17 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
    $oldclassname = $item->fields['name'];
    $oldistreedropdown = $item->fields['is_tree_dropdown'];
    $oldasviewon = $item->fields['as_view_on'];
-   if (substr($newclassname, 0, 13) == 'PluginDataflows') {
+   if (substr($newclassname, 0, 15) == 'PluginDataflows') {
       // class is owned by this plugin
-      $newrootname = strtolower(substr($newclassname, 13));
+      $newrootname = strtolower(substr($newclassname, 15));
       $newfilename = $newrootname;
       $newtablename = 'glpi_plugin_dataflows_'.getPlural($newrootname);
       $newfieldname = 'plugin_dataflows_'.getPlural($newrootname).'_id';
-      if (substr($oldclassname, 0, 13) == 'PluginDataflows') { 
+      if (substr($oldclassname, 0, 15) == 'PluginDataflows') { 
          //old and new types are owned by this plugin
          if ($oldclassname != $newclassname) { 
             //dropdown name modified->rename table
-            $oldrootname = strtolower(substr($oldclassname, 13));
+            $oldrootname = strtolower(substr($oldclassname, 15));
             $oldfilename = $oldrootname;
             $oldtablename = 'glpi_plugin_dataflows_'.getPlural($oldrootname);
             $oldfieldname = 'plugin_dataflows_'.getPlural($oldrootname).'_id';
@@ -670,10 +670,10 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
       }
       create_plugin_dataflows_classfiles($dir, $newclassname, $newistreedropdown);
    }
-   if (substr($oldclassname, 0, 13) == 'PluginDataflows'
+   if (substr($oldclassname, 0, 15) == 'PluginDataflows'
    && $oldclassname != $newclassname) {
       //old dropdown was owned by this plugin -> drop table if it hasn't been renamed
-      $oldrootname = strtolower(substr($oldclassname, 13));
+      $oldrootname = strtolower(substr($oldclassname, 15));
       $oldfilename = $oldrootname;
       $oldtablename = 'glpi_plugin_dataflows_'.getPlural($oldrootname);
       $oldfieldname = 'plugin_dataflows_'.getPlural($oldrootname).'_id';
@@ -695,12 +695,12 @@ function hook_pre_item_purge_dataflows_configdflink(CommonDBTM $item) {
    global $DB;
    $dir = Plugin::getPhpDir("dataflows", true);
    $oldclassname = $item->fields['name'];
-   $oldfilename = strtolower(substr($oldclassname, 13));
+   $oldfilename = strtolower(substr($oldclassname, 15));
    $oldid = $item->fields['id'];
    // suppress in glpi_plugin_dataflows_configdfs
    $query = "UPDATE `glpi_plugin_dataflows_configdfs` SET `plugin_dataflows_configdflinks_id` = 0 WHERE `plugin_dataflows_configdflinks_id` = '".$oldid."'";
    $result = $DB->query($query);
-   if (substr($oldclassname, 0, 13) == 'PluginDataflows') {
+   if (substr($oldclassname, 0, 15) == 'PluginDataflows') {
       // delete files in inc and front directories
       if (file_exists($dir.'/inc/'.$oldfilename.'.class.php')) 
          unlink($dir.'/inc/'.$oldfilename.'.class.php');
@@ -712,8 +712,8 @@ function hook_pre_item_purge_dataflows_configdflink(CommonDBTM $item) {
    return true;
 }
 function create_plugin_dataflows_classfiles($dir, $newclassname, $istreedropdown = false) {
-   if (substr($newclassname, 0, 13) == 'PluginDataflows') {
-      $newfilename = strtolower(substr($newclassname, 13));
+   if (substr($newclassname, 0, 15) == 'PluginDataflows') {
+      $newfilename = strtolower(substr($newclassname, 15));
       $dropdowntype = 'CommonDropdown';
       if ($istreedropdown) $dropdowntype = 'CommonTreeDropdown';
       // create files in inc and front directories, with read/write access

@@ -118,7 +118,7 @@ function plugin_version_dataflows() {
 
    return array (
       'name' => _n('Dataflow', 'Dataflows', 2, 'dataflows'),
-      'version' => '3.0.0',
+      'version' => '3.0.1',
       'author'  => "Eric Feron",
       'license' => 'GPLv2+',
       'homepage'=> 'https://github.com/ericferon/glpi-dataflows',
@@ -169,7 +169,7 @@ function hook_pre_item_add_dataflows_configdf(CommonDBTM $item) {
    $dbfield = new PluginDataflowsConfigdfDbfieldtype;
    if ($dbfield->getFromDB($item->fields['plugin_dataflows_configdfdbfieldtypes_id'])) {
       $fieldtype = $dbfield->fields['name'];
-      $query = "ALTER TABLE `glpi_plugin_archisw_swcomponents` ADD COLUMN IF NOT EXISTS $fieldname $fieldtype";
+      $query = "ALTER TABLE `glpi_plugin_dataflows_dataflows` ADD COLUMN IF NOT EXISTS $fieldname $fieldtype";
       $result = $DB->query($query);
       return true;
    }
@@ -183,10 +183,10 @@ function hook_pre_item_update_dataflows_configdf(CommonDBTM $item) {
    if ($dbfield->getFromDB($item->fields['plugin_dataflows_configdfdbfieldtypes_id'])) {
       $fieldtype = $dbfield->fields['name'];
       if ($oldfieldname != $newfieldname) {
-         $query = "ALTER TABLE `glpi_plugin_archisw_swcomponents` RENAME COLUMN $oldfieldname TO $newfieldname ";
+         $query = "ALTER TABLE `glpi_plugin_dataflows_dataflows` RENAME COLUMN $oldfieldname TO $newfieldname ";
          $result = $DB->query($query);
       }
-      $query = "ALTER TABLE `glpi_plugin_archisw_swcomponents` MODIFY $newfieldname $fieldtype";
+      $query = "ALTER TABLE `glpi_plugin_dataflows_dataflows` MODIFY $newfieldname $fieldtype";
       $result = $DB->query($query);
       return true;
    }
@@ -195,11 +195,11 @@ function hook_pre_item_update_dataflows_configdf(CommonDBTM $item) {
 function hook_pre_item_purge_dataflows_configdf(CommonDBTM $item) {
    global $DB;
    $fieldname = $item->fields['name'];
-   $query = "ALTER TABLE `glpi_plugin_archisw_swcomponents` DROP COLUMN $fieldname";
+   $query = "ALTER TABLE `glpi_plugin_dataflows_dataflows` DROP COLUMN $fieldname";
    $result = $DB->query($query);
    $rowcount = $DB->numrows($fieldresult);
    $tablename = 'glpi_'.substr($fieldname, 0, -3);
-   if ($item->fields['plugin_dataflows_configdfdatatypes_id'] == 6 && substr($tablename, 0, 20) == 'glpi_plugin_archisw_') { //dropdown->drop table
+   if ($item->fields['plugin_dataflows_configdfdatatypes_id'] == 6 && substr($tablename, 0, 22) == 'glpi_plugin_dataflows_') { //dropdown->drop table
          $query = "DROP TABLE IF EXISTS `".$tablename."`";
          $result = $DB->query($query);
          $classname = 'PluginDataflows'.ucfirst(DbUtils::getSingular(substr($fieldname, 15, -3))); //cut ending '_id' and get singular form of word

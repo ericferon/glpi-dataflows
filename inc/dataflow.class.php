@@ -143,7 +143,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
                   'id'       => $tabid,
                   'table'    => $tabtable,
                   'field'    => $fielddata['name'],
-                  'name'     => __($fielddata['description'],'archisw'),
+                  'name'     => __($fielddata['description'],'dataflows'),
                   'datatype' => $datatypetable[$datatypeid]['name'],
                   'massiveaction' => $fielddata['massiveaction'],
                   'nosearch' => $fielddata['nosearch']
@@ -157,7 +157,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
                   'id'       => $tabid,
                   'table'    => $tablename,
                   'field'    => 'name',
-                  'name'     => __($fielddata['description'],'archisw'),
+                  'name'     => __($fielddata['description'],'dataflows'),
                   'datatype' => $datatypetable[$datatypeid]['name']
                ];
                break;
