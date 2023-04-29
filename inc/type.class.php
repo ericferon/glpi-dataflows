@@ -2,7 +2,7 @@
 /*
  -------------------------------------------------------------------------
  Dataflows plugin for GLPI
- Copyright (C) 2009-2018 by Eric Feron.
+ Copyright (C) 2009-2023 by Eric Feron.
  -------------------------------------------------------------------------
 
  LICENSE
@@ -23,51 +23,9 @@
  along with Dataflows. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-
-if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
-}
-
-// Class for a Dropdown
-class PluginDataflowsType extends CommonDropdown {
-
-   static $rightname = "plugin_dataflows";
-   var $can_be_translated  = true;
-   
-   static function getTypeName($nb=0) {
-
-      return _n('Type','Types',$nb);
-   }
-
-   static function transfer($ID, $entity) {
-      global $DB;
-
-      if ($ID>0) {
-         // Not already transfer
-         // Search init item
-         $query = "SELECT *
-                   FROM `glpi_plugin_dataflows_dataflowtypes`
-                   WHERE `id` = '$ID'";
-
-         if ($result=$DB->query($query)) {
-            if ($DB->numrows($result)) {
-               $data = $DB->fetchAssoc($result);
-               $data = Toolbox::addslashes_deep($data);
-               $input['name'] = $data['name'];
-               $input['entities_id']  = $entity;
-               $temp = new self();
-               $newID    = $temp->getID($input);
-
-               if ($newID<0) {
-                  $newID = $temp->import($input);
-               }
-
-               return $newID;
-            }
-         }
+      if (!defined('GLPI_ROOT')) {
+         die('Sorry. You cannott access directly to this file');
       }
-      return 0;
-   }
-}
-
-?>
+      class PluginDataflowsType extends CommonDropdown {
+      }
+      ?>

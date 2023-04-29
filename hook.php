@@ -504,7 +504,7 @@ function hook_pre_item_add_dataflows_configdflink(CommonDBTM $item) {
    $newistreedropdown = $item->input['is_tree_dropdown'];
    $newisentitylimited = $item->input['is_entity_limited'];
    $newasviewon = $item->input['as_view_on'];
-   $newviewlimit = $item->input['viewlimit'];
+   $newviewlimit = str_replace("\'", "'", $item->input['viewlimit']); // unescape single quotes
   if (substr($newclassname, 0, 15) == 'PluginDataflows') {
       $rootname = strtolower(substr($newclassname, 15));
       $tablename = 'glpi_plugin_dataflows_'.getPlural($rootname);
@@ -512,8 +512,15 @@ function hook_pre_item_add_dataflows_configdflink(CommonDBTM $item) {
       if (!empty($newasviewon)) {
          $entities = ($newisentitylimited?" `entities_id`,":"");
          $name = ($newistreedropdown?" `completename`,":" `name`,");
-         $query = "CREATE VIEW `$tablename` (`id`,$entities `name`, `comment`) AS 
+         if (!$newistreedropdown) {
+            // new simple dropdown view
+            $query = "CREATE VIEW `$tablename` (`id`,$entities `name`, `comment`) AS 
                   SELECT `id`,$entities `name`, `comment` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
+         } 
+         else { // new treedropdon view
+            $query = "CREATE VIEW `$tablename` (`id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive`) AS 
+                  SELECT `id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
+         }
          $result = $DB->query($query);
       }
       else {
@@ -557,7 +564,7 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
    $newclassname = $item->input['name'];
    $newistreedropdown = $item->input['is_tree_dropdown'];
    $newasviewon = $item->input['as_view_on'];
-   $newviewlimit = $item->input['viewlimit'];
+   $newviewlimit = str_replace("\'", "'", $item->input['viewlimit']); // unescape single quotes
    $oldclassname = $item->fields['name'];
    $oldistreedropdown = $item->fields['is_tree_dropdown'];
    $oldasviewon = $item->fields['as_view_on'];
@@ -585,8 +592,15 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
             if (!empty($newasviewon)) {
                $entities = ($newisentitylimited?" `entities_id`,":"");
                $name = ($newistreedropdown?" `completename`,":" `name`,");
-               $query = "CREATE OR REPLACE VIEW `$newtablename` (`id`,$entities `name`, `comment`) AS 
+               if (!$newistreedropdown) {
+                  // new simple dropdown view
+                  $query = "CREATE OR REPLACE VIEW `$newtablename` (`id`,$entities `name`, `comment`) AS 
                         SELECT `id`,$entities `name`, `comment` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
+               } 
+               else { // new treedropdon view
+                  $query = "CREATE OR REPLACE VIEW `$newtablename` (`id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive`) AS 
+                        SELECT `id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
+               }
                $result = $DB->query($query);
             }
             else {
@@ -631,8 +645,15 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
          if (!empty($newasviewon)) {
             $entities = ($newisentitylimited?" `entities_id`,":"");
             $name = ($newistreedropdown?" `completename`,":" `name`,");
-            $query = "CREATE VIEW `$tablename` (`id`,$entities `name`, `comment`) AS 
+            if (!$newistreedropdown) {
+               // new simple dropdown view
+               $query = "CREATE VIEW `$tablename` (`id`,$entities `name`, `comment`) AS 
                   SELECT `id`,$entities `name`, `comment` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
+            } 
+            else { // new treedropdon view
+               $query = "CREATE VIEW `$tablename` (`id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive`) AS 
+                  SELECT `id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
+            }
             $result = $DB->query($query);
          }
          else {

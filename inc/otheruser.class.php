@@ -2,7 +2,7 @@
 /*
  -------------------------------------------------------------------------
  Dataflows plugin for GLPI
- Copyright (C) 2009-2018 by Eric Feron.
+ Copyright (C) 2009-2023 by Eric Feron.
  -------------------------------------------------------------------------
 
  LICENSE
@@ -23,20 +23,9 @@
  along with Dataflows. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-
-if (!defined('GLPI_ROOT')) {
-	die("Sorry. You can't access directly to this file");
-}
-
-class PluginDataflowsOtherUser extends CommonDropdown {
-
-   static $rightname = "plugin_dataflows";
-   var $can_be_translated  = true;
-   
-   static function getTypeName($nb=0) {
-
-      return _n('Other user','Other users',$nb,'dataflows');
-   }
-}
-
-?>
+      if (!defined('GLPI_ROOT')) {
+         die('Sorry. You cannott access directly to this file');
+      }
+      class PluginDataflowsOtherUser extends CommonDropdown {
+      }
+      ?>

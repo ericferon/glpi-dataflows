@@ -2,7 +2,7 @@
 /*
  -------------------------------------------------------------------------
  Dataflows plugin for GLPI
- Copyright (C) 2009-2018 by Eric Feron.
+ Copyright (C) 2009-2023 by Eric Feron.
  -------------------------------------------------------------------------
 
  LICENSE
@@ -23,10 +23,7 @@
  along with Dataflows. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-
-include ('../../../inc/includes.php');
-
-$dropdown = new PluginDataflowsIndicator();
-include (GLPI_ROOT . "/front/dropdown.common.php");
-
-?>
+      include ('../../../inc/includes.php');
+      $dropdown = new PluginDataflowsIndicator();
+      include (GLPI_ROOT . '/front/dropdown.common.php');
+      ?>
