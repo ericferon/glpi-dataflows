@@ -716,12 +716,19 @@ function hook_pre_item_purge_dataflows_configdflink(CommonDBTM $item) {
    global $DB;
    $dir = Plugin::getPhpDir("dataflows", true);
    $oldclassname = $item->fields['name'];
-   $oldfilename = strtolower(substr($oldclassname, 15));
+   $oldasviewon = $item->fields['as_view_on'];
+   $oldrootname = strtolower(substr($oldclassname, 15));
+   $oldfilename = $oldrootname;
    $oldid = $item->fields['id'];
    // suppress in glpi_plugin_dataflows_configdfs
    $query = "UPDATE `glpi_plugin_dataflows_configdfs` SET `plugin_dataflows_configdflinks_id` = 0 WHERE `plugin_dataflows_configdflinks_id` = '".$oldid."'";
    $result = $DB->query($query);
    if (substr($oldclassname, 0, 15) == 'PluginDataflows') {
+      $oldtablename = 'glpi_plugin_dataflows_'.getPlural($oldrootname);
+      $oldfieldname = 'plugin_dataflows_'.getPlural($oldrootname).'_id';
+      $tableorview = empty($oldasviewon)?"TABLE":"VIEW";
+      $query = "DROP $tableorview IF EXISTS `".$oldtablename."`";
+      $result = $DB->query($query);
       // delete files in inc and front directories
       if (file_exists($dir.'/inc/'.$oldfilename.'.class.php')) 
          unlink($dir.'/inc/'.$oldfilename.'.class.php');
