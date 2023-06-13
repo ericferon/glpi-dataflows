@@ -606,6 +606,9 @@ class PluginDataflowsDataflow extends CommonDBTM {
             if ($linktable[$fielddata['plugin_dataflows_configdflinks_id']]['is_entity_limited']) {
                $params['entity'] = $this->fields["entities_id"];
             }
+            if ($linktable[$fielddata['plugin_dataflows_configdflinks_id']]['name'] == 'User') {
+               $params['right'] = 'interface';
+            }
             echo "<td $fieldhalign>".__($fielddescription, 'archibp')."</td>";
             echo "<td colspan='".$colspan."'>";
             if ($linktable[$fielddata['plugin_dataflows_configdflinks_id']]['has_dropdown']) {
