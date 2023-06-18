@@ -30,7 +30,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginDataflowsConfigdfLink extends CommonDropdown {
 
-   static $rightname = "plugin_archibp";
+   static $rightname = "plugin_dataflows_configuration";
    var $can_be_translated  = true;
    
    static function getTypeName($nb=0) {
@@ -42,61 +42,61 @@ class PluginDataflowsConfigdfLink extends CommonDropdown {
             [
                   'name'      => 'has_dropdown',
                   'type'      => 'bool',
-                  'label'     => __('Has own dropdown', 'archibp'),
+                  'label'     => __('Has own dropdown', 'dataflows'),
                   'list'      => false
             ],
             [
                   'name'      => 'is_entity_limited',
                   'type'      => 'bool',
-                  'label'     => __('Is limited by entity', 'archibp'),
+                  'label'     => __('Is limited by entity', 'dataflows'),
                   'list'      => false
             ],
             [
                   'name'      => 'is_tree_dropdown',
                   'type'      => 'bool',
-                  'label'     => __('Is hierarchical dropdown', 'archibp'),
+                  'label'     => __('Is hierarchical dropdown', 'dataflows'),
                   'list'      => false
             ],
             [
                   'name'      => 'as_view_on',
                   'type'      => 'text',
-                  'label'     => __('As view on table', 'archibp'),
+                  'label'     => __('As view on table', 'dataflows'),
                   'list'      => false
             ],
             [
                   'name'      => 'viewlimit',
                   'type'      => 'text',
-                  'label'     => __('View limited by WHERE clause', 'archibp'),
+                  'label'     => __('View limited by WHERE clause', 'dataflows'),
                   'list'      => false
             ]
 		];
    }
    function rawSearchOptions() {
 	  $opt = CommonDropdown::rawSearchOptions();
-//      $sopt['common'] = __("App structures", "archibp");
+//      $sopt['common'] = __("App structures", "dataflows");
 
       $opt[2400]['id']          = 2400;
       $opt[2400]['table']       = $this->getTable();
       $opt[2400]['field']       = 'has_dropdown';
-      $opt[2400]['name']        = __('Has own dropdown', 'archibp');
+      $opt[2400]['name']        = __('Has own dropdown', 'dataflows');
       $opt[2400]['datatype']    = 'boolean';
 
       $opt[2401]['id']          = 2401;
       $opt[2401]['table']       = $this->getTable();
       $opt[2401]['field']       = 'is_entity_limited';
-      $opt[2401]['name']        = __('Is limited by entity', 'archibp');
+      $opt[2401]['name']        = __('Is limited by entity', 'dataflows');
       $opt[2401]['datatype']    = 'boolean';
 
       $opt[2402]['id']          = 2402;
       $opt[2402]['table']       = $this->getTable();
       $opt[2402]['field']       = 'is_tree_dropdown';
-      $opt[2402]['name']        = __('Is hierarchical dropdown', 'archibp');
+      $opt[2402]['name']        = __('Is hierarchical dropdown', 'dataflows');
       $opt[2402]['datatype']    = 'boolean';
 
       $opt[2403]['id']          = 2403;
       $opt[2403]['table']       = $this->getTable();
       $opt[2403]['field']       = 'as_view_on';
-      $opt[2403]['name']        = __('As view on table', 'archibp');
+      $opt[2403]['name']        = __('As view on table', 'dataflows');
       $opt[2403]['datatype']    = 'text';
 
       return $opt;

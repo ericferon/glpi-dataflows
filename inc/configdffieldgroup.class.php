@@ -30,7 +30,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginDataflowsConfigdfFieldgroup extends CommonDropdown {
 
-   static $rightname = "plugin_archibp";
+   static $rightname = "plugin_dataflows_configuration";
    var $can_be_translated  = true;
    
    static function getTypeName($nb=0) {
@@ -43,13 +43,13 @@ class PluginDataflowsConfigdfFieldgroup extends CommonDropdown {
             [
                   'name'      => 'sortorder',
                   'type'      => 'text',
-                  'label'     => __('Sort order', 'archibp'),
+                  'label'     => __('Sort order', 'dataflows'),
                   'list'      => false
             ],
             [
                   'name'      => 'is_visible',
                   'type'      => 'bool',
-                  'label'     => __('Is visible on opening', 'archibp'),
+                  'label'     => __('Is visible on opening', 'dataflows'),
                   'list'      => false
             ]
 		];
@@ -57,18 +57,18 @@ class PluginDataflowsConfigdfFieldgroup extends CommonDropdown {
    
    function rawSearchOptions() {
 	  $opt = CommonDropdown::rawSearchOptions();
-//      $sopt['common'] = __("App structures", "archibp");
+//      $sopt['common'] = __("App structures", "dataflows");
 
       $opt[2400]['id']          = 2400;
       $opt[2400]['table']       = $this->getTable();
       $opt[2400]['field']       = 'sortorder';
-      $opt[2400]['name']        = __('Sort order', 'archibp');
+      $opt[2400]['name']        = __('Sort order', 'dataflows');
       $opt[2400]['datatype']    = 'text';
 
       $opt[2401]['id']          = 2401;
       $opt[2401]['table']       = $this->getTable();
       $opt[2401]['field']       = 'is_visible';
-      $opt[2401]['name']        = __('Is visible on opening', 'archibp');
+      $opt[2401]['name']        = __('Is visible on opening', 'dataflows');
       $opt[2401]['datatype']    = 'bool';
 
       return $opt;

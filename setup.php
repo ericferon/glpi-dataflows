@@ -82,7 +82,12 @@ function plugin_init_dataflows() {
 
       if (Session::haveRight("plugin_dataflows", READ)) {
 
-         $PLUGIN_HOOKS['menu_toadd']['dataflows'] = ['assets'   => 'PluginDataflowsMenu', "config" => 'PluginDataflowsConfigdfMenu'];
+         $PLUGIN_HOOKS['menu_toadd']['dataflows']['assets'] = 'PluginDataflowsMenu';
+      }
+
+      if (Session::haveRight("plugin_dataflows_configuration", READ)) {
+
+         $PLUGIN_HOOKS['menu_toadd']['dataflows']['config'] = 'PluginDataflowsConfigdfMenu';
       }
 
       if (Session::haveRight("plugin_dataflows", READ)
@@ -118,7 +123,7 @@ function plugin_version_dataflows() {
 
    return array (
       'name' => _n('Dataflow', 'Dataflows', 2, 'dataflows'),
-      'version' => '3.0.4',
+      'version' => '3.0.5',
       'author'  => "Eric Feron",
       'license' => 'GPLv2+',
       'homepage'=> 'https://github.com/ericferon/glpi-dataflows',

@@ -31,20 +31,12 @@ if (!defined('GLPI_ROOT')) {
 class PluginDataflowsConfigdf extends CommonDBTM {
 
    public $dohistory=true;
-   static $rightname = "plugin_archibp";
+   static $rightname = "plugin_dataflows_configuration";
    protected $usenotepad         = true;
    
    static function getTypeName($nb=0) {
 
-      return __('Configbp', 'archibp');
-   }
-
-   public static function canCreate() {
-      return Session::haveRight(static::$rightname, UPDATE);
-   }
-
-   public static function canView() {
-      return Session::haveRight(static::$rightname, READ);
+      return __('Dataflows Config', 'dataflows');
    }
 
    // search fields from GLPI 9.3 on
@@ -104,7 +96,7 @@ class PluginDataflowsConfigdf extends CommonDBTM {
          'id'       => '11',
          'table'    => $this->getTable(),
          'field'    => 'row',
-         'name'     => __('Row', 'archibp'),
+         'name'     => __('Row', 'dataflows'),
          'datatype' => 'text'
       ];
 
@@ -120,7 +112,7 @@ class PluginDataflowsConfigdf extends CommonDBTM {
          'id'       => '13',
          'table'    => $this->getTable(),
          'field'    => 'is_linked',
-         'name'     => __('Is linked to another class', 'archibp'),
+         'name'     => __('Is linked to another class', 'dataflows'),
          'datatype' => 'bool'
       ];
 
@@ -136,7 +128,7 @@ class PluginDataflowsConfigdf extends CommonDBTM {
          'id'       => '15',
          'table'    => $this->getTable(),
          'field'    => 'nosearch',
-         'name'     => __('Massive action allowed ?', 'archibp'),
+         'name'     => __('Massive action allowed ?', 'dataflows'),
          'datatype' => 'bool'
       ];
 
@@ -144,7 +136,7 @@ class PluginDataflowsConfigdf extends CommonDBTM {
          'id'       => '16',
          'table'    => $this->getTable(),
          'field'    => 'forcegroupby',
-         'name'     => __('Force group by ?', 'archibp'),
+         'name'     => __('Force group by ?', 'dataflows'),
          'datatype' => 'bool'
       ];
 
@@ -193,17 +185,17 @@ class PluginDataflowsConfigdf extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //field group
-      echo "<td>".__('Field group', 'archibp').": </td>";
+      echo "<td>".__('Field group', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsConfigdfFieldgroup', ['value' => $this->fields['plugin_dataflows_configdffieldgroups_id']]);
       echo "</td>";
       //row
-      echo "<td>".__('Row', 'archibp')."</td>";
+      echo "<td>".__('Row', 'dataflows')."</td>";
       echo "<td>";
       echo Html::input('row',['value' => $this->fields['row'], 'id' => "row", 'size' => 2]);
       echo "</td>";
       //horizontal alignment
-      echo "<td>".__('Hor.alignment', 'archibp')."</td>";
+      echo "<td>".__('Hor.alignment', 'dataflows')."</td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsConfigdfHalign', ['value' => $this->fields['plugin_dataflows_configdfhaligns_id']]);
       echo "</td>";
@@ -211,17 +203,17 @@ class PluginDataflowsConfigdf extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //db field type
-      echo "<td>".__('DB Field Type', 'archibp').": </td>";
+      echo "<td>".__('DB Field Type', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsConfigdfDbfieldtype', ['value' => $this->fields['plugin_dataflows_configdfdbfieldtypes_id']]);
       echo "</td>";
       //search datatype
-      echo "<td>".__('Search Data Type', 'archibp').": </td>";
+      echo "<td>".__('Search Data Type', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsConfigdfDatatype', ['value' => $this->fields['plugin_dataflows_configdfdatatypes_id']]);
       echo "</td>";
       //readonly
-      echo "<td>".__('Is read-only ?', 'archibp').": </td>";
+      echo "<td>".__('Is read-only ?', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::showYesNo('is_readonly',$this->fields['is_readonly']);
       echo "</td>";
@@ -229,17 +221,17 @@ class PluginDataflowsConfigdf extends CommonDBTM {
 	  
       echo "<tr class='tab_bg_1'>";
       //nosearch
-      echo "<td>".__('Search allowed ?', 'archibp').": </td>";
+      echo "<td>".__('Search allowed ?', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::showYesNo('nosearch',$this->fields['nosearch']);
       echo "</td>";
       //massiveaction
-      echo "<td>".__('Massive action allowed ?', 'archibp')."</td>";
+      echo "<td>".__('Massive action allowed ?', 'dataflows')."</td>";
       echo "<td>";
       Dropdown::showYesNo('massiveaction',$this->fields['massiveaction']);
       echo "</td>";
       //forcegroupby
-      echo "<td>".__('Force group by ?', 'archibp')."</td>";
+      echo "<td>".__('Force group by ?', 'dataflows')."</td>";
       echo "<td>";
       Dropdown::showYesNo('forcegroupby',$this->fields['forcegroupby']);
       echo "</td>";
@@ -247,17 +239,17 @@ class PluginDataflowsConfigdf extends CommonDBTM {
 	  
       echo "<tr class='tab_bg_1'>";
       //islinked
-      echo "<td>".__('Is linked to another class ?', 'archibp').": </td>";
+      echo "<td>".__('Is linked to another class ?', 'dataflows').": </td>";
       echo "<td>";
       Dropdown::showYesNo('is_linked',$this->fields['is_linked']);
       echo "</td>";
       //linked table
-      echo "<td>".__('Linked class', 'archibp')."</td>";
+      echo "<td>".__('Linked class', 'dataflows')."</td>";
       echo "<td>";
       Dropdown::show('PluginDataflowsConfigdfLink', ['value' => $this->fields['plugin_dataflows_configdflinks_id']]);
       echo "</td>";
       //link field
-      echo "<td>".__('Linked by field', 'archibp')."</td>";
+      echo "<td>".__('Linked by field', 'dataflows')."</td>";
       echo "<td>";
       echo Html::input('linkfield',['value' => $this->fields['linkfield'], 'id' => "linkfield"]);
       echo "</td>";
@@ -265,7 +257,7 @@ class PluginDataflowsConfigdf extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       //join parameters
-      echo "<td>".__('Join parameters', 'archibp')."</td>";
+      echo "<td>".__('Join parameters', 'dataflows')."</td>";
       echo "<td colspan='5'>";
       echo Html::input('joinparams',['value' => $this->fields['joinparams'], 'id' => "joinparams"]);
       echo "</td>";

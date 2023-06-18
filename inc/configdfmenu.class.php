@@ -24,7 +24,7 @@
  --------------------------------------------------------------------------
  */
 class PluginDataflowsConfigdfMenu extends CommonGLPI {
-   static $rightname = 'plugin_dataflows';
+   static $rightname = 'plugin_dataflows_configuration';
 
    static function getMenuName() {
       return _n('Dataflows configuration', 'Dataflows configuration', 2, 'dataflows');
@@ -53,8 +53,8 @@ class PluginDataflowsConfigdfMenu extends CommonGLPI {
       if (isset($_SESSION['glpimenu']['configdf']['types']['PluginDataflowsConfigdfMenu'])) {
          unset($_SESSION['glpimenu']['configdf']['types']['PluginDataflowsConfigdfMenu']); 
       }
-      if (isset($_SESSION['glpimenu']['configdf']['content']['pluginarchibpconfigbpmenu'])) {
-         unset($_SESSION['glpimenu']['configdf']['content']['pluginarchibpconfigbpmenu']); 
+      if (isset($_SESSION['glpimenu']['configdf']['content']['plugindataflowsconfigdfmenu'])) {
+         unset($_SESSION['glpimenu']['configdf']['content']['plugindataflowsconfigdfmenu']); 
       }
    }
 }
