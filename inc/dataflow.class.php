@@ -150,6 +150,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
                ];
                break;
             case 6: //Dropdown
+            case 9: //TreeDropdown
                $linktableid = $fielddata['plugin_dataflows_configdflinks_id'];
                $itemtype = $linktable[$linktableid]['name'];
                $tablename = $this->getTable($itemtype);
@@ -158,7 +159,9 @@ class PluginDataflowsDataflow extends CommonDBTM {
                   'table'    => $tablename,
                   'field'    => 'name',
                   'name'     => __($fielddata['description'],'dataflows'),
-                  'datatype' => $datatypetable[$datatypeid]['name']
+                  'datatype' => $datatypetable[$datatypeid]['name'],
+                  'massiveaction' => $fielddata['massiveaction'],
+                  'nosearch' => $fielddata['nosearch']
                ];
                break;
             case 7: //Itemlink
@@ -181,6 +184,15 @@ class PluginDataflowsDataflow extends CommonDBTM {
          'field'    => 'is_recursive',
          'name'     => __('Child entities'),
          'datatype' => 'bool'
+      ];
+
+      $tab[] = [
+         'id'            => $tabid++,
+         'table'         => $this->getTable(),
+         'field'         => 'date_mod',
+         'massiveaction' => false,
+         'name'          => __('Last update'),
+         'datatype'      => 'datetime'
       ];
 
       $tab[] = [
@@ -602,7 +614,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
             echo "</td>";
             break;
          case 6: //Dropdown
-         case 9: //Dropdown
+         case 9: //TreeDropdown
             if ($linktable[$fielddata['plugin_dataflows_configdflinks_id']]['is_entity_limited']) {
                $params['entity'] = $this->fields["entities_id"];
             }
@@ -632,8 +644,8 @@ class PluginDataflowsDataflow extends CommonDBTM {
          case 8: //Textarea
             echo "<td $fieldhalign>".__($fielddescription, 'dataflows')."</td>";
             echo "<td colspan='".$colspan."'>";
-            echo Html::textarea(['name' => $fieldname, 'value' => $this->fields[$fieldname], 'editor_id' => $fieldname, 
-                                'enable_richtext' => true, 'display' => false, 'rows' => 3, 'readonly' => $fieldreadonly]);
+            echo Html::textarea(['name' => $fieldname, 'value' => strip_tags($this->fields[$fieldname]), 'editor_id' => $fieldname, 
+                                'enable_richtext' => false, 'display' => false, 'rows' => 3, 'readonly' => $fieldreadonly]);
             echo "</td>";
             break;      
       }

@@ -144,7 +144,7 @@ class PluginDataflowsProfile extends Profile {
                 'label'     => _n('Dataflow', 'Dataflows', 2, 'dataflows'),
                 'field'     => 'plugin_dataflows'
           ],
-          ['rights'    => [READ => __('Read'), CREATE => __('Create'), UPDATE => __('Update')],
+          ['rights'    => [READ => __('Read'), CREATE => __('Create'), UPDATE => __('Update'), DELETE => __('Put in trashbin'), PURGE => __('Delete permanently')],
                 'itemtype'  => 'PluginDataflowsConfigdf',
                 'label'     => __('Configuration', 'dataflows'),
                 'field'     => 'plugin_dataflows_configuration']
