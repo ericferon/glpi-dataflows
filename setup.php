@@ -123,7 +123,7 @@ function plugin_version_dataflows() {
 
    return array (
       'name' => _n('Dataflow', 'Dataflows', 2, 'dataflows'),
-      'version' => '3.0.6',
+      'version' => '3.0.8',
       'author'  => "Eric Feron",
       'license' => 'GPLv2+',
       'homepage'=> 'https://github.com/ericferon/glpi-dataflows',
@@ -170,11 +170,15 @@ function plugin_datainjection_migratetypes_dataflows($types) {
 // Uninstall process for plugin : need to return true if succeeded : may display messages or add to message after redirect
 function hook_pre_item_add_dataflows_configdf(CommonDBTM $item) {
    global $DB;
+   Toolbox::logInFile("debug",print_r($item, true));
    $fieldname = $item->fields['name'];
    $dbfield = new PluginDataflowsConfigdfDbfieldtype;
    if ($dbfield->getFromDB($item->fields['plugin_dataflows_configdfdbfieldtypes_id'])) {
       $fieldtype = $dbfield->fields['name'];
       $query = "ALTER TABLE `glpi_plugin_dataflows_dataflows` ADD COLUMN IF NOT EXISTS $fieldname $fieldtype";
+      if($item->fields['plugin_dataflows_configdfdatatypes_id'] == 6) {// if dropdown, add key
+         $query .= ", ADD KEY IF NOT EXISTS $fieldname ($fieldname)";
+      }
       $result = $DB->query($query);
       return true;
    }
@@ -188,10 +192,13 @@ function hook_pre_item_update_dataflows_configdf(CommonDBTM $item) {
    if ($dbfield->getFromDB($item->fields['plugin_dataflows_configdfdbfieldtypes_id'])) {
       $fieldtype = $dbfield->fields['name'];
       if ($oldfieldname != $newfieldname) {
-         $query = "ALTER TABLE `glpi_plugin_dataflows_dataflows` CHANGE COLUMN $oldfieldname $newfieldname ";
-         $result = $DB->query($query);
+         $query = "ALTER TABLE `glpi_plugin_dataflows_dataflows` CHANGE COLUMN $oldfieldname $newfieldname $fieldtype";
+      } else {
+         $query = "ALTER TABLE `glpi_plugin_dataflows_dataflows` MODIFY $newfieldname $fieldtype";
       }
-      $query = "ALTER TABLE `glpi_plugin_dataflows_dataflows` MODIFY $newfieldname $fieldtype";
+      if($item->input['plugin_dataflows_configdfdatatypes_id'] == 6) {// if dropdown, add key
+         $query .= ", ADD KEY IF NOT EXISTS $newfieldname ($newfieldname)";
+      }
       $result = $DB->query($query);
       return true;
    }
@@ -199,8 +206,13 @@ function hook_pre_item_update_dataflows_configdf(CommonDBTM $item) {
 }
 function hook_pre_item_purge_dataflows_configdf(CommonDBTM $item) {
    global $DB;
-   $fieldname = $item->fields['name'];
-   $query = "ALTER TABLE `glpi_plugin_dataflows_dataflows` DROP COLUMN IF EXISTS $fieldname";
+   $oldid = $item->fields['id'];
+   $oldfieldname = $item->fields['name'];
+   // suppress in glpi_plugin_dataflows_labeltranslations
+   $query = "DELETE FROM `glpi_plugin_dataflows_labeltranslations` WHERE `items_id` = '".$oldid."'";
+   $result = $DB->query($query);
+   // suppress column
+   $query = "ALTER TABLE `glpi_plugin_dataflows_dataflows` DROP COLUMN IF EXISTS $oldfieldname";
    $result = $DB->query($query);
    return true;
 }

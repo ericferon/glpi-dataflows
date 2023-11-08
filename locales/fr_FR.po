@@ -11,14 +11,14 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-12 07:49+0200\n"
 "PO-Revision-Date: 2023-04-12 07:57+0200\n"
-"Last-Translator: Eric Feron <ericferon@scarlet.be>\n"
+"Last-Translator: Eric Feron <eric.feron@archi-it.be>, 2023\n"
 "Language-Team: French (France) (http://www.transifex.com/tsmr/GLPI_dataflows/"
 "language/fr_FR/)\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 "X-Generator: Poedit 3.0.1\n"
 
 #. TRANS : %1$s is the itemtype name,
@@ -71,6 +71,7 @@ msgid "Connector"
 msgid_plural "Connectors"
 msgstr[0] "Connecteur à la source"
 msgstr[1] "Connecteurs"
+msgstr[2] "Connecteurs"
 
 #. db field type
 #: inc/configdf.class.php:214
@@ -83,6 +84,7 @@ msgid "Dataflow"
 msgid_plural "Dataflows"
 msgstr[0] "Flux de données"
 msgstr[1] "Flux de données"
+msgstr[2] "Flux de données"
 
 #. technical maintainer
 #: inc/dataflow.class.php:146 inc/dataflow.class.php:489
@@ -108,6 +110,7 @@ msgid "Dataflow associated"
 msgid_plural "Dataflows associated"
 msgstr[0] "Flux de données associé"
 msgstr[1] "Bases de données associées"
+msgstr[2] "Bases de données associées"
 
 #. name
 #: inc/configdf.class.php:99 inc/configdf.class.php:188
@@ -121,12 +124,14 @@ msgid "Destination Connector"
 msgid_plural "Destination Connectors"
 msgstr[0] "Connecteur à la destination"
 msgstr[1] "Connecteurs à la destination"
+msgstr[2] "Connecteurs à la destination"
 
 #: inc/desturi.class.php:38
 msgid "Destination URI (ProgramID, ...)"
 msgid_plural "Destination URIs"
 msgstr[0] "Répertoire/ProgramId/Port à la destination"
 msgstr[1] "Répertoires/ProgramId/Ports à la destination"
+msgstr[2] "Répertoires/ProgramId/Ports à la destination"
 
 #. to credential
 #: inc/dataflow.class.php:318 inc/tocredential.class.php:35
@@ -135,6 +140,7 @@ msgid "Destination User"
 msgid_plural "Destination Users"
 msgstr[0] "Utilisateurs à la destination"
 msgstr[1] "Utilisateur à la destination"
+msgstr[2] "Utilisateur à la destination"
 
 #. destination format
 #: inc/dataflow.class.php:617
@@ -179,6 +185,7 @@ msgid "Flow group"
 msgid_plural "Flow groups"
 msgstr[0] "Groupe de flux"
 msgstr[1] "Groupes de flux"
+msgstr[2] "Groupes de flux"
 
 #. forcegroupby
 #: inc/configdf.class.php:147 inc/configdf.class.php:242
@@ -190,6 +197,7 @@ msgid "From App"
 msgid_plural "From Apps"
 msgstr[0] "De l'application"
 msgstr[1] "Des applications"
+msgstr[2] "Des applications"
 
 #. from application
 #: inc/dataflow.class.php:288 inc/dataflow.class.php:534
@@ -201,6 +209,7 @@ msgid "From computer"
 msgid_plural "From computers"
 msgstr[0] "De l'ordinateur"
 msgstr[1] "Des ordinateurs"
+msgstr[2] "Des ordinateurs"
 
 #. source path
 #: inc/dataflow.class.php:327 inc/dataflow.class.php:573
@@ -237,12 +246,14 @@ msgid "Indicator"
 msgid_plural "Indicators"
 msgstr[0] "Indicateur"
 msgstr[1] "Indicateurs"
+msgstr[2] "Indicateurs"
 
 #: inc/intermediatecomputer.class.php:38
 msgid "Intermediate computer"
 msgid_plural "Intermediate computers"
 msgstr[0] "Ordinateur intermédiaire"
 msgstr[1] "Ordinateurs intermédiaires"
+msgstr[2] "Ordinateurs intermédiaires"
 
 #: inc/dataflow_item.class.php:276
 msgid "Inventory number"
@@ -345,6 +356,7 @@ msgid "Other Group"
 msgid_plural "Other Groups"
 msgstr[0] "Autre groupe"
 msgstr[1] "Autres groupes"
+msgstr[2] "Autres groupes"
 
 #. other expert
 #: inc/dataflow.class.php:502 inc/dataflow.class.php:782
@@ -362,6 +374,7 @@ msgid "Other user"
 msgid_plural "Other users"
 msgstr[0] "Autres experts"
 msgstr[1] "Autre expert"
+msgstr[2] "Autre expert"
 
 #. destination connector
 #: inc/dataflow.class.php:309 inc/dataflow.class.php:670
@@ -379,6 +392,7 @@ msgid "Protocol"
 msgid_plural "Protocols"
 msgstr[0] "Protocole de transfert"
 msgstr[1] "Protocoles de transfert"
+msgstr[2] "Protocoles de transfert"
 
 #. row
 #: inc/configdf.class.php:107 inc/configdf.class.php:201
@@ -406,6 +420,7 @@ msgid "Service Level"
 msgid_plural "Service Levels"
 msgstr[0] "Niveau de service"
 msgstr[1] "Niveaux de service"
+msgstr[2] "Niveaux de service"
 
 #. short description of dataflows
 #: inc/dataflow.class.php:251 inc/dataflow.class.php:371
@@ -424,12 +439,14 @@ msgid "Source Connector"
 msgid_plural "Source Connectors"
 msgstr[0] "Connecteur à la source"
 msgstr[1] "Connecteurs à la source"
+msgstr[2] "Connecteurs à la source"
 
 #: inc/srcuri.class.php:38
 msgid "Source URI (ProgramID, ...)"
 msgid_plural "Source URIs"
 msgstr[0] "URI source (ProgramID, ...)"
 msgstr[1] "URI sources (ProgramID, ...)"
+msgstr[2] "URI sources (ProgramID, ...)"
 
 #. from credential
 #: inc/dataflow.class.php:314 inc/fromcredential.class.php:36
@@ -438,6 +455,7 @@ msgid "Source User"
 msgid_plural "Source Users"
 msgstr[0] "Utilisateur à la source"
 msgstr[1] "Utilisateurs à la source"
+msgstr[2] "Utilisateurs à la source"
 
 #. source format
 #: inc/dataflow.class.php:612
@@ -461,6 +479,7 @@ msgid "Status"
 msgid_plural "States"
 msgstr[0] "Statut"
 msgstr[1] "Statuts"
+msgstr[2] "Statuts"
 
 #. status date of dataflows
 #: inc/dataflow.class.php:183 inc/dataflow.class.php:273
@@ -473,6 +492,7 @@ msgid "SupportGroup"
 msgid_plural "SupportGroups"
 msgstr[0] "Groupe de support"
 msgstr[1] "Groupes de support"
+msgstr[2] "Groupes de support"
 
 #: setup.php:98
 msgid "This plugin requires GLPI >= 9.2 and <= 9.4"
@@ -482,7 +502,8 @@ msgstr "Ce plugin nécessite une version GLPI >= 9.2 et < 9.4"
 msgid "To App"
 msgid_plural "To Apps"
 msgstr[0] "A l'application"
-msgstr[1] ""
+msgstr[1] "Aux applications"
+msgstr[2] "Aux applications"
 
 #. to application
 #: inc/dataflow.class.php:292 inc/dataflow.class.php:538
@@ -494,6 +515,7 @@ msgid "To computer"
 msgid_plural "To computers"
 msgstr[0] "A l'ordinateur"
 msgstr[1] "Aux ordinateurs"
+msgstr[2] "Aux ordinateurs"
 
 #. destination path
 #: inc/dataflow.class.php:332 inc/dataflow.class.php:578
@@ -511,6 +533,7 @@ msgid "Transfer Error handling"
 msgid_plural "Transfer Error handlings"
 msgstr[0] "Traitement d'erreur de transfert"
 msgstr[1] "Traitements d'erreur de transfert"
+msgstr[2] "Traitements d'erreur de transfert"
 
 #. transfer on holiday
 #: inc/dataflow.class.php:425 inc/holidayaction.class.php:38
@@ -519,6 +542,7 @@ msgid "Transfer On holiday"
 msgid_plural "Transfers On holiday"
 msgstr[0] "Transfert lors de congé"
 msgstr[1] "Transferts lors de congé"
+msgstr[2] "Transferts lors de congé"
 
 #. destination postprocessing
 #: inc/dataflow.class.php:383 inc/destpostproc.class.php:38
@@ -527,6 +551,7 @@ msgid "Transfer Postprocessing"
 msgid_plural "Transfer Postprocessings"
 msgstr[0] "Post-traitements du transfert"
 msgstr[1] "Post-traitement du transfert"
+msgstr[2] "Post-traitement du transfert"
 
 #. source preprocessing
 #: inc/dataflow.class.php:378 inc/srcpreproc.class.php:38
@@ -535,6 +560,7 @@ msgid "Transfer Preprocessing"
 msgid_plural "Transfer Preprocessings"
 msgstr[0] "Pré-traitement du transfert"
 msgstr[1] "Pré-traitements du transfert"
+msgstr[2] "Pré-traitements du transfert"
 
 #. transfer protocol
 #: inc/dataflow.class.php:281 inc/dataflow.class.php:527
@@ -548,6 +574,7 @@ msgid "Transfer Timetable"
 msgid_plural "Transfer Timetables"
 msgstr[0] "Horaire de transfert"
 msgstr[1] "Horaires de transfert"
+msgstr[2] "Horaires de transfert"
 
 #. transfer volume
 #: inc/dataflow.class.php:446 inc/dataflow.class.php:723
@@ -561,6 +588,7 @@ msgid "Transfer frequency (def : per day)"
 msgid_plural "Transfer frequencies"
 msgstr[0] "Fréquences de transfert (def : par jour)"
 msgstr[1] "Fréquence de transfert (def : par jour)"
+msgstr[2] "Fréquence de transfert (def : par jour)"
 
 #. transfer trigger
 #: inc/dataflow.class.php:391 inc/triggertype.class.php:38
@@ -569,6 +597,7 @@ msgid "Transfer trigger"
 msgid_plural "Transfer triggers"
 msgstr[0] "Déclencheur du transfert"
 msgstr[1] "Déclencheurs du transfert"
+msgstr[2] "Déclencheurs du transfert"
 
 #. echo "</td>";
 #. trigger format
@@ -594,31 +623,3 @@ msgstr "URL vers la doc. technique (conception, ...)"
 #: inc/configdflink.class.php:69
 msgid "View limited by WHERE clause"
 msgstr "Vue limitée par la clause WHERE"
-
-#~ msgid "Category"
-#~ msgid_plural "Categories"
-#~ msgstr[0] "Catégorie"
-#~ msgstr[1] "Catégories"
-
-#~ msgid "Instance"
-#~ msgid_plural "Instances"
-#~ msgstr[0] "Instance"
-#~ msgstr[1] "Instances"
-
-#~ msgid "Path"
-#~ msgstr "Chemin"
-
-#~ msgid "Script"
-#~ msgid_plural "Scripts"
-#~ msgstr[0] "Script"
-#~ msgstr[1] "Scripts"
-
-#~ msgid "Type of script"
-#~ msgid_plural "Types of script"
-#~ msgstr[0] "Type de script"
-#~ msgstr[1] "Types de script"
-
-#~ msgid "Engine"
-#~ msgid_plural "Engines"
-#~ msgstr[0] "Moteur"
-#~ msgstr[1] "Moteurs"
