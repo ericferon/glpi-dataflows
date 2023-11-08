@@ -164,6 +164,7 @@ class PluginDataflowsConfigdf extends CommonDBTM {
 
       $ong = [];
       $this->addDefaultFormTab($ong);
+      $this->addStandardTab('PluginDataflowsLabelTranslation', $ong, $options);
       $this->addStandardTab('Log', $ong, $options);
 
       return $ong;

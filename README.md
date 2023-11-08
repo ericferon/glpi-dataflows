@@ -10,3 +10,5 @@ This plugin enables you to manage the dataflows inventory (source and destinatio
 > * Applications inventory
 > * Can be used with helpdesk
 > * Field validity check with Statecheck plugin
+
+Contributions for translation in your language are welcome to https://explore.transifex.com/ericferon/glpi-dataflows/

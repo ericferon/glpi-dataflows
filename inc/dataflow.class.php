@@ -571,7 +571,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
    
    function displayField($fielddata, $colspan = 1, $linktable=[]) {
       $fieldname = $fielddata['name'];
-      $fielddescription = $fielddata['description'];
+      $fielddescription = $_SESSION['glpilanguage']=="en_GB"?__($fielddata['description'], 'archisw'):PluginDataflowsLabelTranslation::getLabelFor($fielddata); // if current language = en_GB, get default description
       $fieldreadonly = $fielddata['is_readonly']?'true':'false';
       $fieldtype = $fielddata['plugin_dataflows_configdfhaligns_id'];
       $fieldhalign = ($fieldtype == '7') ? "class='alignright'":"";
@@ -582,7 +582,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       }
       switch($fielddata['plugin_dataflows_configdfdatatypes_id']) {
          case 1: //Text
-            echo "<td $fieldhalign>".__($fielddescription, 'dataflows')."</td>";
+            echo "<td $fieldhalign>".$fielddescription."</td>";
             echo "<td colspan='".$colspan."'>";
             $params['id'] = $fieldname;
             $params['width'] = '100%';
@@ -590,25 +590,25 @@ class PluginDataflowsDataflow extends CommonDBTM {
             echo "</td>";
             break;
          case 2: //Boolean
-            echo "<td $fieldhalign>".__($fielddescription, 'dataflows')."</td>";
+            echo "<td $fieldhalign>".$fielddescription."</td>";
             echo "<td colspan='".$colspan."'>";
             Dropdown::showYesNo($fieldname,$this->fields[$fieldname], -1);
             echo "</td>";
             break;
          case 3: //Date
-            echo "<td $fieldhalign>".__($fielddescription, 'dataflows')."</td>";
+            echo "<td $fieldhalign>".$fielddescription."</td>";
             echo "<td colspan='".$colspan."'>";
             Html::showDateField($fieldname, ['value' => empty($this->fields[$fieldname])?date("Y-m-d"):$this->fields[$fieldname], 'readonly' => $fieldreadonly]);
             echo "</td>";
             break;
          case 4: //Date and time
-            echo "<td $fieldhalign>".__($fielddescription, 'dataflows')."</td>";
+            echo "<td $fieldhalign>".$fielddescription."</td>";
             echo "<td colspan='".$colspan."'>";
             Html::showDateTimeField($fieldname, ['value' => empty($this->fields[$fieldname])?date("Y-m-d H:i:s"):$this->fields[$fieldname], 'readonly' => $fieldreadonly]);
             echo "</td>";
             break;
          case 5: //Number
-            echo "<td $fieldhalign>".__($fielddescription, 'dataflows')."</td>";
+            echo "<td $fieldhalign>".$fielddescription."</td>";
             echo "<td colspan='".$colspan."'>";
             Dropdown::showNumber($fieldname, $params);
             echo "</td>";
@@ -621,7 +621,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
             if ($linktable[$fielddata['plugin_dataflows_configdflinks_id']]['name'] == 'User') {
                $params['right'] = 'interface';
             }
-            echo "<td $fieldhalign>".__($fielddescription, 'dataflows')."</td>";
+            echo "<td $fieldhalign>".$fielddescription."</td>";
             echo "<td colspan='".$colspan."'>";
             if ($linktable[$fielddata['plugin_dataflows_configdflinks_id']]['has_dropdown']) {
                $linktable[$fielddata['plugin_dataflows_configdflinks_id']]['name']::dropdown($params);
@@ -633,7 +633,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
             break;
          case 7: //Itemlink
             echo "<td $fieldhalign>";
-            echo Html::link(__($fielddescription, 'dataflows'), $this->fields[$fieldname]);
+            echo Html::link($fielddescription, $this->fields[$fieldname]);
             echo "</td>";
             echo "<td colspan='".$colspan."'>";
             $params['id'] = $fieldname;
@@ -642,7 +642,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
             echo "</td>";
             break;
          case 8: //Textarea
-            echo "<td $fieldhalign>".__($fielddescription, 'dataflows')."</td>";
+            echo "<td $fieldhalign>".$fielddescription."</td>";
             echo "<td colspan='".$colspan."'>";
             echo Html::textarea(['name' => $fieldname, 'value' => strip_tags($this->fields[$fieldname]), 'editor_id' => $fieldname, 
                                 'enable_richtext' => false, 'display' => false, 'rows' => 3, 'readonly' => $fieldreadonly]);

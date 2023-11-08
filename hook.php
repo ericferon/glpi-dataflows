@@ -32,7 +32,7 @@ function plugin_dataflows_install() {
    $update=false;
    if (!$DB->TableExists("glpi_plugin_dataflows_dataflows")) {
 
-		$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/empty-3.0.1.sql");
+		$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/empty-3.0.2.sql");
 	}
 	else {
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && !$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_indicators_id")) {
@@ -75,6 +75,10 @@ function plugin_dataflows_install() {
         if ($DB->numrows($result) <= 0) {
             $DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-3.0.1.sql");
         }
+
+        if (!$DB->TableExists("glpi_plugin_dataflows_labeltranslations")) {
+            $DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-3.0.2.sql");
+   }
 
 	}
     if (class_exists('PluginAccountsAccount')) {

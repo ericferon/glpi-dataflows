@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-12 07:49+0200\n"
+"POT-Creation-Date: 2023-08-25 17:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,6 +25,14 @@ msgstr ""
 msgid "%1$s = %2$s"
 msgstr ""
 
+#: ajax/viewtranslations.php:51
+msgid "Access denied"
+msgstr ""
+
+#: inc/labeltranslation.class.php:99
+msgid "Add a new translation"
+msgstr ""
+
 #: inc/dataflow_item.class.php:235
 msgid "Add an item"
 msgstr ""
@@ -34,6 +42,7 @@ msgid "As view on table"
 msgstr ""
 
 #: inc/profile.class.php:123 inc/profile.class.php:151
+#: inc/profile.class.php:155
 msgid "Associable items to a ticket"
 msgstr ""
 
@@ -47,20 +56,26 @@ msgctxt "button"
 msgid "Associate a dataflow"
 msgstr ""
 
-#: hook.php:538 hook.php:536 hook.php:489
+#: hook.php:538 hook.php:536 hook.php:489 hook.php:499
 msgid "Associate to the dataflow"
 msgstr ""
 
 #: inc/dataflow.class.php:363 inc/dataflow.class.php:182
+#: inc/dataflow.class.php:185
 msgid "Child entities"
 msgstr ""
 
 #: inc/dataflow.class.php:958 inc/dataflow.class.php:792
+#: inc/dataflow.class.php:807
 msgid "Comments"
 msgstr ""
 
 #: inc/configdf.class.php:39
 msgid "Configbp"
+msgstr ""
+
+#: inc/profile.class.php:149
+msgid "Configuration"
 msgstr ""
 
 #: inc/connector.class.php:38
@@ -69,8 +84,12 @@ msgid_plural "Connectors"
 msgstr[0] ""
 msgstr[1] ""
 
+#: inc/profile.class.php:147
+msgid "Create"
+msgstr ""
+
 #. db field type
-#: inc/configdf.class.php:214
+#: inc/configdf.class.php:214 inc/configdf.class.php:215
 msgid "DB Field Type"
 msgstr ""
 
@@ -106,8 +125,17 @@ msgid_plural "Dataflows associated"
 msgstr[0] ""
 msgstr[1] ""
 
+#: inc/configdf.class.php:39
+msgid "Dataflows Config"
+msgstr ""
+
+#: inc/profile.class.php:147
+msgid "Delete permanently"
+msgstr ""
+
 #. name
 #: inc/configdf.class.php:99 inc/configdf.class.php:188
+#: inc/configdf.class.php:91 inc/configdf.class.php:189
 msgid "Description"
 msgstr ""
 
@@ -157,6 +185,8 @@ msgstr ""
 #: inc/dataflow.class.php:955 inc/dataflow_item.class.php:274
 #: inc/dataflow_item.class.php:493 inc/dataflow.class.php:203
 #: inc/dataflow.class.php:211 inc/dataflow.class.php:789
+#: inc/dataflow.class.php:215 inc/dataflow.class.php:223
+#: inc/dataflow.class.php:804
 msgid "Entity"
 msgstr ""
 
@@ -167,7 +197,7 @@ msgid "Extract Method (Bapi, Stored Proc, ...)"
 msgstr ""
 
 #. field group
-#: inc/configdf.class.php:196
+#: inc/configdf.class.php:196 inc/configdf.class.php:197
 msgid "Field group"
 msgstr ""
 
@@ -179,6 +209,7 @@ msgstr[1] ""
 
 #. forcegroupby
 #: inc/configdf.class.php:147 inc/configdf.class.php:242
+#: inc/configdf.class.php:243
 msgid "Force group by ?"
 msgstr ""
 
@@ -217,13 +248,14 @@ msgid "Helpdesk"
 msgstr ""
 
 #. horizontal alignment
-#: inc/configdf.class.php:206
+#: inc/configdf.class.php:206 inc/configdf.class.php:207
 msgid "Hor.alignment"
 msgstr ""
 
 #: inc/dataflow.class.php:347 inc/dataflow.class.php:408
 #: inc/configdf.class.php:155 inc/dataflow.class.php:174
-#: inc/dataflow.class.php:211
+#: inc/dataflow.class.php:211 inc/dataflow.class.php:177
+#: inc/dataflow.class.php:223
 msgid "ID"
 msgstr ""
 
@@ -253,17 +285,17 @@ msgstr ""
 msgid "Is limited by entity"
 msgstr ""
 
-#: inc/configdf.class.php:123
+#: inc/configdf.class.php:123 inc/configdf.class.php:115
 msgid "Is linked to another class"
 msgstr ""
 
 #. islinked
-#: inc/configdf.class.php:250
+#: inc/configdf.class.php:250 inc/configdf.class.php:251
 msgid "Is linked to another class ?"
 msgstr ""
 
 #. readonly
-#: inc/configdf.class.php:224
+#: inc/configdf.class.php:224 inc/configdf.class.php:225
 msgid "Is read-only ?"
 msgstr ""
 
@@ -272,22 +304,34 @@ msgid "Is visible on opening"
 msgstr ""
 
 #. join parameters
-#: inc/configdf.class.php:268
+#: inc/configdf.class.php:268 inc/configdf.class.php:269
 msgid "Join parameters"
 msgstr ""
 
-#: inc/dataflow.class.php:220
+#: inc/labeltranslation.class.php:126 inc/labeltranslation.class.php:203
+msgid "Label"
+msgstr ""
+
+#: inc/labeltranslation.class.php:125 inc/labeltranslation.class.php:184
+msgid "Language"
+msgstr ""
+
+#: inc/dataflow.class.php:220 inc/dataflow.class.php:194
 msgid "Last update"
 msgstr ""
 
 #. link field
-#: inc/configdf.class.php:260
+#: inc/configdf.class.php:260 inc/configdf.class.php:261
 msgid "Linked by field"
 msgstr ""
 
 #. linked table
-#: inc/configdf.class.php:255
+#: inc/configdf.class.php:255 inc/configdf.class.php:256
 msgid "Linked class"
+msgstr ""
+
+#: inc/labeltranslation.class.php:119
+msgid "List of translations"
 msgstr ""
 
 #. load method
@@ -308,6 +352,7 @@ msgstr ""
 
 #. massiveaction
 #: inc/configdf.class.php:139 inc/configdf.class.php:237
+#: inc/configdf.class.php:238
 msgid "Massive action allowed ?"
 msgstr ""
 
@@ -323,14 +368,27 @@ msgstr ""
 #. name of dataflows
 #. name
 #. name of dataflows
+#. name
+#. name of dataflows
 #: hook.php:390 inc/dataflow.class.php:102 inc/dataflow.class.php:415
 #: inc/dataflow.class.php:434 inc/dataflow.class.php:484
 #: inc/dataflow.class.php:953 inc/dataflow_item.class.php:272
 #: inc/dataflow_item.class.php:491 hook.php:343 inc/configdf.class.php:65
 #: inc/configdf.class.php:179 inc/dataflow.class.php:103
 #: inc/dataflow.class.php:218 inc/dataflow.class.php:237
-#: inc/dataflow.class.php:309 inc/dataflow.class.php:787
+#: inc/dataflow.class.php:309 inc/dataflow.class.php:787 hook.php:353
+#: inc/configdf.class.php:57 inc/configdf.class.php:180
+#: inc/dataflow.class.php:230 inc/dataflow.class.php:249
+#: inc/dataflow.class.php:321 inc/dataflow.class.php:802
 msgid "Name"
+msgstr ""
+
+#: inc/mapping.class.php:63
+msgid "No structure type"
+msgstr ""
+
+#: inc/labeltranslation.class.php:165
+msgid "No translation found"
 msgstr ""
 
 #: inc/dataflow.class.php:318
@@ -377,19 +435,33 @@ msgid_plural "Protocols"
 msgstr[0] ""
 msgstr[1] ""
 
+#: inc/profile.class.php:147
+msgid "Put in trashbin"
+msgstr ""
+
+#: inc/profile.class.php:147
+msgid "Read"
+msgstr ""
+
 #. row
 #: inc/configdf.class.php:107 inc/configdf.class.php:201
+#: inc/configdf.class.php:99 inc/configdf.class.php:202
 msgid "Row"
 msgstr ""
 
 #. search datatype
-#: inc/configdf.class.php:219
+#: inc/configdf.class.php:219 inc/configdf.class.php:220
 msgid "Search Data Type"
 msgstr ""
 
 #. nosearch
 #: inc/configdf.class.php:232
 msgid "Search allowed ?"
+msgstr ""
+
+#. nosearch
+#: inc/configdf.class.php:131 inc/configdf.class.php:233
+msgid "Search disabled ?"
 msgstr ""
 
 #: inc/dataflow_item.class.php:275
@@ -498,6 +570,7 @@ msgid "To external server"
 msgstr ""
 
 #: inc/dataflow.class.php:1003 inc/dataflow.class.php:837
+#: inc/dataflow.class.php:852
 msgid "Transfer"
 msgstr ""
 
@@ -577,6 +650,7 @@ msgstr ""
 #. type
 #: inc/dataflow.class.php:736 inc/dataflow.class.php:957
 #: inc/dataflow_item.class.php:271 inc/dataflow.class.php:791
+#: inc/dataflow.class.php:806
 msgid "Type"
 msgstr ""
 
@@ -588,6 +662,18 @@ msgstr ""
 msgid "URL to technical doc (design, ...)"
 msgstr ""
 
+#: inc/profile.class.php:147
+msgid "Update"
+msgstr ""
+
 #: inc/configdflink.class.php:69
 msgid "View limited by WHERE clause"
+msgstr ""
+
+#: inc/mapping.class.php:185
+msgid "Wrong structure type"
+msgstr ""
+
+#: inc/mapping.class.php:107 inc/mapping.class.php:127
+msgid "unbounded"
 msgstr ""
