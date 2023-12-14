@@ -139,7 +139,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
             case 4: //Date and time
             case 5: //Number
             case 8: //Textarea
-               $tab[] = [
+               $params = [
                   'id'       => $tabid,
                   'table'    => $tabtable,
                   'field'    => $fielddata['name'],
@@ -148,13 +148,14 @@ class PluginDataflowsDataflow extends CommonDBTM {
                   'massiveaction' => $fielddata['massiveaction'],
                   'nosearch' => $fielddata['nosearch']
                ];
+               $tab[] = $params;
                break;
             case 6: //Dropdown
             case 9: //TreeDropdown
                $linktableid = $fielddata['plugin_dataflows_configdflinks_id'];
                $itemtype = $linktable[$linktableid]['name'];
                $tablename = $this->getTable($itemtype);
-               $tab[] = [
+               $params = [
                   'id'       => $tabid,
                   'table'    => $tablename,
                   'field'    => 'name',
@@ -163,6 +164,10 @@ class PluginDataflowsDataflow extends CommonDBTM {
                   'massiveaction' => $fielddata['massiveaction'],
                   'nosearch' => $fielddata['nosearch']
                ];
+               if ($itemtype == 'User') {
+                  $params['right'] = 'interface';
+               }
+               $tab[] = $params;
                break;
             case 7: //Itemlink
                break;
