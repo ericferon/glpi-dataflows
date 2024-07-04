@@ -950,12 +950,6 @@ class PluginDataflowsDataflow extends CommonDBTM {
             if ($item->getType() == 'PluginDataflowsDataflow') {
             foreach ($ids as $key) {
                   $item->getFromDB($key);
-                  $type = PluginDataflowsDataflowType::transfer($item->fields["plugin_dataflows_dataflowtypes_id"], $input['entities_id']);
-                  if ($type > 0) {
-                     $values["id"] = $key;
-                     $values["plugin_dataflows_dataflowtypes_id"] = $type;
-                     $item->update($values);
-                  }
 
                   unset($values);
                   $values["id"] = $key;
