@@ -278,6 +278,8 @@ class PluginDataflowsDataflow extends CommonDBTM {
       $this->addImpactTab($ong, $options);
       $this->addStandardTab('PluginDataflowsDataflow_Item', $ong, $options);
       $this->addStandardTab('Ticket', $ong, $options);
+      $this->addStandardTab('Item_Problem', $ong, $options);
+      $this->addStandardTab('Change_Item', $ong, $options);
       $this->addStandardTab('Notepad', $ong, $options);
       $this->addStandardTab('Log', $ong, $options);
 

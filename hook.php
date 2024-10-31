@@ -32,7 +32,7 @@ function plugin_dataflows_install() {
    $update=false;
    if (!$DB->TableExists("glpi_plugin_dataflows_dataflows")) {
 
-		$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/empty-3.0.2.sql");
+		$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/empty-3.0.3.sql");
 	}
 	else {
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && !$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_indicators_id")) {
@@ -78,7 +78,16 @@ function plugin_dataflows_install() {
 
         if (!$DB->TableExists("glpi_plugin_dataflows_labeltranslations")) {
             $DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-3.0.2.sql");
-   }
+        }
+
+        $query = "show columns from glpi_plugin_dataflows_dataflows where FIELD = 'name'";
+        $result = $DB->query($query);
+        while ($data = $DB->fetchAssoc($result)) {
+            $fieldtype = $data['Type'];
+        }
+        if ($fieldtype == "varchar(45)") {
+            $DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-3.0.3.sql");
+        }
 
 	}
     if (class_exists('PluginAccountsAccount')) {
@@ -514,7 +523,8 @@ function hook_pre_item_add_dataflows_configdflink(CommonDBTM $item) {
    $newistreedropdown = $item->input['is_tree_dropdown'];
    $newisentitylimited = $item->input['is_entity_limited'];
    $newasviewon = $item->input['as_view_on'];
-   $newviewlimit = str_replace("\'", "'", $item->input['viewlimit']); // unescape single quotes
+   if (!empty($item->input['viewlimit']))
+      $newviewlimit = str_replace("\'", "'", $item->input['viewlimit']); // unescape single quotes
   if (substr($newclassname, 0, 15) == 'PluginDataflows') {
       $rootname = strtolower(substr($newclassname, 15));
       $tablename = 'glpi_plugin_dataflows_'.getPlural($rootname);
@@ -524,11 +534,11 @@ function hook_pre_item_add_dataflows_configdflink(CommonDBTM $item) {
          $name = ($newistreedropdown?" `completename`,":" `name`,");
          if (!$newistreedropdown) {
             // new simple dropdown view
-            $query = "CREATE VIEW `$tablename` (`id`,$entities `name`, `comment`) AS 
+            $query = "CREATE VIEW IF NOT EXISTS `$tablename` (`id`,$entities `name`, `comment`) AS 
                   SELECT `id`,$entities `name`, `comment` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
          } 
          else { // new treedropdon view
-            $query = "CREATE VIEW `$tablename` (`id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive`) AS 
+            $query = "CREATE VIEW IF NOT EXISTS `$tablename` (`id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive`) AS 
                   SELECT `id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
          }
          $result = $DB->query($query);
@@ -544,7 +554,7 @@ function hook_pre_item_add_dataflows_configdflink(CommonDBTM $item) {
                   `completename` MEDIUMTEXT NULL,
                   PRIMARY KEY (`id`) ,
                   UNIQUE INDEX `".$tablename."_name` (`name`) )
-                  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+                  DEFAULT CHARSET=utf8mb4 COLLATE=utf8_unicode_ci";
             $result = $DB->query($query);
          }
          else { //treedropdown->create table
@@ -561,7 +571,7 @@ function hook_pre_item_add_dataflows_configdflink(CommonDBTM $item) {
                         `ancestors_cache` LONGTEXT NULL,
                         PRIMARY KEY (`id`) ,
                         UNIQUE INDEX `".$tablename."_name` (`name`) )
-                        DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+                        DEFAULT CHARSET=utf8mb4 COLLATE=utf8_unicode_ci";
             $result = $DB->query($query);
          }
       }
@@ -574,7 +584,8 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
    $newclassname = $item->input['name'];
    $newistreedropdown = $item->input['is_tree_dropdown'];
    $newasviewon = $item->input['as_view_on'];
-   $newviewlimit = str_replace("\'", "'", $item->input['viewlimit']); // unescape single quotes
+   if (!empty($item->input['viewlimit']))
+      $newviewlimit = str_replace("\'", "'", $item->input['viewlimit']); // unescape single quotes
    $oldclassname = $item->fields['name'];
    $oldistreedropdown = $item->fields['is_tree_dropdown'];
    $oldasviewon = $item->fields['as_view_on'];
@@ -678,7 +689,7 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
                   `completename` MEDIUMTEXT NULL,
                   PRIMARY KEY (`id`) ,
                   UNIQUE INDEX `".$newtablename."_name` (`name`) )
-                  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+                  DEFAULT CHARSET=utf8mb4 COLLATE=utf8_unicode_ci";
             } 
             else { // new treedropdon table
                $query = "CREATE TABLE IF NOT EXISTS `".$newtablename."` (
@@ -694,7 +705,7 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
                   `ancestors_cache` LONGTEXT NULL,
                   PRIMARY KEY (`id`) ,
                   UNIQUE INDEX `".$newtablename."_name` (`name`) )
-                  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+                  DEFAULT CHARSET=utf8mb4 COLLATE=utf8_unicode_ci";
             }
             $result = $DB->query($query);
          }
