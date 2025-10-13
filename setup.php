@@ -23,6 +23,12 @@
  along with Dataflows. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+define('PLUGIN_DATAFLOWS_VERSION', '3.0.14');
+
+// Minimal GLPI version, inclusive
+define('PLUGIN_DATAFLOWS_MIN_GLPI', '10.0.0');
+// Maximum GLPI version, exclusive
+define('PLUGIN_DATAFLOWS_MAX_GLPI', '11.0.99');
 
 // Init the hooks of the plugins -Needed
 function plugin_init_dataflows() {
@@ -123,14 +129,15 @@ function plugin_version_dataflows() {
 
    return array (
       'name' => _n('Dataflow', 'Dataflows', 2, 'dataflows'),
-      'version' => '3.0.13',
+      'version' => PLUGIN_DATAFLOWS_VERSION,
       'author'  => "Eric Feron",
       'license' => 'GPLv2+',
       'homepage'=> 'https://github.com/ericferon/glpi-dataflows',
       'requirements' => [
          'glpi' => [
-            'min' => '9.5',
-            'dev' => false
+            'min' => PLUGIN_DATAFLOWS_MIN_GLPI,
+            'max' => PLUGIN_DATAFLOWS_MAX_GLPI,
+//            'dev' => false
          ]
       ]
    );
@@ -140,21 +147,13 @@ function plugin_version_dataflows() {
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_dataflows_check_prerequisites() {
    global $DB;
-   if (version_compare(GLPI_VERSION, '10.0', 'lt')
-       || version_compare(GLPI_VERSION, '10.1', 'ge')) {
-      if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', '10.0');
-      }
-      return false;
-   } else {
 		$query = "select * from glpi_plugins where directory in ('archisw', 'statecheck') and state = 1";
-		$result_query = $DB->query($query);
+		$result_query = $DB->doQuery($query);
 		if($DB->numRows($result_query) == 2) {
 			return true;
 		} else {
 			echo "The 2 plugins 'archisw' (a.k.a Apps structure inventory) and 'statecheck' must be installed before using 'dataflows' (Dataflows)";
 		}
-	}
 }
 
 // Uninstall process for plugin : need to return true if succeeded : may display messages or add to message after redirect
@@ -179,7 +178,7 @@ function hook_pre_item_add_dataflows_configdf(CommonDBTM $item) {
       if($item->fields['plugin_dataflows_configdfdatatypes_id'] == 6) {// if dropdown, add key
          $query .= ", ADD KEY IF NOT EXISTS $fieldname ($fieldname)";
       }
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       return true;
    }
    return false;
@@ -199,7 +198,7 @@ function hook_pre_item_update_dataflows_configdf(CommonDBTM $item) {
       if($item->input['plugin_dataflows_configdfdatatypes_id'] == 6) {// if dropdown, add key
          $query .= ", ADD KEY IF NOT EXISTS $newfieldname ($newfieldname)";
       }
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       return true;
    }
    return false;
@@ -210,10 +209,10 @@ function hook_pre_item_purge_dataflows_configdf(CommonDBTM $item) {
    $oldfieldname = $item->fields['name'];
    // suppress in glpi_plugin_dataflows_labeltranslations
    $query = "DELETE FROM `glpi_plugin_dataflows_labeltranslations` WHERE `items_id` = '".$oldid."'";
-   $result = $DB->query($query);
+   $result = $DB->doQuery($query);
    // suppress column
    $query = "ALTER TABLE `glpi_plugin_dataflows_dataflows` DROP COLUMN IF EXISTS $oldfieldname";
-   $result = $DB->query($query);
+   $result = $DB->doQuery($query);
    return true;
 }
 ?>

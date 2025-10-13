@@ -32,7 +32,7 @@ function plugin_dataflows_install() {
    $update=false;
    if (!$DB->TableExists("glpi_plugin_dataflows_dataflows")) {
 
-		$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/empty-3.0.3.sql");
+		$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/empty-3.0.4.sql");
 	}
 	else {
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && !$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_indicators_id")) {
@@ -41,7 +41,7 @@ function plugin_dataflows_install() {
 		}
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_fromswcomponents_id") || !$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_toswcomponents_id"))) {
 			$update=true;
-			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-1.1.0.sql");
+			$DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-1.1.1.sql");
 		}
 		if ($DB->TableExists("glpi_plugin_dataflows_dataflows") && (!$DB->FieldExists("glpi_plugin_dataflows_dataflows","plugin_dataflows_triggertypes_id"))) {
 			$update=true;
@@ -71,7 +71,7 @@ function plugin_dataflows_install() {
             $DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-3.0.0.sql");
         }
         $query = "SELECT * from `glpi_plugin_dataflows_srcstructuretypes` where `name` = 'JSON'";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         if ($DB->numrows($result) <= 0) {
             $DB->runFile(Plugin::getPhpDir("dataflows")."/sql/update-3.0.1.sql");
         }
@@ -81,7 +81,7 @@ function plugin_dataflows_install() {
         }
 
         $query = "show columns from glpi_plugin_dataflows_dataflows where FIELD = 'name'";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         while ($data = $DB->fetchAssoc($result)) {
             $fieldtype = $data['Type'];
         }
@@ -100,7 +100,7 @@ function plugin_dataflows_install() {
                FROM `glpi_plugin_dataflows_configdflinks` 
                JOIN `glpi_plugin_dataflows_configdfs`  ON `glpi_plugin_dataflows_configdflinks`.`id` = `glpi_plugin_dataflows_configdfs`.`plugin_dataflows_configdflinks_id` 
                WHERE `glpi_plugin_dataflows_configdflinks`.`name` like 'PluginDataflows%'";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $item = new CommonDBTM;
       while ($data = $DB->fetchAssoc($result)) {
          $item->input['name'] = $data['classname'];
@@ -131,10 +131,10 @@ function plugin_dataflows_install() {
                              (`itemtype`, `items_id`, `content`, `date`, `date_mod`)
                       VALUES ('PluginDataflowsDataflow', '".$data['id']."',
                               '".addslashes($data['notepad'])."', NOW(), NOW())";
-               $DB->queryOrDie($iq, "0.85 migrate notepad data");
+               $DB->doQueryOrDie($iq, "0.85 migrate notepad data");
             }
             $query = "ALTER TABLE `glpi_plugin_dataflows_dataflows` DROP COLUMN `notepad`;";
-            $DB->query($query);
+            $DB->doQuery($query);
          }
       }
    }
@@ -142,21 +142,21 @@ function plugin_dataflows_install() {
    if ($update && $DB->TableExists("glpi_plugin_dataflows_profiles")) {
       $query_="SELECT *
             FROM `glpi_plugin_dataflows_profiles` ";
-      $result_=$DB->query($query_);
+      $result_=$DB->doQuery($query_);
       if ($DB->numrows($result_)>0) {
 
          while ($data=$DB->fetch_array($result_)) {
             $query="UPDATE `glpi_plugin_dataflows_profiles`
                   SET `profiles_id` = '".$data["id"]."'
                   WHERE `id` = '".$data["id"]."';";
-            $result=$DB->query($query);
+            $result=$DB->doQuery($query);
 
          }
       }
 
       $query="ALTER TABLE `glpi_plugin_dataflows_profiles`
                DROP `name` ;";
-      $result=$DB->query($query);
+      $result=$DB->doQuery($query);
    }
 
    PluginDataflowsProfile::initProfile();
@@ -174,25 +174,25 @@ function plugin_dataflows_uninstall() {
    include_once (Plugin::getPhpDir("dataflows")."/inc/menu.class.php");
    
    $query = "SELECT `id` FROM `glpi_plugin_statecheck_tables` WHERE `name` = 'glpi_plugin_dataflows_configdfs'";
-   $result = $DB->query($query);
+   $result = $DB->doQuery($query);
    $rowcount = $DB->numrows($result);
    if ($rowcount > 0) {
       while ($data = $DB->fetchAssoc($result)) {
          $tableid = $data['id'];
          $rulequery = "SELECT `id` FROM `glpi_plugin_statecheck_rules` WHERE `plugin_statecheck_tables_id` = '".$tableid."'";
-         $ruleresult = $DB->query($rulequery);
+         $ruleresult = $DB->doQuery($rulequery);
          while ($ruledata = $DB->fetchAssoc($ruleresult)) {
             $ruleid = $ruledata['id'];
             $query = "DELETE FROM `glpi_plugin_statecheck_ruleactions` WHERE `plugin_statecheck_rules_id` = '".$ruleid."'";
-            $DB->query($query);
+            $DB->doQuery($query);
             $query = "DELETE FROM `glpi_plugin_statecheck_rulecriterias` WHERE `plugin_statecheck_rules_id` = '".$ruleid."'";
-            $DB->query($query);
+            $DB->doQuery($query);
          }
          $query = "DELETE FROM `glpi_plugin_statecheck_rules` WHERE `plugin_statecheck_tables_id` = '".$tableid."'";
-         $DB->query($query);
+         $DB->doQuery($query);
       }
       $query = "DELETE FROM `glpi_plugin_statecheck_tables` WHERE `name` like 'glpi_plugin_dataflows_%'";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
    }
 
 	$tables = ["glpi_plugin_dataflows_dataflows",
@@ -206,7 +206,7 @@ function plugin_dataflows_uninstall() {
 					"glpi_plugin_dataflows_profiles"];
 
    $query = "SELECT `name` FROM `glpi_plugin_dataflows_configdflinks` WHERE `name` like 'PluginDataflows%' AND (`as_view_on` IS NULL OR `as_view_on` = '')";
-   $result = $DB->query($query);
+   $result = $DB->doQuery($query);
    while ($data = $DB->fetchAssoc($result)) {
       $tablename = CommonDBTM::getTable($data['name']);
       if (!in_array($tablename,$tables))
@@ -214,7 +214,7 @@ function plugin_dataflows_uninstall() {
    }
 
    foreach($tables as $table)
-      $DB->query("DROP TABLE IF EXISTS `$table`;");
+      $DB->doQuery("DROP TABLE IF EXISTS `$table`;");
 
 	$views = ["glpi_plugin_dataflows_sourceconnectors",
 					"glpi_plugin_dataflows_toauthtypes",
@@ -223,7 +223,7 @@ function plugin_dataflows_uninstall() {
 					"glpi_plugin_dataflows_toswcomponents"];
 				
    $query = "SELECT `name` FROM `glpi_plugin_dataflows_configdflinks` WHERE `name` LIKE 'PluginDataflows%' AND (`as_view_on` IS NOT NULL AND `as_view_on` <> '')";
-   $result = $DB->query($query);
+   $result = $DB->doQuery($query);
    while ($data = $DB->fetchAssoc($result)) {
       $tablename = CommonDBTM::getTable($data['name']);
       if (!in_array($tablename,$tables))
@@ -231,7 +231,7 @@ function plugin_dataflows_uninstall() {
    }
 				
 	foreach($views as $view)
-		$DB->query("DROP VIEW IF EXISTS `$view`;");
+		$DB->doQuery("DROP VIEW IF EXISTS `$view`;");
 
 	$tables_glpi = ["glpi_displaypreferences",
                "glpi_documents_items",
@@ -243,9 +243,9 @@ function plugin_dataflows_uninstall() {
                "glpi_impactitems"];
 
    foreach($tables_glpi as $table_glpi)
-      $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` LIKE 'PluginDataflows%' ;");
+      $DB->doQuery("DELETE FROM `$table_glpi` WHERE `itemtype` LIKE 'PluginDataflows%' ;");
 
-   $DB->query("DELETE
+   $DB->doQuery("DELETE
                   FROM `glpi_impactrelations`
                   WHERE `itemtype_source` IN ('PluginDataflowsDataflow')
                     OR `itemtype_impacted` IN ('PluginDataflowsDataflow')");
@@ -301,7 +301,7 @@ function plugin_dataflows_getDataflowRelations() {
 					 ];
 
       $query = "SELECT `name` FROM `glpi_plugin_dataflows_configdflinks` WHERE `name` like 'PluginDataflows%'";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       while ($data = $DB->fetchAssoc($result)) {
          $tablename = CommonDBTM::getTable($data['name']);
          if (!in_array($tablename,$tables)) {
@@ -335,7 +335,7 @@ function plugin_dataflows_getDropdown() {
                FROM `glpi_plugin_dataflows_configdflinks` 
                JOIN `glpi_plugin_dataflows_configdfs`  ON `glpi_plugin_dataflows_configdflinks`.`id` = `glpi_plugin_dataflows_configdfs`.`plugin_dataflows_configdflinks_id` 
                WHERE `glpi_plugin_dataflows_configdflinks`.`name` like 'PluginDataflows%' AND (`glpi_plugin_dataflows_configdflinks`.`as_view_on` IS NULL OR `glpi_plugin_dataflows_configdflinks`.`as_view_on` = '')";
-         $result = $DB->query($query);
+         $result = $DB->doQuery($query);
          while ($data = $DB->fetchAssoc($result)) {
             $classname = $data['classname'];
             if (!in_array($classname,$classes))
@@ -428,7 +428,7 @@ function plugin_dataflows_giveItem($type,$ID,$data,$num) {
                      FROM `glpi_plugin_dataflows_dataflows_items`
                      WHERE `plugin_dataflows_dataflows_id` = '".$data['id']."'
                      ORDER BY `itemtype`";
-         $result_device = $DB->query($query_device);
+         $result_device = $DB->doQuery($query_device);
          $number_device = $DB->numrows($result_device);
          $y = 0;
          $out='';
@@ -458,7 +458,7 @@ function plugin_dataflows_giveItem($type,$ID,$data,$num) {
                   }
                   $query.=" ORDER BY `glpi_entities`.`completename`, `".$table_item."`.`$column`";
 
-                  if ($result_linked = $DB->query($query))
+                  if ($result_linked = $DB->doQuery($query))
                      if ($DB->numrows($result_linked)) {
                         $item = new $itemtype();
                         while ($data = $DB->fetchAssoc($result_linked)) {
@@ -541,29 +541,29 @@ function hook_pre_item_add_dataflows_configdflink(CommonDBTM $item) {
             $query = "CREATE VIEW IF NOT EXISTS `$tablename` (`id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive`) AS 
                   SELECT `id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
          }
-         $result = $DB->query($query);
+         $result = $DB->doQuery($query);
       }
       else {
-         $entities = ($newisentitylimited?"`entities_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,":"");
+         $entities = ($newisentitylimited?"`entities_id` INT UNSIGNED NOT NULL DEFAULT 0,":"");
          if (!$newistreedropdown) { //dropdown->create table
             $query = "CREATE TABLE IF NOT EXISTS `".$tablename."` (
-                  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,".
+                  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,".
                   $entities.
                   "`name` VARCHAR(45) NOT NULL,
                   `comment` VARCHAR(255) NULL,
                   `completename` MEDIUMTEXT NULL,
                   PRIMARY KEY (`id`) ,
                   UNIQUE INDEX `".$tablename."_name` (`name`) )
-                  DEFAULT CHARSET=utf8mb4 COLLATE=utf8_unicode_ci";
-            $result = $DB->query($query);
+                  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+            $result = $DB->doQuery($query);
          }
          else { //treedropdown->create table
             $query = "CREATE TABLE IF NOT EXISTS `".$tablename."` (
-                        `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,".
+                        `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,".
                         $entities.
                         "`is_recursive` BIT NOT NULL DEFAULT 0,
                         `name` VARCHAR(45) NOT NULL,
-                        $fieldname INT(11) UNSIGNED NOT NULL DEFAULT 0,
+                        $fieldname INT UNSIGNED NOT NULL DEFAULT 0,
                         `completename` MEDIUMTEXT NULL,
                         `comment` VARCHAR(255) NULL,
                         `level` INT NOT NULL DEFAULT 0,
@@ -571,8 +571,8 @@ function hook_pre_item_add_dataflows_configdflink(CommonDBTM $item) {
                         `ancestors_cache` LONGTEXT NULL,
                         PRIMARY KEY (`id`) ,
                         UNIQUE INDEX `".$tablename."_name` (`name`) )
-                        DEFAULT CHARSET=utf8mb4 COLLATE=utf8_unicode_ci";
-            $result = $DB->query($query);
+                        DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+            $result = $DB->doQuery($query);
          }
       }
       create_plugin_dataflows_classfiles($dir, $newclassname, $newistreedropdown);
@@ -604,9 +604,9 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
             $oldtablename = 'glpi_plugin_dataflows_'.getPlural($oldrootname);
             $oldfieldname = 'plugin_dataflows_'.getPlural($oldrootname).'_id';
             $query = "RENAME TABLE `".$oldtablename."` TO `".$newtablename."`";
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
             $query = "UPDATE `glpi_plugin_dataflows_configdflinks` SET `name` = '".$newclassname."' WHERE `name` = '".$oldclassname."'";
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
          }
          else {// no change dropdown name
             // if dropdown table is a view, replace the old view
@@ -622,7 +622,7 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
                   $query = "CREATE OR REPLACE VIEW `$newtablename` (`id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive`) AS 
                         SELECT `id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
                }
-               $result = $DB->query($query);
+               $result = $DB->doQuery($query);
             }
             else {
                // if dropdown table is really a table ...
@@ -631,11 +631,11 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
                // old type was dropdown and new one is treedropdown=>add the needed fields
                   $query = "ALTER TABLE $newtablename
                      ADD COLUMN `is_recursive` BIT NOT NULL DEFAULT 0 AFTER `id`,
-                     ADD COLUMN $newfieldname INT(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `name`,
+                     ADD COLUMN $newfieldname INT UNSIGNED NOT NULL DEFAULT 0 AFTER `name`,
                      ADD COLUMN `level` INT NOT NULL DEFAULT 0 AFTER `completename`,
                      ADD COLUMN `sons_cache` LONGTEXT NULL AFTER `level`,
                      ADD COLUMN `ancestors_cache` LONGTEXT NULL AFTER `sons_cache`";
-                  $result = $DB->query($query);
+                  $result = $DB->doQuery($query);
                }
                else if ($oldistreedropdown && !$newistreedropdown) {
                // old type was treedropdown and new one is dropdown=>drop the unneeded fields
@@ -645,18 +645,18 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
                      DROP COLUMN `level`,
                      DROP COLUMN `sons_cache`,
                      DROP COLUMN `ancestors_cache`";
-                  $result = $DB->query($query);
+                  $result = $DB->doQuery($query);
                }
                // 'is_entity_limited' has changed
                if (!$item->fields['is_entity_limited'] && $item->input['is_entity_limited']) { // 'is_entity_limited' changed from no to yes
                // => add 'entities_id' column to dropdown table
-                  $query = "ALTER TABLE $newtablename ADD COLUMN IF NOT EXISTS `entities_id` INT(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `id`";
-                  $result = $DB->query($query);
+                  $query = "ALTER TABLE $newtablename ADD COLUMN IF NOT EXISTS `entities_id` INT UNSIGNED NOT NULL DEFAULT 0 AFTER `id`";
+                  $result = $DB->doQuery($query);
                }
                else if ($item->fields['is_entity_limited'] && !$item->input['is_entity_limited']) { // 'is_entity_limited' changed from yes to no
                // => drop 'entities_id' column from dropdown table
                   $query = "ALTER TABLE $newtablename DROP COLUMN `entities_id`";
-                  $result = $DB->query($query);
+                  $result = $DB->doQuery($query);
                }
             }
          }
@@ -675,29 +675,29 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
                $query = "CREATE VIEW `$tablename` (`id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive`) AS 
                   SELECT `id`,$entities `name`, `comment`, `completename`, `level`, `is_recursive` FROM $newasviewon".(empty($newviewlimit)?"":" WHERE $newviewlimit");
             }
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
          }
          else {
-            $entities = ($item->input['is_entity_limited']?"`entities_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,":""); // with or without 'entities_id' column
+            $entities = ($item->input['is_entity_limited']?"`entities_id` INT UNSIGNED NOT NULL DEFAULT 0,":""); // with or without 'entities_id' column
             if (!$newistreedropdown) {
                // new simple dropdown table
                $query = "CREATE TABLE IF NOT EXISTS `".$newtablename."` (
-                  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,".
+                  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,".
                   $entities.
                   "`name` VARCHAR(45) NOT NULL,
                   `comment` VARCHAR(255) NULL,
                   `completename` MEDIUMTEXT NULL,
                   PRIMARY KEY (`id`) ,
                   UNIQUE INDEX `".$newtablename."_name` (`name`) )
-                  DEFAULT CHARSET=utf8mb4 COLLATE=utf8_unicode_ci";
+                  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
             } 
             else { // new treedropdon table
                $query = "CREATE TABLE IF NOT EXISTS `".$newtablename."` (
-                  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,".
+                  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,".
                   $entities.
                   "`is_recursive` BIT NOT NULL DEFAULT 0,
                   `name` VARCHAR(45) NOT NULL,
-                  $newfieldname INT(11) UNSIGNED NOT NULL DEFAULT 0,
+                  $newfieldname INT UNSIGNED NOT NULL DEFAULT 0,
                   `completename` MEDIUMTEXT NULL,
                   `comment` VARCHAR(255) NULL,
                   `level` INT NOT NULL DEFAULT 0,
@@ -705,9 +705,9 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
                   `ancestors_cache` LONGTEXT NULL,
                   PRIMARY KEY (`id`) ,
                   UNIQUE INDEX `".$newtablename."_name` (`name`) )
-                  DEFAULT CHARSET=utf8mb4 COLLATE=utf8_unicode_ci";
+                  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
             }
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
          }
       }
       create_plugin_dataflows_classfiles($dir, $newclassname, $newistreedropdown);
@@ -721,9 +721,9 @@ function hook_pre_item_update_dataflows_configdflink(CommonDBTM $item) {
       $oldfieldname = 'plugin_dataflows_'.getPlural($oldrootname).'_id';
       $tableorview = empty($oldasviewon)?"TABLE":"VIEW";
       $query = "DROP $tableorview IF EXISTS `".$oldtablename."`";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $query = "DELETE FROM `glpi_plugin_dataflows_configdflinks` WHERE `name` = '".$oldclassname."'";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       // delete files in inc and front directories
       if (file_exists($dir.'/inc/'.$oldfilename.'.class.php')) 
          unlink($dir.'/inc/'.$oldfilename.'.class.php');
@@ -743,13 +743,13 @@ function hook_pre_item_purge_dataflows_configdflink(CommonDBTM $item) {
    $oldid = $item->fields['id'];
    // suppress in glpi_plugin_dataflows_configdfs
    $query = "UPDATE `glpi_plugin_dataflows_configdfs` SET `plugin_dataflows_configdflinks_id` = 0 WHERE `plugin_dataflows_configdflinks_id` = '".$oldid."'";
-   $result = $DB->query($query);
+   $result = $DB->doQuery($query);
    if (substr($oldclassname, 0, 15) == 'PluginDataflows') {
       $oldtablename = 'glpi_plugin_dataflows_'.getPlural($oldrootname);
       $oldfieldname = 'plugin_dataflows_'.getPlural($oldrootname).'_id';
       $tableorview = empty($oldasviewon)?"TABLE":"VIEW";
       $query = "DROP $tableorview IF EXISTS `".$oldtablename."`";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       // delete files in inc and front directories
       if (file_exists($dir.'/inc/'.$oldfilename.'.class.php')) 
          unlink($dir.'/inc/'.$oldfilename.'.class.php');

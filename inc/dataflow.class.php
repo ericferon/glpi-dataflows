@@ -41,14 +41,14 @@ class PluginDataflowsDataflow extends CommonDBTM {
       return _n('Dataflow', 'Dataflows', $nb, 'dataflows');
    }
 
-   public static function canCreate() {
+/*   public static function canCreate(): bool {
       return Session::haveRight(static::$rightname, UPDATE);
    }
 
-   public static function canView() {
+   public static function canView(): bool {
       return Session::haveRight(static::$rightname, READ);
    }
-
+*/
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
 
       if ($item->getType()=='Supplier') {
@@ -107,7 +107,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       $linktable = [];
       $tablequery = "SELECT * FROM `glpi_plugin_dataflows_configdflinks`";
-      $tableresult = $DB->query($tablequery);
+      $tableresult = $DB->doQuery($tablequery);
       while ($tabledata = $DB->fetchAssoc($tableresult)) {
          $linktable[$tabledata['id']]['name'] = $tabledata['name'];
          $linktable[$tabledata['id']]['has_dropdown'] = $tabledata['has_dropdown'];
@@ -116,7 +116,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       $datatypetable = [];
       $datatypequery = "SELECT * FROM `glpi_plugin_dataflows_configdfdatatypes`";
-      $datatyperesult = $DB->query($datatypequery);
+      $datatyperesult = $DB->doQuery($datatypequery);
       while ($datatypedata = $DB->fetchAssoc($datatyperesult)) {
          $datatypetable[$datatypedata['id']]['name'] = $datatypedata['name'];
       }
@@ -125,7 +125,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
                 FROM `glpi_plugin_dataflows_configdfs` 
                 WHERE `is_deleted` = 0 
                 ORDER BY `id`";
-      $fieldresult = $DB->query($fieldquery);
+      $fieldresult = $DB->doQuery($fieldquery);
       $rowcount = $DB->numrows($fieldresult);
       $tabid = 1; // tabid 1 is used for name
       $tabtable = $this->getTable();
@@ -304,7 +304,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       $columnquery = "SELECT * 
                 FROM `glpi_plugin_dataflows_configdfs` 
                 WHERE `is_deleted` = 0 AND `plugin_dataflows_configdfhaligns_id` in (3,4,5)";
-      $columnresult = $DB->query($columnquery);
+      $columnresult = $DB->doQuery($columnquery);
       $rowcount = $DB->numrows($columnresult);
       if ($rowcount == 0) {
          $columncount = 4;
@@ -333,7 +333,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
 
       $linktable = [];
       $tablequery = "SELECT * FROM `glpi_plugin_dataflows_configdflinks`";
-      $tableresult = $DB->query($tablequery);
+      $tableresult = $DB->doQuery($tablequery);
       while ($tabledata = $DB->fetchAssoc($tableresult)) {
          $linktable[$tabledata['id']]['name'] = $tabledata['name'];
          $linktable[$tabledata['id']]['has_dropdown'] = $tabledata['has_dropdown'];
@@ -344,7 +344,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
                 FROM `glpi_plugin_dataflows_configdfs` 
                 WHERE `is_deleted` = 0 AND `plugin_dataflows_configdffieldgroups_id` = 0 
                 ORDER BY `row`, `plugin_dataflows_configdfhaligns_id`";
-      $fieldresult = $DB->query($fieldquery);
+      $fieldresult = $DB->doQuery($fieldquery);
       $rowcount = $DB->numrows($fieldresult);
       if ($rowcount > 0) {
          $fgroupname = '';
@@ -453,7 +453,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
       $fgroupquery = "SELECT * 
                 FROM `glpi_plugin_dataflows_configdffieldgroups` 
                 ORDER BY `sortorder`";
-      $fgroupresult = $DB->query($fgroupquery);
+      $fgroupresult = $DB->doQuery($fgroupquery);
 
       while ($fgroupdata = $DB->fetchAssoc($fgroupresult)) {
          $fgroupid = $fgroupdata['id'];
@@ -465,7 +465,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
                 FROM `glpi_plugin_dataflows_configdfs` 
                 WHERE `is_deleted` = 0 AND `plugin_dataflows_configdffieldgroups_id` = $fgroupid 
                 ORDER BY `row`, `plugin_dataflows_configdfhaligns_id`";
-         $fieldresult = $DB->query($fieldquery);
+         $fieldresult = $DB->doQuery($fieldquery);
          $rowcount = $DB->numrows($fieldresult);
          if ($rowcount > 0) {
             // Accordion separator
@@ -700,7 +700,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
                                FROM `glpi_plugin_dataflows_dataflows`
                              $where)
                 ORDER BY `name`";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
 
       $values = [0 => Dropdown::EMPTY_VALUE];
 
@@ -793,7 +793,7 @@ class PluginDataflowsDataflow extends CommonDBTM {
         . getEntitiesRestrictRequest(" AND ","glpi_plugin_dataflows_dataflows",'','',$this->maybeRecursive());
       $query.= " ORDER BY `glpi_plugin_dataflows_dataflows`.`name` ";
 
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
 
       if (Session::isMultiEntitiesMode()) {
